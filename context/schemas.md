@@ -234,6 +234,8 @@ A backlog feature should support:
 - dependencies
 - short scope summary
 
+At most one feature may have `in-progress` status in a validated `ProjectBlueprint`. A blueprint with multiple active features is invalid.
+
 The full active feature specification belongs in `features/current-feature.md` or an equivalent generated artifact, not entirely inside the high-level blueprint object.
 
 ## Unresolved decision
@@ -256,14 +258,22 @@ This prevents the model from inventing certainty.
 
 The conversation itself is not the durable domain model.
 
-Temporary discovery state may contain:
+Implemented temporary discovery state is `DiscoveryState` and contains:
 
-- messages
-- extracted facts
-- missing information
-- current question
-- draft decisions
-- completeness state
+- `initialIdea`
+- `messages`
+- extracted `facts` with explicit or detected source
+- information `gaps`
+- optional `currentQuestion`
+- `draftDecisions` that are draft or proposed only
+- area `completeness`
+- `readyForBlueprintProposal`
+
+Facts, draft proposals, approved blueprint decisions, and unresolved gaps remain distinct.
+
+Discovery cannot be marked ready for a blueprint proposal while a blocking gap remains or a question is still current.
+
+Readiness requires no explicit `missing` or `partial` completeness entries, no draft decisions, at least one user message, and at least one extracted fact. Areas may remain unresolved or not yet assessed. This schema enforces structural readiness; contradiction analysis between facts and messages is a later discovery behavior and is not inferred silently here.
 
 Durable generation must use a validated blueprint, not raw conversation text.
 

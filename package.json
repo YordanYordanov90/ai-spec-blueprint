@@ -14,9 +14,16 @@
     "check:code-standards": "tsx src/lib/blueprint/generators/code-standards.check.ts",
     "check:markdown": "tsx src/lib/blueprint/generators/markdown.check.ts",
     "check:ui-context": "tsx src/lib/blueprint/generators/ui-context.check.ts",
-    "check:ai-workflow-rules": "tsx src/lib/blueprint/generators/ai-workflow-rules.check.ts"
+    "check:ai-workflow-rules": "tsx src/lib/blueprint/generators/ai-workflow-rules.check.ts",
+    "check:progress-tracker": "tsx src/lib/blueprint/generators/progress-tracker.check.ts",
+    "check:agents": "tsx src/lib/blueprint/generators/agents.check.ts",
+    "check:context-package": "tsx src/lib/blueprint/generators/context-package.check.ts",
+    "check:ai-model-config": "tsx src/lib/ai/model-config.check.ts",
+    "check:discovery-state": "tsx src/lib/blueprint/schemas/discovery.check.ts"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^4.0.42",
+    "ai": "^7.0.66",
     "next": "16.3.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",

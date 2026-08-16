@@ -1,0 +1,115 @@
+import { createOpenAI } from "@ai-sdk/openai";
+import { generateText, streamText } from "ai";
+import { z } from "zod";
+
+const NonEmptyTextSchema = z.string().trim().min(1);
+
+export const AiProviderSchema = z.literal("openai");
+
+export const AiModelConfigSchema = z
+  .object({
+    provider: AiProviderSchema,
+    model: NonEmptyTextSchema,
+    apiKey: NonEmptyTextSchema,
+  })
+  .strict();
+
+export type AiModelConfig = z.infer<typeof AiModelConfigSchema>;
+
+export const AiDataScopeSchema = z.enum([
+  "initial-idea",
+  "discovery-state",
+  "approved-blueprint",
+]);
+
+export const AiCallApprovalSchema = z
+  .object({
+    approvedBy: z.literal("human"),
+    purpose: NonEmptyTextSchema,
+    dataScope: z.array(AiDataScopeSchema).min(1),
+    includesSecrets: z.literal(false),
+  })
+  .strict();
+
+export type AiCallApproval = z.infer<typeof AiCallApprovalSchema>;
+
+export const AiCallInputSchema = z
+  .object({
+    prompt: NonEmptyTextSchema,
+    system: NonEmptyTextSchema.optional(),
+  })
+  .strict();
+
+export type AiCallInput = z.infer<typeof AiCallInputSchema>;
+
+export type ApprovedLanguageModel = Readonly<{
+  provider: string;
+  modelId: string;
+  generateText: (
+    input: AiCallInput,
+    approval: AiCallApproval,
+  ) => ReturnType<typeof generateText>;
+  streamText: (
+    input: AiCallInput,
+    approval: AiCallApproval,
+  ) => ReturnType<typeof streamText>;
+}>;
+
+const AiModelEnvSchema = z
+  .object({
+    OPENAI_API_KEY: NonEmptyTextSchema,
+    OPENAI_MODEL: NonEmptyTextSchema,
+  })
+  .strict();
+
+export function parseAiModelConfig(
+  env: Record<string, string | undefined>,
+): AiModelConfig {
+  const parsedEnv = AiModelEnvSchema.parse({
+    OPENAI_API_KEY: env.OPENAI_API_KEY,
+    OPENAI_MODEL: env.OPENAI_MODEL,
+  });
+
+  return AiModelConfigSchema.parse({
+    provider: "openai",
+    model: parsedEnv.OPENAI_MODEL,
+    apiKey: parsedEnv.OPENAI_API_KEY,
+  });
+}
+
+export function loadAiModelConfig(
+  env: NodeJS.ProcessEnv = process.env,
+): AiModelConfig {
+  return parseAiModelConfig(env);
+}
+
+export function createConfiguredLanguageModel(
+  config: AiModelConfig,
+): ApprovedLanguageModel {
+  const validatedConfig = AiModelConfigSchema.parse(config);
+  const openai = createOpenAI({
+    apiKey: validatedConfig.apiKey,
+  });
+  const model = openai(validatedConfig.model);
+
+  return Object.freeze({
+    provider: model.provider,
+    modelId: model.modelId,
+    generateText: (
+      input: AiCallInput,
+      approval: AiCallApproval,
+    ) => {
+      const validatedInput = AiCallInputSchema.parse(input);
+      AiCallApprovalSchema.parse(approval);
+      return generateText({ ...validatedInput, model });
+    },
+    streamText: (
+      input: AiCallInput,
+      approval: AiCallApproval,
+    ) => {
+      const validatedInput = AiCallInputSchema.parse(input);
+      AiCallApprovalSchema.parse(approval);
+      return streamText({ ...validatedInput, model });
+    },
+  });
+}

@@ -120,7 +120,20 @@ export const ProjectBlueprintSchema = z
     features: z.array(FeatureSummarySchema).min(1),
     unresolvedDecisions: z.array(UnresolvedDecisionSchema),
   })
-  .strict();
+  .strict()
+  .superRefine((blueprint, context) => {
+    const inProgressFeatures = blueprint.features.filter(
+      (feature) => feature.status === "in-progress",
+    );
+
+    if (inProgressFeatures.length > 1) {
+      context.addIssue({
+        code: "custom",
+        message: "A project blueprint may have at most one in-progress feature.",
+        path: ["features"],
+      });
+    }
+  });
 
 export type AiUsageDefinition = z.infer<typeof AiUsageDefinitionSchema>;
 export type ArchitectureDecision = z.infer<typeof ArchitectureDecisionSchema>;

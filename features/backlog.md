@@ -52,25 +52,25 @@ Render `context/ui-context.md`.
 
 Render `context/ai-workflow-rules.md`.
 
-### F011 - Generate progress tracker
+### F011 - Generate progress tracker — complete
 
 Render `context/progress-tracker.md`.
 
-### F012 - Generate AGENTS.md
+### F012 - Generate AGENTS.md — complete
 
 Generate the compact agent entry document.
 
-### F013 - Generate complete context package
+### F013 - Generate complete context package — complete
 
 Compose all generated files into one validated exportable package.
 
 ## Phase 3 - AI discovery
 
-### F014 - Centralized AI model configuration
+### F014 - Centralized AI model configuration — complete
 
 Add Vercel AI SDK and OpenAI provider configuration without coupling the domain to a model name.
 
-### F015 - Grill Me discovery state
+### F015 - Grill Me discovery state — complete
 
 Represent temporary discovery facts, gaps, questions, and draft decisions.
 
