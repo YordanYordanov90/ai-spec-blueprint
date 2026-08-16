@@ -197,6 +197,24 @@ assert.match(
 );
 
 assert.throws(() =>
+  ProjectBlueprintSchema.parse({
+    ...validProjectBlueprintExample,
+    features: [
+      {
+        ...validProjectBlueprintExample.features[0],
+        status: "in-progress",
+      },
+      {
+        ...validProjectBlueprintExample.features[0],
+        id: "F002",
+        title: "Review a release note",
+        status: "in-progress",
+      },
+    ],
+  }),
+);
+
+assert.throws(() =>
   runContextGenerator({} as ProjectBlueprint, generateContextPackage),
 );
 

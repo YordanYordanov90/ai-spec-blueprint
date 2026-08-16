@@ -102,20 +102,6 @@ export const CompletenessAreaSchema = z.enum([
   "features",
 ]);
 
-const REQUIRED_COMPLETENESS_AREAS = [
-  "product",
-  "users",
-  "goals",
-  "stack",
-  "architecture",
-  "domain",
-  "ui",
-  "security",
-  "ai",
-  "verification",
-  "features",
-] as const;
-
 const MINIMUM_READY_FACTS = 1;
 
 export const CompletenessEntrySchema = z
@@ -219,29 +205,15 @@ export const DiscoveryStateSchema = z
       const hasUserMessage = state.messages.some(
         (message) => message.role === "user",
       );
-      const completenessByArea = new Map(
-        state.completeness.map((entry) => [entry.area, entry.status]),
-      );
-      const missingAreas = REQUIRED_COMPLETENESS_AREAS.filter(
-        (area) => !completenessByArea.has(area),
-      );
       const incompleteAreas = state.completeness.filter(
-        (entry) => entry.status !== "complete",
+        (entry) => entry.status === "missing" || entry.status === "partial",
       );
-
-      if (missingAreas.length > 0) {
-        context.addIssue({
-          code: "custom",
-          message: `Discovery cannot be ready while completeness areas are missing: ${missingAreas.join(", ")}.`,
-          path: ["completeness"],
-        });
-      }
 
       if (incompleteAreas.length > 0) {
         context.addIssue({
           code: "custom",
           message:
-            "Discovery cannot be ready while completeness areas are not complete.",
+            "Discovery cannot be ready while completeness areas are missing or partial.",
           path: ["completeness"],
         });
       }

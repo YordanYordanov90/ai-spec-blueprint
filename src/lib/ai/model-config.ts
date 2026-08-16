@@ -16,43 +16,41 @@ export const AiModelConfigSchema = z
 
 export type AiModelConfig = z.infer<typeof AiModelConfigSchema>;
 
-/**
- * Every model instance must be created with an explicit human-approved data
- * handling policy. This keeps future call sites from sending secrets or
- * project context to the provider without declaring the boundary first.
- */
+export const AiDataScopeSchema = z.enum([
+  "initial-idea",
+  "discovery-state",
+  "approved-blueprint",
+]);
+
 export const AiCallApprovalSchema = z
   .object({
     approvedBy: z.literal("human"),
-    dataHandling: z.enum([
-      "approved-project-context",
-      "approved-sensitive-project-context",
-    ]),
+    purpose: NonEmptyTextSchema,
+    dataScope: z.array(AiDataScopeSchema).min(1),
     includesSecrets: z.literal(false),
   })
   .strict();
 
 export type AiCallApproval = z.infer<typeof AiCallApprovalSchema>;
 
-type WithoutModel<T> = T extends unknown ? Omit<T, "model"> : never;
+export const AiCallInputSchema = z
+  .object({
+    prompt: NonEmptyTextSchema,
+    system: NonEmptyTextSchema.optional(),
+  })
+  .strict();
 
-export type ApprovedGenerateTextOptions = WithoutModel<
-  Parameters<typeof generateText>[0]
->;
-
-export type ApprovedStreamTextOptions = WithoutModel<
-  Parameters<typeof streamText>[0]
->;
+export type AiCallInput = z.infer<typeof AiCallInputSchema>;
 
 export type ApprovedLanguageModel = Readonly<{
   provider: string;
   modelId: string;
   generateText: (
-    options: ApprovedGenerateTextOptions,
+    input: AiCallInput,
     approval: AiCallApproval,
   ) => ReturnType<typeof generateText>;
   streamText: (
-    options: ApprovedStreamTextOptions,
+    input: AiCallInput,
     approval: AiCallApproval,
   ) => ReturnType<typeof streamText>;
 }>;
@@ -98,18 +96,20 @@ export function createConfiguredLanguageModel(
     provider: model.provider,
     modelId: model.modelId,
     generateText: (
-      options: ApprovedGenerateTextOptions,
+      input: AiCallInput,
       approval: AiCallApproval,
     ) => {
+      const validatedInput = AiCallInputSchema.parse(input);
       AiCallApprovalSchema.parse(approval);
-      return generateText({ ...options, model });
+      return generateText({ ...validatedInput, model });
     },
     streamText: (
-      options: ApprovedStreamTextOptions,
+      input: AiCallInput,
       approval: AiCallApproval,
     ) => {
+      const validatedInput = AiCallInputSchema.parse(input);
       AiCallApprovalSchema.parse(approval);
-      return streamText({ ...options, model });
+      return streamText({ ...validatedInput, model });
     },
   });
 }

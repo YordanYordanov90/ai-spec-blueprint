@@ -7,7 +7,6 @@ import {
   markdownDocument,
   markdownHeading,
   markdownParagraph,
-  markdownPlainText,
 } from "./markdown";
 
 const MAX_SLUG_LENGTH = 60;
@@ -61,13 +60,13 @@ function renderDecisionRecord(
     markdownHeading(2, "Status"),
     markdownParagraph("Accepted"),
     markdownHeading(2, "Context"),
-    markdownPlainText(
+    markdownParagraph(
       `This record captures the architecture decision for ${decision.relatedAreas.join(", ")}.`,
     ),
     markdownHeading(2, "Decision"),
-    markdownPlainText(decision.decision),
+    markdownParagraph(decision.decision),
     markdownHeading(2, "Rationale"),
-    markdownPlainText(decision.rationale),
+    markdownParagraph(decision.rationale),
     markdownHeading(2, "Constraints"),
     decision.constraints.length > 0
       ? markdownBulletList(decision.constraints)

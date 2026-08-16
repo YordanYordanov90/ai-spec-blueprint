@@ -3,6 +3,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 import {
+  AiCallInputSchema,
   AiCallApprovalSchema,
   AiModelConfigSchema,
   createConfiguredLanguageModel,
@@ -21,8 +22,13 @@ const config = parseAiModelConfig({
 
 const approvedCall = {
   approvedBy: "human",
-  dataHandling: "approved-project-context",
+  purpose: "Extract explicit project facts",
+  dataScope: ["discovery-state"],
   includesSecrets: false,
+} as const;
+const approvedInput = {
+  prompt: "Extract explicit project facts.",
+  system: "Return only validated discovery facts.",
 } as const;
 
 assert.deepEqual(config, {
@@ -89,22 +95,28 @@ assert.equal("doStream" in model, false);
 assert.equal("model" in model, false);
 
 assert.deepEqual(AiCallApprovalSchema.parse(approvedCall), approvedCall);
+assert.deepEqual(AiCallInputSchema.parse(approvedInput), approvedInput);
 assert.throws(() =>
   model.generateText(
-    { prompt: "test" } as never,
+    approvedInput,
     {
       approvedBy: "human",
-      dataHandling: "approved-project-context",
+      purpose: "Extract explicit project facts",
+      dataScope: ["discovery-state"],
       includesSecrets: true,
     } as never,
   ),
 );
 assert.throws(() =>
   model.streamText(
-    { prompt: "test" } as never,
     {
-      approvedBy: "system",
-      dataHandling: "approved-project-context",
+      ...approvedInput,
+      tools: {},
+    } as never,
+    {
+      approvedBy: "human",
+      purpose: "Extract explicit project facts",
+      dataScope: ["discovery-state"],
       includesSecrets: false,
     } as never,
   ),

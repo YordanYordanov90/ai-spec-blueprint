@@ -34,17 +34,25 @@ assert.throws(() =>
   }),
 );
 
-assert.throws(() =>
+assert.doesNotThrow(() =>
   DiscoveryStateSchema.parse({
     ...readyDiscoveryStateExample,
     completeness: readyDiscoveryStateExample.completeness.slice(0, -1),
+  }),
+);
+assert.doesNotThrow(() =>
+  DiscoveryStateSchema.parse({
+    ...readyDiscoveryStateExample,
+    completeness: readyDiscoveryStateExample.completeness.map((entry) =>
+      entry.area === "ui" ? { ...entry, status: "unresolved" } : entry,
+    ),
   }),
 );
 assert.throws(() =>
   DiscoveryStateSchema.parse({
     ...readyDiscoveryStateExample,
     completeness: readyDiscoveryStateExample.completeness.map((entry) =>
-      entry.area === "ui" ? { ...entry, status: "unresolved" } : entry,
+      entry.area === "ui" ? { ...entry, status: "partial" } : entry,
     ),
   }),
 );

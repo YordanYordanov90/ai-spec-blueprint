@@ -234,6 +234,8 @@ A backlog feature should support:
 - dependencies
 - short scope summary
 
+At most one feature may have `in-progress` status in a validated `ProjectBlueprint`. A blueprint with multiple active features is invalid.
+
 The full active feature specification belongs in `features/current-feature.md` or an equivalent generated artifact, not entirely inside the high-level blueprint object.
 
 ## Unresolved decision
@@ -271,7 +273,7 @@ Facts, draft proposals, approved blueprint decisions, and unresolved gaps remain
 
 Discovery cannot be marked ready for a blueprint proposal while a blocking gap remains or a question is still current.
 
-Readiness also requires complete coverage across the discovery areas, no draft decisions, at least one user message, and at least one extracted fact. This schema enforces structural readiness; contradiction analysis between facts and messages is a later discovery behavior and is not inferred silently here.
+Readiness requires no explicit `missing` or `partial` completeness entries, no draft decisions, at least one user message, and at least one extracted fact. Areas may remain unresolved or not yet assessed. This schema enforces structural readiness; contradiction analysis between facts and messages is a later discovery behavior and is not inferred silently here.
 
 Durable generation must use a validated blueprint, not raw conversation text.
 

@@ -1,5 +1,7 @@
 export {
+  AiCallInputSchema,
   AiCallApprovalSchema,
+  AiDataScopeSchema,
   AiModelConfigSchema,
   AiProviderSchema,
   createConfiguredLanguageModel,
@@ -7,9 +9,8 @@ export {
   parseAiModelConfig,
 } from "./model-config";
 export type {
+  AiCallInput,
   AiCallApproval,
   AiModelConfig,
-  ApprovedGenerateTextOptions,
   ApprovedLanguageModel,
-  ApprovedStreamTextOptions,
 } from "./model-config";
