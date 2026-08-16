@@ -1,57 +1,55 @@
-# F002 - Define Guardrail and Decision Domain Structures
+# F011 - Generate Progress Tracker
 
 ## Status
 
-Ready after F001.
+Ready after F010.
 
 ## Objective
 
-Refine the domain structures that represent proposals, approved decisions, unresolved decisions, and project guardrails.
+Render `context/progress-tracker.md` from a validated `ProjectBlueprint` using the shared generator contract.
 
-This feature makes human review state explicit before AI discovery and deterministic generation depend on it.
+The document must reflect recorded feature status and unresolved decisions without inventing project progress that the blueprint does not contain.
 
 ## Why this feature is next
 
-F001 established the central `ProjectBlueprint` shape and the minimum nested records. The next dependency is a clear, reusable way to preserve whether a technology or architecture choice is proposed, approved, unresolved, or rejected, alongside the origin and severity of each guardrail.
+The core context documents from overview through AI workflow rules now have deterministic renderers. Progress tracker is the next durable status document before `AGENTS.md` and full package composition.
 
 ## In scope
 
-- reviewable decision status structures
-- reusable decision metadata where it improves consistency
-- guardrail categories, sources, severity, and rationale
-- validation rules for decision and guardrail records
-- representative valid and invalid samples for the new invariants
+- a framework-independent progress tracker generator
+- Markdown output for `context/progress-tracker.md`
+- mapping validated features, unresolved decisions, and related blueprint status into a stable document shape
+- returning a validated `GeneratedArtifact` through the shared generator contract
 
 ## Out of scope
 
 Do not implement:
 
-- Markdown generators
-- Grill Me logic
-- Vercel AI SDK or OpenAI calls
-- Web review UI
-- persistence or authentication
+- `AGENTS.md` generation
+- complete context package composition
+- filesystem writes or downloads
+- export packaging
+- Web UI
+- AI calls
 - CLI behavior
-- generated artifact models
-- changes to the approved shared-core architecture
+- persistence or authentication
 
 ## Architectural constraints
 
-- Schemas must remain framework-independent.
-- Zod remains the runtime source of truth.
-- Human approval must be distinguishable from an AI proposal.
-- Unresolved decisions must not be silently treated as approved decisions.
-- Universal and project-specific guardrails must remain distinguishable.
-- Do not add speculative workflow or persistence state.
+- Use the F004 generator contract. Do not introduce a second generation API.
+- The renderer must not import React, Next.js route code, browser APIs, or provider clients.
+- The renderer must not call an LLM.
+- Equivalent validated input must produce stable path, section order, and content.
+- Untrusted paths must still be validated through `GeneratedArtifactSchema`.
+- Render only facts present in the validated blueprint. Do not invent completed work or hide unresolved decisions.
 
 ## Acceptance criteria
 
-- Decision status semantics are explicit and reusable where appropriate.
-- Approved, proposed, unresolved, and rejected states remain distinguishable.
-- Guardrails preserve category, source, severity, rule, and rationale.
-- Invalid decision and guardrail shapes fail runtime validation.
-- Existing valid `ProjectBlueprint` examples continue to parse.
-- No UI, AI call, generator, CLI, persistence, or authentication behavior is introduced.
+- A progress tracker generator exists in the framework-independent Blueprint Core.
+- It accepts validated `ProjectBlueprint` data and returns a validated `context/progress-tracker.md` artifact.
+- The generated document includes feature IDs, titles, phases, statuses, and unresolved decisions from the blueprint.
+- Equivalent input produces identical artifact path and content.
+- No other new context document generator is implemented in this feature.
 
 ## Verification
 
@@ -59,6 +57,7 @@ Use the scaffolded project's actual commands:
 
 - TypeScript/typecheck
 - lint
-- focused schema validation checks
+- focused generator checks for the contract and already completed renderers
+- focused progress tracker generator checks
 
 Do not add a large testing stack solely for this feature.

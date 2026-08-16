@@ -2,7 +2,7 @@
 
 ## Project status
 
-Status: Domain foundation in progress
+Status: Deterministic generation in progress
 
 The application scaffold is owned by the human developer and may not yet exist when this file is first copied.
 
@@ -47,11 +47,11 @@ Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 1 - Domain foundation
+Phase 2 - Deterministic generation
 
 ## Current feature
 
-`F002 - Define guardrail and decision domain structures`
+`F011 - Generate progress tracker`
 
 See `features/current-feature.md`.
 
@@ -60,18 +60,18 @@ See `features/current-feature.md`.
 ### Phase 1 - Domain foundation
 
 - [x] F001 - Define ProjectBlueprint domain schema
-- [ ] F002 - Define guardrail and decision domain structures
-- [ ] F003 - Define generated artifact model
+- [x] F002 - Define guardrail and decision domain structures
+- [x] F003 - Define generated artifact model
 
 ### Phase 2 - Deterministic generation
 
-- [ ] F004 - Build generator contract
-- [ ] F005 - Generate project overview
-- [ ] F006 - Generate architecture context
-- [ ] F007 - Generate schemas context
-- [ ] F008 - Generate code standards
-- [ ] F009 - Generate UI context
-- [ ] F010 - Generate AI workflow rules
+- [x] F004 - Build generator contract
+- [x] F005 - Generate project overview
+- [x] F006 - Generate architecture context
+- [x] F007 - Generate schemas context
+- [x] F008 - Generate code standards
+- [x] F009 - Generate UI context
+- [x] F010 - Generate AI workflow rules
 - [ ] F011 - Generate progress tracker
 - [ ] F012 - Generate AGENTS.md
 - [ ] F013 - Generate complete context package

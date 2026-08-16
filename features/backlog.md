@@ -14,41 +14,41 @@
 
 Create the initial Zod schema composition for the core structured blueprint.
 
-### F002 - Define guardrail and decision domain structures
+### F002 - Define guardrail and decision domain structures — complete
 
 Add the minimum structures required to distinguish approved decisions, proposals, unresolved decisions, and guardrails.
 
-### F003 - Define generated artifact model
+### F003 - Define generated artifact model — complete
 
 Define the framework-independent representation of an output file.
 
 ## Phase 2 - Deterministic generation
 
-### F004 - Build generator contract
+### F004 - Build generator contract — complete
 
 Create the common deterministic generation interface.
 
-### F005 - Generate project overview
+### F005 - Generate project overview — complete
 
 Render `context/project-overview.md` from validated blueprint data.
 
-### F006 - Generate architecture context
+### F006 - Generate architecture context — complete
 
 Render `context/architecture.md`.
 
-### F007 - Generate schemas context
+### F007 - Generate schemas context — complete
 
 Render `context/schemas.md`.
 
-### F008 - Generate code standards
+### F008 - Generate code standards — complete
 
 Render `context/code-standards.md`.
 
-### F009 - Generate UI context
+### F009 - Generate UI context — complete
 
 Render `context/ui-context.md`.
 
-### F010 - Generate AI workflow rules
+### F010 - Generate AI workflow rules — complete
 
 Render `context/ai-workflow-rules.md`.
 

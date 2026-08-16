@@ -29,6 +29,11 @@ export const validProjectBlueprintExample = {
       status: "confirmed",
       rationale: "The product needs a web-first interface.",
       constraints: ["Use the App Router", "Prefer Server Components by default"],
+      review: {
+        status: "approved",
+        proposedBy: "human",
+        approvedBy: "human",
+      },
     },
     {
       category: "persistence",
@@ -36,6 +41,10 @@ export const validProjectBlueprintExample = {
       status: "preferred-if-needed",
       rationale: "A database may be useful if durable team history becomes a requirement.",
       constraints: ["Do not introduce persistence before it is approved"],
+      review: {
+        status: "proposed",
+        proposedBy: "human",
+      },
     },
   ],
   architecture: [
@@ -47,6 +56,11 @@ export const validProjectBlueprintExample = {
       status: "approved",
       relatedAreas: ["schemas", "future CLI"],
       requiresAdr: true,
+      review: {
+        status: "approved",
+        proposedBy: "human",
+        approvedBy: "human",
+      },
     },
   ],
   domain: [
@@ -120,4 +134,27 @@ export const invalidProjectBlueprintExample = {
       status: "install-now" as const,
     },
   ],
+};
+
+export const invalidDecisionExample = {
+  ...validProjectBlueprintExample.stack[0],
+  review: {
+    status: "approved" as const,
+    proposedBy: "ai" as const,
+    approvedBy: "ai" as const,
+  },
+};
+
+export const invalidGuardrailExample = {
+  ...validProjectBlueprintExample.guardrails[0],
+  severity: "must" as const,
+};
+
+export const invalidArchitectureDecisionExample = {
+  ...validProjectBlueprintExample.architecture[0],
+  review: {
+    status: "rejected" as const,
+    rejectedBy: "human" as const,
+    reason: "The decision is not approved for this project.",
+  },
 };

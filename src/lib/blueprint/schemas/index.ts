@@ -1,8 +1,11 @@
 export {
   ArchitectureDecisionSchema,
   ArchitectureDecisionStatusSchema,
+  DecisionProposalSourceSchema,
+  DecisionReviewSchema,
   GuardrailCategorySchema,
   GuardrailSchema,
+  GuardrailsSchema,
   GuardrailSeveritySchema,
   GuardrailSourceSchema,
   TechnologyDecisionSchema,
@@ -21,6 +24,11 @@ export {
   UiDirectionSchema,
   VerificationDefinitionSchema,
 } from "./project-blueprint";
+export {
+  GeneratedArtifactPathSchema,
+  GeneratedArtifactSchema,
+  GeneratedDocumentTypeSchema,
+} from "./generated-artifact";
 export type {
   AiUsageDefinition,
   BlueprintMetadata,
@@ -33,8 +41,10 @@ export type {
   UiDirection,
   VerificationDefinition,
 } from "./project-blueprint";
+export type { GeneratedArtifact } from "./generated-artifact";
 export type {
   ArchitectureDecision,
+  DecisionReview,
   Guardrail,
   TechnologyDecision,
   UnresolvedDecision,

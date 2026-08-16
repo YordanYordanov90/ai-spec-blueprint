@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import {
   ArchitectureDecisionSchema,
-  GuardrailSchema,
+  GuardrailsSchema,
   TechnologyDecisionSchema,
   UnresolvedDecisionSchema,
 } from "./decisions";
@@ -116,7 +116,7 @@ export const ProjectBlueprintSchema = z
     ai: AiUsageDefinitionSchema.optional(),
     security: SecurityDefinitionSchema,
     verification: VerificationDefinitionSchema,
-    guardrails: z.array(GuardrailSchema).min(1),
+    guardrails: GuardrailsSchema,
     features: z.array(FeatureSummarySchema).min(1),
     unresolvedDecisions: z.array(UnresolvedDecisionSchema),
   })
