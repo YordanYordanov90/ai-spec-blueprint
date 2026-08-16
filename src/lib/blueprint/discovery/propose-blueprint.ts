@@ -10,11 +10,17 @@ import {
   type ProjectBlueprint,
 } from "../schemas/project-blueprint";
 
-function factStatement(
+function factStatements(
   facts: readonly ExtractedFact[],
   topic: DiscoveryTopic,
-): string | undefined {
-  return facts.find((fact) => fact.topic === topic)?.statement;
+): string[] {
+  return facts
+    .filter((fact) => fact.topic === topic)
+    .map((fact) => fact.statement);
+}
+
+function joinFactStatements(statements: readonly string[]): string | undefined {
+  return statements.length > 0 ? statements.join("\n") : undefined;
 }
 
 function workingTitle(initialIdea: string): string {
@@ -23,15 +29,35 @@ function workingTitle(initialIdea: string): string {
 }
 
 function persistenceExpectation(
-  persistenceFact: string | undefined,
+  persistenceFacts: readonly string[],
 ): "in-memory" | "local" | "database" | "external-service" | "unknown" {
-  if (!persistenceFact) {
+  if (persistenceFacts.length === 0) {
     return "unknown";
   }
 
-  const normalized = persistenceFact.toLowerCase();
+  const normalized = persistenceFacts.join(" ").toLowerCase();
+  const explicitlyRejectsDatabase = persistenceFacts.some((fact) => {
+    const statement = fact.toLowerCase();
 
-  if (normalized.includes("database") && !normalized.includes("not require")) {
+    return (
+      /\b(?:no|without|never|avoid|skip)\b(?:\s+\w+){0,5}\s+databases?\b/.test(
+        statement,
+      ) ||
+      /\b(?:does not|doesn't|do not|don't|must not|mustn't)\b(?:\s+\w+){0,5}\s+databases?\b/.test(
+        statement,
+      ) ||
+      /\bdatabases?\b(?:\s+\w+){0,5}\s+\b(?:not|required|needed|necessary)\b/.test(
+        statement,
+      ) ||
+      /\bin[- ]memory\b/.test(statement)
+    );
+  });
+
+  if (explicitlyRejectsDatabase) {
+    return "in-memory";
+  }
+
+  if (normalized.includes("database")) {
     return "database";
   }
 
@@ -58,7 +84,9 @@ function renderUnresolvedDecision(gap: InformationGap) {
   };
 }
 
-function renderPersistenceStack(persistenceFact: string | undefined) {
+function renderPersistenceStack(persistenceFacts: readonly string[]) {
+  const persistenceFact = joinFactStatements(persistenceFacts);
+
   if (!persistenceFact) {
     return {
       category: "persistence",
@@ -70,6 +98,20 @@ function renderPersistenceStack(persistenceFact: string | undefined) {
       review: {
         status: "unresolved" as const,
         reason: "Discovery left persistence unresolved.",
+      },
+    };
+  }
+
+  if (persistenceExpectation(persistenceFacts) === "in-memory") {
+    return {
+      category: "persistence",
+      choice: "In-memory state",
+      status: "preferred-if-needed" as const,
+      rationale: persistenceFact,
+      constraints: ["Do not introduce database persistence"],
+      review: {
+        status: "proposed" as const,
+        proposedBy: "ai" as const,
       },
     };
   }
@@ -98,31 +140,35 @@ export function proposeProjectBlueprint(
     );
   }
 
+  const productProblemFacts = factStatements(
+    validatedState.facts,
+    "product-problem",
+  );
   const productProblem =
-    factStatement(validatedState.facts, "product-problem") ??
+    joinFactStatements(productProblemFacts) ??
     validatedState.initialIdea;
-  const usersFact = factStatement(validatedState.facts, "users");
-  const scopeFact = factStatement(validatedState.facts, "mvp-scope");
-  const nonGoalsFact = factStatement(validatedState.facts, "non-goals");
-  const persistenceFact = factStatement(validatedState.facts, "persistence");
-  const authenticationFact = factStatement(
+  const usersFacts = factStatements(validatedState.facts, "users");
+  const scopeFacts = factStatements(validatedState.facts, "mvp-scope");
+  const nonGoalsFacts = factStatements(validatedState.facts, "non-goals");
+  const persistenceFacts = factStatements(validatedState.facts, "persistence");
+  const authenticationFacts = factStatements(
     validatedState.facts,
     "authentication",
   );
-  const domainFact = factStatement(validatedState.facts, "domain");
-  const uiFact = factStatement(validatedState.facts, "ui");
-  const securityFact = factStatement(validatedState.facts, "security");
-  const testingFact = factStatement(validatedState.facts, "testing");
+  const domainFacts = factStatements(validatedState.facts, "domain");
+  const uiFacts = factStatements(validatedState.facts, "ui");
+  const securityFacts = factStatements(validatedState.facts, "security");
+  const testingFacts = factStatements(validatedState.facts, "testing");
 
-  if (!usersFact || !scopeFact) {
+  if (usersFacts.length === 0 || scopeFacts.length === 0) {
     throw new Error(
       "Discovery is missing required facts for a blueprint proposal.",
     );
   }
 
   const securityConstraints = [
-    authenticationFact,
-    securityFact,
+    ...authenticationFacts,
+    ...securityFacts,
     "Do not invent authentication or persistence requirements.",
   ].filter((constraint): constraint is string => Boolean(constraint));
 
@@ -132,21 +178,19 @@ export function proposeProjectBlueprint(
       name: workingTitle(validatedState.initialIdea),
       summary: productProblem,
       problem: productProblem,
-      successCriteria: [scopeFact],
+      successCriteria: scopeFacts,
     },
-    users: [
-      {
-        name: "Primary user",
-        description: usersFact,
-        needs: [usersFact],
-      },
-    ],
-    goals: [scopeFact],
-    nonGoals: [
-      nonGoalsFact ??
-        "Do not treat unstated capabilities as V1 requirements.",
-    ],
-    stack: [renderPersistenceStack(persistenceFact)],
+    users: usersFacts.map((statement, index) => ({
+      name: index === 0 ? "Primary user" : `Additional user ${index + 1}`,
+      description: statement,
+      needs: [statement],
+    })),
+    goals: scopeFacts,
+    nonGoals:
+      nonGoalsFacts.length > 0
+        ? nonGoalsFacts
+        : ["Do not treat unstated capabilities as V1 requirements."],
+    stack: [renderPersistenceStack(persistenceFacts)],
     architecture: [
       {
         title: "Discovery-derived architecture",
@@ -167,21 +211,35 @@ export function proposeProjectBlueprint(
         },
       },
     ],
-    domain: [
-      {
-        name: domainFact ? "Recorded domain concept" : "Primary concept",
-        purpose: domainFact ?? productProblem,
-        attributes: [],
-        relationships: [],
-        invariants: [],
-        persistenceExpectation: persistenceExpectation(persistenceFact),
-        sensitivity: "unknown",
-      },
-    ],
+    domain:
+      domainFacts.length > 0
+        ? domainFacts.map((statement, index) => ({
+            name:
+              index === 0
+                ? "Recorded domain concept"
+                : `Additional domain concept ${index + 1}`,
+            purpose: statement,
+            attributes: [],
+            relationships: [],
+            invariants: [],
+            persistenceExpectation: persistenceExpectation(persistenceFacts),
+            sensitivity: "unknown" as const,
+          }))
+        : [
+            {
+              name: "Primary concept",
+              purpose: productProblem,
+              attributes: [],
+              relationships: [],
+              invariants: [],
+              persistenceExpectation: persistenceExpectation(persistenceFacts),
+              sensitivity: "unknown" as const,
+            },
+          ],
     ui: {
-      personality: uiFact ?? "Unresolved product personality",
+      personality: joinFactStatements(uiFacts) ?? "Unresolved product personality",
       visualDirection:
-        uiFact ??
+        joinFactStatements(uiFacts) ??
         "Visual direction was not confirmed during discovery.",
       layoutPrinciples: ["Keep recorded decisions inspectable"],
       navigationModel: "A primary workspace with section-level navigation.",
@@ -192,7 +250,7 @@ export function proposeProjectBlueprint(
       ],
       componentStrategy:
         "Use small composable components with a shared token system.",
-      unresolvedBrandingChoices: uiFact
+      unresolvedBrandingChoices: uiFacts.length > 0
         ? ["Final accent color"]
         : ["Product personality", "Visual direction", "Final accent color"],
     },
@@ -201,7 +259,7 @@ export function proposeProjectBlueprint(
     },
     verification: {
       strategy:
-        testingFact ??
+        joinFactStatements(testingFacts) ??
         "Verify recorded discovery facts and unresolved decisions before approval.",
       requiredChecks: ["TypeScript", "Lint"],
       riskAreas: validatedState.gaps.map((gap) => gap.topic),
@@ -220,12 +278,12 @@ export function proposeProjectBlueprint(
     features: [
       {
         id: "F001",
-        title: workingTitle(scopeFact),
-        objective: scopeFact,
+        title: workingTitle(scopeFacts[0]),
+        objective: scopeFacts.join("\n"),
         phase: "foundation",
         status: "planned",
         dependencies: [],
-        scopeSummary: scopeFact,
+        scopeSummary: scopeFacts.join("\n"),
       },
     ],
     unresolvedDecisions: validatedState.gaps.map(renderUnresolvedDecision),

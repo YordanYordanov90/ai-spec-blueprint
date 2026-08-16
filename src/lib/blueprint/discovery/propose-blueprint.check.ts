@@ -69,7 +69,7 @@ const coveredState = analyzeMissingInformation(
   applyExtractedFacts(requiredFacts, [
     {
       id: "fact-persistence",
-      statement: "V1 does not require a database.",
+      statement: "V1 must not use a database.",
       source: "explicit",
       topic: "persistence",
     },
@@ -86,11 +86,54 @@ const coveredProposal = proposeProjectBlueprint(coveredState);
 
 assert.equal(coveredProposal.stack[0]?.status, "preferred-if-needed");
 assert.equal(coveredProposal.stack[0]?.review.status, "proposed");
+assert.equal(coveredProposal.stack[0]?.choice, "In-memory state");
 assert.equal(coveredProposal.unresolvedDecisions.length, 0);
 assert.match(
   coveredProposal.security.constraints.join("\n"),
   /V1 does not require authentication/,
 );
-assert.equal(coveredProposal.domain[0]?.persistenceExpectation, "unknown");
+assert.equal(coveredProposal.domain[0]?.persistenceExpectation, "in-memory");
+
+const multiFactState = analyzeMissingInformation(
+  applyExtractedFacts(requiredFacts, [
+    {
+      id: "fact-user-second",
+      statement: "A product manager reviews the release before publication.",
+      source: "explicit",
+      topic: "users",
+    },
+    {
+      id: "fact-scope-second",
+      statement: "V1 must preserve the source context for each release note.",
+      source: "explicit",
+      topic: "mvp-scope",
+    },
+    {
+      id: "fact-non-goal-first",
+      statement: "V1 must not publish release notes automatically.",
+      source: "explicit",
+      topic: "non-goals",
+    },
+    {
+      id: "fact-non-goal-second",
+      statement: "V1 is not a replacement for the issue tracker.",
+      source: "explicit",
+      topic: "non-goals",
+    },
+  ]),
+);
+
+const multiFactProposal = proposeProjectBlueprint(multiFactState);
+
+assert.equal(multiFactProposal.users.length, 2);
+assert.deepEqual(multiFactProposal.goals, [
+  "V1 must create reviewable release notes without auto-publishing.",
+  "V1 must preserve the source context for each release note.",
+]);
+assert.deepEqual(multiFactProposal.product.successCriteria, multiFactProposal.goals);
+assert.deepEqual(multiFactProposal.nonGoals, [
+  "V1 must not publish release notes automatically.",
+  "V1 is not a replacement for the issue tracker.",
+]);
 
 console.log("Blueprint proposal checks passed.");
