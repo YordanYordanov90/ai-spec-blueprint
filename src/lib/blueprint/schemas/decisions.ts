@@ -51,7 +51,24 @@ export const TechnologyDecisionSchema = z
     constraints: z.array(NonEmptyTextSchema),
     review: DecisionReviewSchema,
   })
-  .strict();
+  .strict()
+  .superRefine((decision, context) => {
+    const reviewStatus = decision.review.status;
+    const isCompatible =
+      (decision.status === "confirmed" && reviewStatus === "approved") ||
+      (decision.status === "preferred-if-needed" &&
+        (reviewStatus === "proposed" || reviewStatus === "approved")) ||
+      (decision.status === "unresolved" && reviewStatus === "unresolved") ||
+      (decision.status === "rejected" && reviewStatus === "rejected");
+
+    if (!isCompatible) {
+      context.addIssue({
+        code: "custom",
+        message: "Technology status and review status must agree.",
+        path: ["review", "status"],
+      });
+    }
+  });
 
 export const ArchitectureDecisionStatusSchema = z.enum([
   "approved",
@@ -71,7 +88,16 @@ export const ArchitectureDecisionSchema = z
     requiresAdr: z.boolean(),
     review: DecisionReviewSchema,
   })
-  .strict();
+  .strict()
+  .superRefine((decision, context) => {
+    if (decision.status !== decision.review.status) {
+      context.addIssue({
+        code: "custom",
+        message: "Architecture status and review status must agree.",
+        path: ["review", "status"],
+      });
+    }
+  });
 
 export const GuardrailCategorySchema = z.enum([
   "architecture",

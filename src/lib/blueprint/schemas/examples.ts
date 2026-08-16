@@ -149,3 +149,12 @@ export const invalidGuardrailExample = {
   ...validProjectBlueprintExample.guardrails[0],
   severity: "must" as const,
 };
+
+export const invalidArchitectureDecisionExample = {
+  ...validProjectBlueprintExample.architecture[0],
+  review: {
+    status: "rejected" as const,
+    rejectedBy: "human" as const,
+    reason: "The decision is not approved for this project.",
+  },
+};

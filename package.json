@@ -12,6 +12,7 @@
     "check:architecture": "tsx src/lib/blueprint/generators/architecture.check.ts",
     "check:schemas-context": "tsx src/lib/blueprint/generators/schemas-context.check.ts",
     "check:code-standards": "tsx src/lib/blueprint/generators/code-standards.check.ts",
+    "check:markdown": "tsx src/lib/blueprint/generators/markdown.check.ts",
     "check:ui-context": "tsx src/lib/blueprint/generators/ui-context.check.ts",
     "check:ai-workflow-rules": "tsx src/lib/blueprint/generators/ai-workflow-rules.check.ts"
   },

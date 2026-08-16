@@ -7,7 +7,9 @@ export function markdownParagraph(text: string): string {
 }
 
 export function markdownBulletList(items: readonly string[]): string {
-  return items.map((item) => `- ${item.trim()}`).join("\n");
+  return items
+    .map((item) => `- ${item.trim().split(/\r?\n/).map((line) => line.trim()).join(" ")}`)
+    .join("\n");
 }
 
 export function joinMarkdownBlocks(

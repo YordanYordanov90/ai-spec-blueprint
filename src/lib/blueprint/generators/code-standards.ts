@@ -43,7 +43,12 @@ function renderArchitectureConstraints(
   decisions: readonly ArchitectureDecision[],
 ): string {
   const sections = decisions
-    .filter((decision) => decision.constraints.length > 0)
+    .filter(
+      (decision) =>
+        decision.status === "approved" &&
+        decision.review.status === "approved" &&
+        decision.constraints.length > 0,
+    )
     .map((decision) =>
       joinMarkdownBlocks([
         markdownHeading(3, decision.title),

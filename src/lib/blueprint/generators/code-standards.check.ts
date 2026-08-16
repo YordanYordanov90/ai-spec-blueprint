@@ -19,6 +19,24 @@ assert.equal(artifact?.documentType, "markdown");
 
 const content = artifact?.content ?? "";
 
+const unapprovedBlueprint = ProjectBlueprintSchema.parse({
+  ...validProjectBlueprintExample,
+  architecture: [
+    {
+      ...validProjectBlueprintExample.architecture[0],
+      status: "proposed",
+      constraints: ["No unapproved architecture constraint"],
+      review: {
+        status: "proposed",
+        proposedBy: "ai",
+      },
+    },
+  ],
+});
+const unapprovedContent =
+  runContextGenerator(unapprovedBlueprint, generateCodeStandards)[0]?.content ??
+  "";
+
 assert.match(content, /^# Code Standards\n/);
 assert.match(content, /### web framework\n/);
 assert.match(content, /- Status: confirmed\n/);
@@ -27,6 +45,7 @@ assert.match(content, /### persistence\n/);
 assert.match(content, /- Status: preferred-if-needed\n/);
 assert.match(content, /### Shared domain contract\n/);
 assert.match(content, /- No React or Next\.js imports in Blueprint Core\n/);
+assert.doesNotMatch(unapprovedContent, /No unapproved architecture constraint/);
 assert.match(
   content,
   /Strategy: Verify domain invariants and critical review flows before release\.\n/,

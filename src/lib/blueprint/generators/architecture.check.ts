@@ -1,11 +1,19 @@
 import assert from "node:assert/strict";
 
-import { validProjectBlueprintExample } from "../schemas/examples";
+import {
+  invalidArchitectureDecisionExample,
+  validProjectBlueprintExample,
+} from "../schemas/examples";
+import { ArchitectureDecisionSchema } from "../schemas/decisions";
 import { ProjectBlueprintSchema } from "../schemas/project-blueprint";
 import { generateArchitecture } from "./architecture";
 import { runContextGenerator } from "./contract";
 
 const blueprint = ProjectBlueprintSchema.parse(validProjectBlueprintExample);
+
+assert.throws(() =>
+  ArchitectureDecisionSchema.parse(invalidArchitectureDecisionExample),
+);
 
 const firstRun = runContextGenerator(blueprint, generateArchitecture);
 const secondRun = runContextGenerator(blueprint, generateArchitecture);
