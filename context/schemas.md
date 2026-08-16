@@ -256,14 +256,20 @@ This prevents the model from inventing certainty.
 
 The conversation itself is not the durable domain model.
 
-Temporary discovery state may contain:
+Implemented temporary discovery state is `DiscoveryState` and contains:
 
-- messages
-- extracted facts
-- missing information
-- current question
-- draft decisions
-- completeness state
+- `initialIdea`
+- `messages`
+- extracted `facts` with explicit or detected source
+- information `gaps`
+- optional `currentQuestion`
+- `draftDecisions` that are draft or proposed only
+- area `completeness`
+- `readyForBlueprintProposal`
+
+Facts, draft proposals, approved blueprint decisions, and unresolved gaps remain distinct.
+
+Discovery cannot be marked ready for a blueprint proposal while a blocking gap remains or a question is still current.
 
 Durable generation must use a validated blueprint, not raw conversation text.
 

@@ -2,7 +2,7 @@
 
 ## Project status
 
-Status: Deterministic generation in progress
+Status: AI discovery in progress
 
 The application scaffold is owned by the human developer and may not yet exist when this file is first copied.
 
@@ -47,11 +47,11 @@ Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 2 - Deterministic generation
+Phase 3 - AI discovery
 
 ## Current feature
 
-`F011 - Generate progress tracker`
+`F016 - Implement project fact extraction`
 
 See `features/current-feature.md`.
 
@@ -72,14 +72,14 @@ See `features/current-feature.md`.
 - [x] F008 - Generate code standards
 - [x] F009 - Generate UI context
 - [x] F010 - Generate AI workflow rules
-- [ ] F011 - Generate progress tracker
-- [ ] F012 - Generate AGENTS.md
-- [ ] F013 - Generate complete context package
+- [x] F011 - Generate progress tracker
+- [x] F012 - Generate AGENTS.md
+- [x] F013 - Generate complete context package
 
 ### Phase 3 - AI discovery
 
-- [ ] F014 - Add centralized AI model configuration
-- [ ] F015 - Define Grill Me discovery state
+- [x] F014 - Add centralized AI model configuration
+- [x] F015 - Define Grill Me discovery state
 - [ ] F016 - Implement project fact extraction
 - [ ] F017 - Implement missing-information analysis
 - [ ] F018 - Generate focused follow-up questions

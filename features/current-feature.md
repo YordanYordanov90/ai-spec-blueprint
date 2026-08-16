@@ -1,55 +1,47 @@
-# F011 - Generate Progress Tracker
+# F016 - Implement Project Fact Extraction
 
 ## Status
 
-Ready after F010.
+Ready after F015.
 
 ## Objective
 
-Render `context/progress-tracker.md` from a validated `ProjectBlueprint` using the shared generator contract.
-
-The document must reflect recorded feature status and unresolved decisions without inventing project progress that the blueprint does not contain.
+Extract approved or explicit project facts from Grill Me input into the `DiscoveryState` fact model.
 
 ## Why this feature is next
 
-The core context documents from overview through AI workflow rules now have deterministic renderers. Progress tracker is the next durable status document before `AGENTS.md` and full package composition.
+Discovery state now exists. Fact extraction is the first AI discovery behavior that populates that state without asking the user to repeat known information.
 
 ## In scope
 
-- a framework-independent progress tracker generator
-- Markdown output for `context/progress-tracker.md`
-- mapping validated features, unresolved decisions, and related blueprint status into a stable document shape
-- returning a validated `GeneratedArtifact` through the shared generator contract
+- extract explicit facts from project input into validated `ExtractedFact` records
+- distinguish explicit user-provided facts from inferred detections
+- keep extracted facts inside discovery state rather than writing a `ProjectBlueprint`
 
 ## Out of scope
 
 Do not implement:
 
-- `AGENTS.md` generation
-- complete context package composition
-- filesystem writes or downloads
-- export packaging
+- missing-information analysis
+- follow-up question generation
+- structured blueprint proposal generation
 - Web UI
-- AI calls
 - CLI behavior
 - persistence or authentication
 
 ## Architectural constraints
 
-- Use the F004 generator contract. Do not introduce a second generation API.
-- The renderer must not import React, Next.js route code, browser APIs, or provider clients.
-- The renderer must not call an LLM.
-- Equivalent validated input must produce stable path, section order, and content.
-- Untrusted paths must still be validated through `GeneratedArtifactSchema`.
-- Render only facts present in the validated blueprint. Do not invent completed work or hide unresolved decisions.
+- Use the centralized AI model configuration from F014.
+- Validate model output with Zod before it becomes discovery state.
+- Do not treat extracted facts as approved blueprint decisions.
+- Do not call an LLM from deterministic generators.
 
 ## Acceptance criteria
 
-- A progress tracker generator exists in the framework-independent Blueprint Core.
-- It accepts validated `ProjectBlueprint` data and returns a validated `context/progress-tracker.md` artifact.
-- The generated document includes feature IDs, titles, phases, statuses, and unresolved decisions from the blueprint.
-- Equivalent input produces identical artifact path and content.
-- No other new context document generator is implemented in this feature.
+- Project input can be reduced to validated extracted facts in discovery state.
+- Facts keep an explicit or detected source.
+- Invalid model output is not silently converted into facts.
+- Gap analysis and question generation remain later features.
 
 ## Verification
 
@@ -57,7 +49,7 @@ Use the scaffolded project's actual commands:
 
 - TypeScript/typecheck
 - lint
-- focused generator checks for the contract and already completed renderers
-- focused progress tracker generator checks
+- focused fact-extraction checks
+- existing discovery-state and AI configuration checks
 
 Do not add a large testing stack solely for this feature.

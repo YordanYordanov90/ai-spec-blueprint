@@ -13,6 +13,21 @@ export {
   UnresolvedDecisionSchema,
 } from "./decisions";
 export {
+  CompletenessAreaSchema,
+  CompletenessEntrySchema,
+  CompletenessStatusSchema,
+  DiscoveryMessageRoleSchema,
+  DiscoveryMessageSchema,
+  DiscoveryQuestionSchema,
+  DiscoveryStateSchema,
+  DiscoveryTopicSchema,
+  DraftDecisionSchema,
+  DraftDecisionStatusSchema,
+  ExtractedFactSchema,
+  FactSourceSchema,
+  InformationGapSchema,
+} from "./discovery";
+export {
   AiUsageDefinitionSchema,
   BlueprintMetadataSchema,
   DomainConceptSchema,
@@ -49,3 +64,12 @@ export type {
   TechnologyDecision,
   UnresolvedDecision,
 } from "./decisions";
+export type {
+  CompletenessEntry,
+  DiscoveryMessage,
+  DiscoveryQuestion,
+  DiscoveryState,
+  DraftDecision,
+  ExtractedFact,
+  InformationGap,
+} from "./discovery";
