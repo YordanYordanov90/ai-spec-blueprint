@@ -116,6 +116,8 @@ const REQUIRED_COMPLETENESS_AREAS = [
   "features",
 ] as const;
 
+const MINIMUM_READY_FACTS = 1;
+
 export const CompletenessEntrySchema = z
   .object({
     area: CompletenessAreaSchema,
@@ -214,6 +216,9 @@ export const DiscoveryStateSchema = z
     }
 
     if (state.readyForBlueprintProposal) {
+      const hasUserMessage = state.messages.some(
+        (message) => message.role === "user",
+      );
       const completenessByArea = new Map(
         state.completeness.map((entry) => [entry.area, entry.status]),
       );
@@ -247,6 +252,24 @@ export const DiscoveryStateSchema = z
           message:
             "Discovery cannot be ready while draft decisions remain unresolved.",
           path: ["draftDecisions"],
+        });
+      }
+
+      if (!hasUserMessage) {
+        context.addIssue({
+          code: "custom",
+          message:
+            "Discovery cannot be ready without at least one user-provided message.",
+          path: ["messages"],
+        });
+      }
+
+      if (state.facts.length < MINIMUM_READY_FACTS) {
+        context.addIssue({
+          code: "custom",
+          message:
+            "Discovery cannot be ready without at least one extracted fact.",
+          path: ["facts"],
         });
       }
     }

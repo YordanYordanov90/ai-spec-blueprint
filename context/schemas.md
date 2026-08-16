@@ -271,6 +271,8 @@ Facts, draft proposals, approved blueprint decisions, and unresolved gaps remain
 
 Discovery cannot be marked ready for a blueprint proposal while a blocking gap remains or a question is still current.
 
+Readiness also requires complete coverage across the discovery areas, no draft decisions, at least one user message, and at least one extracted fact. This schema enforces structural readiness; contradiction analysis between facts and messages is a later discovery behavior and is not inferred silently here.
+
 Durable generation must use a validated blueprint, not raw conversation text.
 
 ## Zod requirements

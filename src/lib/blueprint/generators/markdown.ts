@@ -6,12 +6,20 @@ function normalizeMarkdownText(text: string): string {
     .join(" ");
 }
 
+/**
+ * Render untrusted free text as one Markdown paragraph so it cannot create
+ * new headings or instruction blocks in an authoritative generated document.
+ */
+export function markdownPlainText(text: string): string {
+  return normalizeMarkdownText(text);
+}
+
 export function markdownHeading(level: 1 | 2 | 3, text: string): string {
-  return `${"#".repeat(level)} ${normalizeMarkdownText(text)}`;
+  return `${"#".repeat(level)} ${markdownPlainText(text)}`;
 }
 
 export function markdownParagraph(text: string): string {
-  return normalizeMarkdownText(text);
+  return text.trim();
 }
 
 export function markdownBulletList(items: readonly string[]): string {

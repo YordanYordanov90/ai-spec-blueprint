@@ -1,4 +1,5 @@
 import { createOpenAI } from "@ai-sdk/openai";
+import { generateText, streamText } from "ai";
 import { z } from "zod";
 
 const NonEmptyTextSchema = z.string().trim().min(1);
@@ -33,6 +34,27 @@ export const AiCallApprovalSchema = z
 
 export type AiCallApproval = z.infer<typeof AiCallApprovalSchema>;
 
+type WithoutModel<T> = T extends unknown ? Omit<T, "model"> : never;
+
+export type ApprovedGenerateTextOptions = WithoutModel<
+  Parameters<typeof generateText>[0]
+>;
+
+export type ApprovedStreamTextOptions = WithoutModel<
+  Parameters<typeof streamText>[0]
+>;
+
+export type ApprovedLanguageModel = Readonly<{
+  provider: string;
+  modelId: string;
+  generateText: (
+    options: ApprovedGenerateTextOptions,
+  ) => ReturnType<typeof generateText>;
+  streamText: (
+    options: ApprovedStreamTextOptions,
+  ) => ReturnType<typeof streamText>;
+}>;
+
 const AiModelEnvSchema = z
   .object({
     OPENAI_API_KEY: NonEmptyTextSchema,
@@ -64,12 +86,24 @@ export function loadAiModelConfig(
 export function createConfiguredLanguageModel(
   config: AiModelConfig,
   approval: AiCallApproval,
-) {
+): ApprovedLanguageModel {
   const validatedConfig = AiModelConfigSchema.parse(config);
-  AiCallApprovalSchema.parse(approval);
+  const validatedApproval = AiCallApprovalSchema.parse(approval);
   const openai = createOpenAI({
     apiKey: validatedConfig.apiKey,
   });
+  const model = openai(validatedConfig.model);
 
-  return openai(validatedConfig.model);
+  return Object.freeze({
+    provider: model.provider,
+    modelId: model.modelId,
+    generateText: (options: ApprovedGenerateTextOptions) => {
+      AiCallApprovalSchema.parse(validatedApproval);
+      return generateText({ ...options, model });
+    },
+    streamText: (options: ApprovedStreamTextOptions) => {
+      AiCallApprovalSchema.parse(validatedApproval);
+      return streamText({ ...options, model });
+    },
+  });
 }

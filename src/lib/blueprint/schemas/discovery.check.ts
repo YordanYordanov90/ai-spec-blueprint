@@ -56,6 +56,18 @@ assert.throws(() =>
 );
 assert.throws(() =>
   DiscoveryStateSchema.parse({
+    ...readyDiscoveryStateExample,
+    messages: [],
+  }),
+);
+assert.throws(() =>
+  DiscoveryStateSchema.parse({
+    ...readyDiscoveryStateExample,
+    facts: [],
+  }),
+);
+assert.throws(() =>
+  DiscoveryStateSchema.parse({
     ...validDiscoveryStateExample,
     facts: [
       {

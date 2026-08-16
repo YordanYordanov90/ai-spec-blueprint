@@ -17,6 +17,7 @@ import {
   markdownDocument,
   markdownHeading,
   markdownParagraph,
+  markdownPlainText,
 } from "./markdown";
 
 const REQUIRED_READING_PREFIX = [
@@ -85,7 +86,7 @@ function renderGuardrail(guardrail: Guardrail): string {
       `Severity: ${guardrail.severity}`,
       `Source: ${guardrail.source}`,
     ]),
-    markdownParagraph(`Rule: ${guardrail.rule}`),
+    markdownPlainText(`Rule: ${guardrail.rule}`),
   ]);
 }
 
@@ -107,7 +108,7 @@ function renderApprovedArchitecture(
     approved.map((decision) =>
       joinMarkdownBlocks([
         markdownHeading(3, decision.title),
-        markdownParagraph(`Decision: ${decision.decision}`),
+        markdownPlainText(`Decision: ${decision.decision}`),
         renderOptionalList("Constraints", decision.constraints),
       ]),
     ),
@@ -116,7 +117,7 @@ function renderApprovedArchitecture(
 
 function renderVerification(verification: VerificationDefinition): string {
   return joinMarkdownBlocks([
-    markdownParagraph(`Strategy: ${verification.strategy}`),
+    markdownPlainText(`Strategy: ${verification.strategy}`),
     joinMarkdownBlocks([
       "Required checks:",
       markdownBulletList(verification.requiredChecks),
@@ -128,7 +129,7 @@ function renderVerification(verification: VerificationDefinition): string {
 function renderUnresolvedDecision(decision: UnresolvedDecision): string {
   return joinMarkdownBlocks([
     markdownHeading(3, decision.question),
-    markdownParagraph(`Why it matters: ${decision.whyItMatters}`),
+    markdownPlainText(`Why it matters: ${decision.whyItMatters}`),
     markdownBulletList([
       `Blocking: ${decision.blocking ? "yes" : "no"}`,
       `Recommended resolution point: ${decision.recommendedResolutionPoint}`,
@@ -160,7 +161,7 @@ function renderAiGuidance(ai: AiUsageDefinition | undefined): string {
   }
 
   return joinMarkdownBlocks([
-    markdownParagraph(`Purpose: ${ai.purpose}`),
+    markdownPlainText(`Purpose: ${ai.purpose}`),
     joinMarkdownBlocks([
       "Allowed responsibilities:",
       markdownBulletList(ai.allowedResponsibilities),
@@ -180,8 +181,8 @@ export function renderAgentsMarkdown(blueprint: ProjectBlueprint): string {
   return markdownDocument([
     markdownHeading(1, "AGENTS.md"),
     markdownHeading(2, "Purpose"),
-    markdownParagraph(blueprint.product.summary),
-    markdownParagraph(blueprint.product.problem),
+    markdownPlainText(blueprint.product.summary),
+    markdownPlainText(blueprint.product.problem),
     markdownHeading(2, "Required reading order"),
     renderNumberedList(requiredReadingOrder(blueprint)),
     markdownParagraph(
