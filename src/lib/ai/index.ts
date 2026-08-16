@@ -1,4 +1,21 @@
 export {
+  AiFailureKindSchema,
+  AiFailureSchema,
+  classifyAiError,
+  createAiFailure,
+  proposeProjectBlueprintResult,
+  runAiOperation,
+  runSyncOperation,
+} from "./ai-failure";
+export type { AiFailure, AiFailureKind, AiResult } from "./ai-failure";
+export {
+  extractProjectFacts,
+  extractProjectFactsResult,
+  ExtractedFactsOutputSchema,
+  ProjectFactExtractionInputSchema,
+} from "./fact-extraction";
+export type { ProjectFactExtractionInput } from "./fact-extraction";
+export {
   AiCallInputSchema,
   AiCallApprovalSchema,
   AiDataScopeSchema,

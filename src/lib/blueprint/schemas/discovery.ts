@@ -247,10 +247,13 @@ export const DiscoveryStateSchema = z
     }
   });
 
+export type CompletenessArea = z.infer<typeof CompletenessAreaSchema>;
 export type CompletenessEntry = z.infer<typeof CompletenessEntrySchema>;
+export type CompletenessStatus = z.infer<typeof CompletenessStatusSchema>;
 export type DiscoveryMessage = z.infer<typeof DiscoveryMessageSchema>;
 export type DiscoveryQuestion = z.infer<typeof DiscoveryQuestionSchema>;
 export type DiscoveryState = z.infer<typeof DiscoveryStateSchema>;
+export type DiscoveryTopic = z.infer<typeof DiscoveryTopicSchema>;
 export type DraftDecision = z.infer<typeof DraftDecisionSchema>;
 export type ExtractedFact = z.infer<typeof ExtractedFactSchema>;
 export type InformationGap = z.infer<typeof InformationGapSchema>;

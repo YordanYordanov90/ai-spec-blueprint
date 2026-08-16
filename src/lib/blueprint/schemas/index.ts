@@ -65,10 +65,13 @@ export type {
   UnresolvedDecision,
 } from "./decisions";
 export type {
+  CompletenessArea,
   CompletenessEntry,
+  CompletenessStatus,
   DiscoveryMessage,
   DiscoveryQuestion,
   DiscoveryState,
+  DiscoveryTopic,
   DraftDecision,
   ExtractedFact,
   InformationGap,

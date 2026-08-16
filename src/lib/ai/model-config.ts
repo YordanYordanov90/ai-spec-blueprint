@@ -1,5 +1,5 @@
 import { createOpenAI } from "@ai-sdk/openai";
-import { generateText, streamText } from "ai";
+import { generateText, Output, streamText } from "ai";
 import { z } from "zod";
 
 const NonEmptyTextSchema = z.string().trim().min(1);
@@ -53,6 +53,11 @@ export type ApprovedLanguageModel = Readonly<{
     input: AiCallInput,
     approval: AiCallApproval,
   ) => ReturnType<typeof streamText>;
+  generateStructured: <Schema extends z.ZodType>(
+    input: AiCallInput,
+    approval: AiCallApproval,
+    schema: Schema,
+  ) => Promise<z.infer<Schema>>;
 }>;
 
 const AiModelEnvSchema = z
@@ -110,6 +115,25 @@ export function createConfiguredLanguageModel(
       const validatedInput = AiCallInputSchema.parse(input);
       AiCallApprovalSchema.parse(approval);
       return streamText({ ...validatedInput, model });
+    },
+    generateStructured: async <Schema extends z.ZodType>(
+      input: AiCallInput,
+      approval: AiCallApproval,
+      schema: Schema,
+    ): Promise<z.infer<Schema>> => {
+      const validatedInput = AiCallInputSchema.parse(input);
+      AiCallApprovalSchema.parse(approval);
+      const result = await generateText({
+        ...validatedInput,
+        model,
+        output: Output.object({ schema }),
+      });
+
+      if (result.output == null) {
+        throw new Error("Model did not return structured output.");
+      }
+
+      return schema.parse(result.output);
     },
   });
 }
