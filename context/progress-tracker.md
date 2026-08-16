@@ -2,7 +2,7 @@
 
 ## Project status
 
-Status: AI discovery in progress
+Status: Web experience in progress
 
 The application scaffold is owned by the human developer and may not yet exist when this file is first copied.
 
@@ -47,11 +47,11 @@ Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 3 - AI discovery
+Phase 4 - Web experience
 
 ## Current feature
 
-`F016 - Implement project fact extraction`
+`F022 - Build new-project onboarding shell`
 
 See `features/current-feature.md`.
 
@@ -80,15 +80,15 @@ See `features/current-feature.md`.
 
 - [x] F014 - Add centralized AI model configuration
 - [x] F015 - Define Grill Me discovery state
-- [ ] F016 - Implement project fact extraction
-- [ ] F017 - Implement missing-information analysis
-- [ ] F018 - Generate focused follow-up questions
-- [ ] F019 - Produce structured blueprint proposal
-- [ ] F020 - Validate and surface AI blueprint errors
+- [x] F016 - Implement project fact extraction
+- [x] F017 - Implement missing-information analysis
+- [x] F018 - Generate focused follow-up questions
+- [x] F019 - Produce structured blueprint proposal
+- [x] F020 - Validate and surface AI blueprint errors
 
 ### Phase 4 - Web experience
 
-- [ ] F021 - Build product landing experience
+- [x] F021 - Build product landing experience
 - [ ] F022 - Build new-project onboarding shell
 - [ ] F023 - Build Grill Me interface
 - [ ] F024 - Build blueprint completeness panel

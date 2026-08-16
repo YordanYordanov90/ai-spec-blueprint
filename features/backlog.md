@@ -74,29 +74,29 @@ Add Vercel AI SDK and OpenAI provider configuration without coupling the domain 
 
 Represent temporary discovery facts, gaps, questions, and draft decisions.
 
-### F016 - Project fact extraction
+### F016 - Project fact extraction — complete
 
 Extract approved/explicit facts from project input into structured state.
 
-### F017 - Missing-information analysis
+### F017 - Missing-information analysis — complete
 
 Determine which unresolved questions materially affect the blueprint.
 
-### F018 - Focused follow-up questions
+### F018 - Focused follow-up questions — complete
 
 Generate high-value Grill Me questions.
 
-### F019 - Structured blueprint proposal
+### F019 - Structured blueprint proposal — complete
 
 Convert sufficient discovery state into a schema-constrained ProjectBlueprint proposal.
 
-### F020 - AI validation/error experience
+### F020 - AI validation/error experience — complete
 
 Handle invalid or incomplete model output explicitly.
 
 ## Phase 4 - Web experience
 
-### F021 - Product landing experience
+### F021 - Product landing experience — complete
 
 Create the initial public explanation of the product and workflow.
 

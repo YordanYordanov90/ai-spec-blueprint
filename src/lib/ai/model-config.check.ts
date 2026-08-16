@@ -90,6 +90,7 @@ assert.equal(model.modelId, "configured-test-model");
 assert.equal(model.provider, "openai.responses");
 assert.equal(typeof model.generateText, "function");
 assert.equal(typeof model.streamText, "function");
+assert.equal(typeof model.generateStructured, "function");
 assert.equal("doGenerate" in model, false);
 assert.equal("doStream" in model, false);
 assert.equal("model" in model, false);

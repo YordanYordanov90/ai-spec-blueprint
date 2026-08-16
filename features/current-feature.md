@@ -1,47 +1,47 @@
-# F016 - Implement Project Fact Extraction
+# F022 - Build New-Project Onboarding Shell
 
 ## Status
 
-Ready after F015.
+Ready after F021.
 
 ## Objective
 
-Extract approved or explicit project facts from Grill Me input into the `DiscoveryState` fact model.
+Create the initial project creation route and interaction shell that the landing start action already targets.
 
 ## Why this feature is next
 
-Discovery state now exists. Fact extraction is the first AI discovery behavior that populates that state without asking the user to repeat known information.
+The landing now explains the product and links to `/new`. The next Web step is a focused onboarding shell before Grill Me UI.
 
 ## In scope
 
-- extract explicit facts from project input into validated `ExtractedFact` records
-- distinguish explicit user-provided facts from inferred detections
-- keep extracted facts inside discovery state rather than writing a `ProjectBlueprint`
+- a `/new` route that can accept an initial project idea
+- a calm onboarding shell that is not a generic full-screen chat
+- enough structure for later Grill Me and completeness panels to attach
 
 ## Out of scope
 
 Do not implement:
 
-- missing-information analysis
-- follow-up question generation
-- structured blueprint proposal generation
-- Web UI
-- CLI behavior
-- persistence or authentication
+- the full Grill Me conversation
+- completeness panel
+- blueprint review
+- generated-file explorer
+- export
+- CLI
+- authentication or persistence
 
 ## Architectural constraints
 
-- Use the centralized AI model configuration from F014.
-- Validate model output with Zod before it becomes discovery state.
-- Do not treat extracted facts as approved blueprint decisions.
-- Do not call an LLM from deterministic generators.
+- Prefer Server Components by default. Use a Client Component only for the idea input.
+- Do not put domain schemas or generators in the page.
+- Keep the shared Blueprint Core independent from this route.
 
 ## Acceptance criteria
 
-- Project input can be reduced to validated extracted facts in discovery state.
-- Facts keep an explicit or detected source.
-- Invalid model output is not silently converted into facts.
-- Gap analysis and question generation remain later features.
+- `/new` is a usable project-creation shell.
+- A user can enter an initial idea.
+- The page is not a generic chat window.
+- Grill Me questioning remains a later feature.
 
 ## Verification
 
@@ -49,7 +49,5 @@ Use the scaffolded project's actual commands:
 
 - TypeScript/typecheck
 - lint
-- focused fact-extraction checks
-- existing discovery-state and AI configuration checks
-
-Do not add a large testing stack solely for this feature.
+- focused onboarding checks
+- inspect `/` and `/new` for consistent start-action behavior
