@@ -3,6 +3,8 @@ import { generateAiWorkflowRules } from "./ai-workflow-rules";
 import { generateArchitecture } from "./architecture";
 import { generateCodeStandards } from "./code-standards";
 import type { ContextGenerator } from "./contract";
+import { generateCurrentFeature } from "./current-feature";
+import { generateDecisionRecords } from "./decision-records";
 import { generateProgressTracker } from "./progress-tracker";
 import { generateProjectOverview } from "./project-overview";
 import { generateSchemasContext } from "./schemas-context";
@@ -10,6 +12,8 @@ import { generateUiContext } from "./ui-context";
 
 const contextDocumentGenerators: readonly ContextGenerator[] = [
   generateAgents,
+  generateCurrentFeature,
+  generateDecisionRecords,
   generateProjectOverview,
   generateArchitecture,
   generateSchemasContext,

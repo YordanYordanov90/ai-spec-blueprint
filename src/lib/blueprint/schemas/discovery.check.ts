@@ -33,6 +33,27 @@ assert.throws(() =>
     initialIdea: "   ",
   }),
 );
+
+assert.throws(() =>
+  DiscoveryStateSchema.parse({
+    ...readyDiscoveryStateExample,
+    completeness: readyDiscoveryStateExample.completeness.slice(0, -1),
+  }),
+);
+assert.throws(() =>
+  DiscoveryStateSchema.parse({
+    ...readyDiscoveryStateExample,
+    completeness: readyDiscoveryStateExample.completeness.map((entry) =>
+      entry.area === "ui" ? { ...entry, status: "unresolved" } : entry,
+    ),
+  }),
+);
+assert.throws(() =>
+  DiscoveryStateSchema.parse({
+    ...readyDiscoveryStateExample,
+    draftDecisions: [validDiscoveryStateExample.draftDecisions[0]],
+  }),
+);
 assert.throws(() =>
   DiscoveryStateSchema.parse({
     ...validDiscoveryStateExample,

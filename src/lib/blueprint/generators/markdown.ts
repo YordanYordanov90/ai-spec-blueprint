@@ -1,9 +1,17 @@
+function normalizeMarkdownText(text: string): string {
+  return text
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join(" ");
+}
+
 export function markdownHeading(level: 1 | 2 | 3, text: string): string {
-  return `${"#".repeat(level)} ${text.trim()}`;
+  return `${"#".repeat(level)} ${normalizeMarkdownText(text)}`;
 }
 
 export function markdownParagraph(text: string): string {
-  return text.trim();
+  return normalizeMarkdownText(text);
 }
 
 export function markdownBulletList(items: readonly string[]): string {

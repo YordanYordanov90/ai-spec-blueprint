@@ -10,6 +10,7 @@ import type {
   VerificationDefinition,
 } from "../schemas/project-blueprint";
 import type { ContextGenerator } from "./contract";
+import { architectureDecisionRecordPath } from "./decision-records";
 import {
   joinMarkdownBlocks,
   markdownBulletList,
@@ -18,7 +19,7 @@ import {
   markdownParagraph,
 } from "./markdown";
 
-const REQUIRED_READING_ORDER = [
+const REQUIRED_READING_PREFIX = [
   "context/project-overview.md",
   "context/architecture.md",
   "context/schemas.md",
@@ -26,9 +27,20 @@ const REQUIRED_READING_ORDER = [
   "context/ui-context.md",
   "context/ai-workflow-rules.md",
   "context/progress-tracker.md",
-  "features/current-feature.md",
-  "relevant ADRs from decisions/",
 ] as const;
+
+function requiredReadingOrder(blueprint: ProjectBlueprint): string[] {
+  return [
+    ...REQUIRED_READING_PREFIX,
+    "features/current-feature.md",
+    "decisions/README.md",
+    ...blueprint.architecture.flatMap((decision, index) =>
+      decision.requiresAdr
+        ? [architectureDecisionRecordPath(decision, index)]
+        : [],
+    ),
+  ];
+}
 
 function renderOptionalList(
   title: string,
@@ -171,7 +183,7 @@ export function renderAgentsMarkdown(blueprint: ProjectBlueprint): string {
     markdownParagraph(blueprint.product.summary),
     markdownParagraph(blueprint.product.problem),
     markdownHeading(2, "Required reading order"),
-    renderNumberedList([...REQUIRED_READING_ORDER]),
+    renderNumberedList(requiredReadingOrder(blueprint)),
     markdownParagraph(
       "If a required context file is missing, contradictory, or materially incomplete, do not invent a replacement architecture.",
     ),

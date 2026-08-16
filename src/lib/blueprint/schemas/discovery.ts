@@ -102,6 +102,20 @@ export const CompletenessAreaSchema = z.enum([
   "features",
 ]);
 
+const REQUIRED_COMPLETENESS_AREAS = [
+  "product",
+  "users",
+  "goals",
+  "stack",
+  "architecture",
+  "domain",
+  "ui",
+  "security",
+  "ai",
+  "verification",
+  "features",
+] as const;
+
 export const CompletenessEntrySchema = z
   .object({
     area: CompletenessAreaSchema,
@@ -197,6 +211,44 @@ export const DiscoveryStateSchema = z
         message: "Discovery cannot be ready for a blueprint proposal while a question is still current.",
         path: ["currentQuestion"],
       });
+    }
+
+    if (state.readyForBlueprintProposal) {
+      const completenessByArea = new Map(
+        state.completeness.map((entry) => [entry.area, entry.status]),
+      );
+      const missingAreas = REQUIRED_COMPLETENESS_AREAS.filter(
+        (area) => !completenessByArea.has(area),
+      );
+      const incompleteAreas = state.completeness.filter(
+        (entry) => entry.status !== "complete",
+      );
+
+      if (missingAreas.length > 0) {
+        context.addIssue({
+          code: "custom",
+          message: `Discovery cannot be ready while completeness areas are missing: ${missingAreas.join(", ")}.`,
+          path: ["completeness"],
+        });
+      }
+
+      if (incompleteAreas.length > 0) {
+        context.addIssue({
+          code: "custom",
+          message:
+            "Discovery cannot be ready while completeness areas are not complete.",
+          path: ["completeness"],
+        });
+      }
+
+      if (state.draftDecisions.length > 0) {
+        context.addIssue({
+          code: "custom",
+          message:
+            "Discovery cannot be ready while draft decisions remain unresolved.",
+          path: ["draftDecisions"],
+        });
+      }
     }
   });
 

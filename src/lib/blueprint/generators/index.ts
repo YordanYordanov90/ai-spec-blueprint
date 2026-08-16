@@ -16,6 +16,14 @@ export {
 } from "./code-standards";
 export { generateContextPackage } from "./context-package";
 export {
+  generateCurrentFeature,
+  renderCurrentFeatureMarkdown,
+} from "./current-feature";
+export {
+  architectureDecisionRecordPath,
+  generateDecisionRecords,
+} from "./decision-records";
+export {
   GeneratedArtifactsSchema,
   runContextGenerator,
   validateGeneratedArtifacts,

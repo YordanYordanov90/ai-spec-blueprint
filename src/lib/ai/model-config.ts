@@ -15,6 +15,24 @@ export const AiModelConfigSchema = z
 
 export type AiModelConfig = z.infer<typeof AiModelConfigSchema>;
 
+/**
+ * Every model instance must be created with an explicit human-approved data
+ * handling policy. This keeps future call sites from sending secrets or
+ * project context to the provider without declaring the boundary first.
+ */
+export const AiCallApprovalSchema = z
+  .object({
+    approvedBy: z.literal("human"),
+    dataHandling: z.enum([
+      "approved-project-context",
+      "approved-sensitive-project-context",
+    ]),
+    includesSecrets: z.literal(false),
+  })
+  .strict();
+
+export type AiCallApproval = z.infer<typeof AiCallApprovalSchema>;
+
 const AiModelEnvSchema = z
   .object({
     OPENAI_API_KEY: NonEmptyTextSchema,
@@ -43,8 +61,12 @@ export function loadAiModelConfig(
   return parseAiModelConfig(env);
 }
 
-export function createConfiguredLanguageModel(config: AiModelConfig) {
+export function createConfiguredLanguageModel(
+  config: AiModelConfig,
+  approval: AiCallApproval,
+) {
   const validatedConfig = AiModelConfigSchema.parse(config);
+  AiCallApprovalSchema.parse(approval);
   const openai = createOpenAI({
     apiKey: validatedConfig.apiKey,
   });

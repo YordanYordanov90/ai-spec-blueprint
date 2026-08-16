@@ -3,6 +3,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 import {
+  AiCallApprovalSchema,
   AiModelConfigSchema,
   createConfiguredLanguageModel,
   parseAiModelConfig,
@@ -17,6 +18,12 @@ const config = parseAiModelConfig({
   ...validEnv,
   UNUSED_ENV: "ignored",
 });
+
+const approvedCall = {
+  approvedBy: "human",
+  dataHandling: "approved-project-context",
+  includesSecrets: false,
+} as const;
 
 assert.deepEqual(config, {
   provider: "openai",
@@ -72,9 +79,25 @@ assert.throws(() =>
   }),
 );
 
-const model = createConfiguredLanguageModel(config);
+const model = createConfiguredLanguageModel(config, approvedCall);
 assert.equal(model.modelId, "configured-test-model");
 assert.equal(model.provider, "openai.responses");
+
+assert.deepEqual(AiCallApprovalSchema.parse(approvedCall), approvedCall);
+assert.throws(() =>
+  createConfiguredLanguageModel(config, {
+    approvedBy: "human",
+    dataHandling: "approved-project-context",
+    includesSecrets: true,
+  } as never),
+);
+assert.throws(() =>
+  createConfiguredLanguageModel(config, {
+    approvedBy: "system",
+    dataHandling: "approved-project-context",
+    includesSecrets: false,
+  } as never),
+);
 
 const modelConfigSource = readFileSync("src/lib/ai/model-config.ts", "utf8");
 assert.doesNotMatch(modelConfigSource, /gpt-/i);

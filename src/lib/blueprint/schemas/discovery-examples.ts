@@ -86,8 +86,16 @@ export const readyDiscoveryStateExample = {
   draftDecisions: [],
   completeness: [
     { area: "product", status: "complete" },
+    { area: "users", status: "complete" },
+    { area: "goals", status: "complete" },
+    { area: "stack", status: "complete" },
+    { area: "architecture", status: "complete" },
+    { area: "domain", status: "complete" },
+    { area: "ui", status: "complete" },
     { area: "security", status: "complete" },
-    { area: "ui", status: "unresolved" },
+    { area: "ai", status: "complete" },
+    { area: "verification", status: "complete" },
+    { area: "features", status: "complete" },
   ],
   readyForBlueprintProposal: true,
 } as const satisfies z.input<typeof DiscoveryStateSchema>;

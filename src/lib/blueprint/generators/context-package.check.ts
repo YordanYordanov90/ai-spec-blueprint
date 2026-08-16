@@ -9,6 +9,8 @@ import { generateArchitecture } from "./architecture";
 import { generateCodeStandards } from "./code-standards";
 import { generateContextPackage } from "./context-package";
 import { runContextGenerator } from "./contract";
+import { generateCurrentFeature } from "./current-feature";
+import { generateDecisionRecords } from "./decision-records";
 import { generateProgressTracker } from "./progress-tracker";
 import { generateProjectOverview } from "./project-overview";
 import { generateSchemasContext } from "./schemas-context";
@@ -23,6 +25,9 @@ const expectedPaths = [
   "context/project-overview.md",
   "context/schemas.md",
   "context/ui-context.md",
+  "decisions/ADR-001-shared-domain-contract.md",
+  "decisions/README.md",
+  "features/current-feature.md",
 ] as const;
 
 const blueprint = ProjectBlueprintSchema.parse(validProjectBlueprintExample);
@@ -75,6 +80,18 @@ assert.match(
   artifactByPath["context/progress-tracker.md"]?.content ?? "",
   /^# Progress Tracker\n/,
 );
+assert.match(
+  artifactByPath["features/current-feature.md"]?.content ?? "",
+  /^# Current Feature\n\nNo feature is currently in progress\./,
+);
+assert.match(
+  artifactByPath["decisions/README.md"]?.content ?? "",
+  /^# Architecture Decision Records\n/,
+);
+assert.match(
+  artifactByPath["decisions/ADR-001-shared-domain-contract.md"]?.content ?? "",
+  /^# ADR-001 — Shared domain contract\n/,
+);
 
 assert.deepEqual(
   artifactByPath["AGENTS.md"],
@@ -108,14 +125,13 @@ assert.deepEqual(
   artifactByPath["context/progress-tracker.md"],
   runContextGenerator(blueprint, generateProgressTracker)[0],
 );
-
-assert.doesNotMatch(
-  firstRun.map((artifact) => artifact.relativePath).join("\n"),
-  /features\/current-feature\.md/,
+assert.deepEqual(
+  artifactByPath["features/current-feature.md"],
+  runContextGenerator(blueprint, generateCurrentFeature)[0],
 );
-assert.doesNotMatch(
-  firstRun.map((artifact) => artifact.relativePath).join("\n"),
-  /decisions\//,
+assert.deepEqual(
+  firstRun.filter((artifact) => artifact.relativePath.startsWith("decisions/")),
+  runContextGenerator(blueprint, generateDecisionRecords),
 );
 
 const blueprintWithAi = ProjectBlueprintSchema.parse({
