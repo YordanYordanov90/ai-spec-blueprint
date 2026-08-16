@@ -3,6 +3,38 @@ import { z } from "zod";
 const NonEmptyTextSchema = z.string().trim().min(1);
 const TextListSchema = z.array(NonEmptyTextSchema).min(1);
 
+export const DecisionProposalSourceSchema = z.enum([
+  "human",
+  "ai",
+  "system",
+]);
+
+/**
+ * Review state is separate from a decision's domain-specific position.
+ * For example, a technology can be "preferred-if-needed" while its review
+ * state records whether that recommendation is still a proposal or approved.
+ */
+export const DecisionReviewSchema = z.discriminatedUnion("status", [
+  z.object({
+    status: z.literal("proposed"),
+    proposedBy: DecisionProposalSourceSchema,
+  }),
+  z.object({
+    status: z.literal("approved"),
+    proposedBy: DecisionProposalSourceSchema,
+    approvedBy: z.literal("human"),
+  }),
+  z.object({
+    status: z.literal("unresolved"),
+    reason: NonEmptyTextSchema,
+  }),
+  z.object({
+    status: z.literal("rejected"),
+    rejectedBy: z.literal("human"),
+    reason: NonEmptyTextSchema,
+  }),
+]);
+
 export const TechnologyDecisionStatusSchema = z.enum([
   "confirmed",
   "preferred-if-needed",
@@ -17,6 +49,7 @@ export const TechnologyDecisionSchema = z
     status: TechnologyDecisionStatusSchema,
     rationale: NonEmptyTextSchema,
     constraints: z.array(NonEmptyTextSchema),
+    review: DecisionReviewSchema,
   })
   .strict();
 
@@ -36,6 +69,7 @@ export const ArchitectureDecisionSchema = z
     status: ArchitectureDecisionStatusSchema,
     relatedAreas: TextListSchema,
     requiresAdr: z.boolean(),
+    review: DecisionReviewSchema,
   })
   .strict();
 
@@ -77,6 +111,25 @@ export const GuardrailSchema = z
   })
   .strict();
 
+export const GuardrailsSchema = z
+  .array(GuardrailSchema)
+  .min(1)
+  .superRefine((guardrails, context) => {
+    const seenIds = new Set<string>();
+
+    guardrails.forEach((guardrail, index) => {
+      if (seenIds.has(guardrail.id)) {
+        context.addIssue({
+          code: "custom",
+          message: `Duplicate guardrail id: ${guardrail.id}`,
+          path: [index, "id"],
+        });
+      }
+
+      seenIds.add(guardrail.id);
+    });
+  });
+
 export const UnresolvedDecisionSchema = z
   .object({
     question: NonEmptyTextSchema,
@@ -90,6 +143,7 @@ export const UnresolvedDecisionSchema = z
 export type ArchitectureDecision = z.infer<
   typeof ArchitectureDecisionSchema
 >;
+export type DecisionReview = z.infer<typeof DecisionReviewSchema>;
 export type Guardrail = z.infer<typeof GuardrailSchema>;
 export type TechnologyDecision = z.infer<typeof TechnologyDecisionSchema>;
 export type UnresolvedDecision = z.infer<typeof UnresolvedDecisionSchema>;

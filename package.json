@@ -6,7 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:generator-contract": "tsx src/lib/blueprint/generators/contract.check.ts",
+    "check:project-overview": "tsx src/lib/blueprint/generators/project-overview.check.ts",
+    "check:architecture": "tsx src/lib/blueprint/generators/architecture.check.ts",
+    "check:schemas-context": "tsx src/lib/blueprint/generators/schemas-context.check.ts",
+    "check:code-standards": "tsx src/lib/blueprint/generators/code-standards.check.ts",
+    "check:ui-context": "tsx src/lib/blueprint/generators/ui-context.check.ts",
+    "check:ai-workflow-rules": "tsx src/lib/blueprint/generators/ai-workflow-rules.check.ts"
   },
   "dependencies": {
     "next": "16.3.1",
@@ -22,6 +29,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "tailwindcss": "^4",
+    "tsx": "^4.23.12",
     "typescript": "^5"
   }
 }
