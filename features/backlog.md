@@ -100,23 +100,23 @@ Handle invalid or incomplete model output explicitly.
 
 Create the initial public explanation of the product and workflow.
 
-### F022 - New-project onboarding shell
+### F022 - New-project onboarding shell — complete
 
 Create the initial project creation route and interaction shell.
 
-### F023 - Grill Me interface
+### F023 - Grill Me interface — complete
 
 Implement the primary discovery conversation UI.
 
-### F024 - Blueprint completeness panel
+### F024 - Blueprint completeness panel — complete
 
 Show which project areas are complete, partial, unresolved, or missing.
 
-### F025 - Blueprint review
+### F025 - Blueprint review — complete
 
 Allow the human to inspect and approve project decisions.
 
-### F026 - Generated-file explorer
+### F026 - Generated-file explorer — complete
 
 Provide IDE-like navigation and readable Markdown preview.
 

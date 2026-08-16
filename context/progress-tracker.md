@@ -51,7 +51,7 @@ Phase 4 - Web experience
 
 ## Current feature
 
-`F022 - Build new-project onboarding shell`
+`F027 - Build context export`
 
 See `features/current-feature.md`.
 
@@ -89,11 +89,11 @@ See `features/current-feature.md`.
 ### Phase 4 - Web experience
 
 - [x] F021 - Build product landing experience
-- [ ] F022 - Build new-project onboarding shell
-- [ ] F023 - Build Grill Me interface
-- [ ] F024 - Build blueprint completeness panel
-- [ ] F025 - Build blueprint review experience
-- [ ] F026 - Build generated-file explorer and preview
+- [x] F022 - Build new-project onboarding shell
+- [x] F023 - Build Grill Me interface
+- [x] F024 - Build blueprint completeness panel
+- [x] F025 - Build blueprint review experience
+- [x] F026 - Build generated-file explorer and preview
 - [ ] F027 - Build context export
 
 ### Phase 5 - CLI

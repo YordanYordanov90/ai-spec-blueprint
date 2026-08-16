@@ -14,6 +14,7 @@ export {
   generateCodeStandards,
   renderCodeStandardsMarkdown,
 } from "./code-standards";
+export { generateApprovedContextPackage } from "./approved-package";
 export { generateContextPackage } from "./context-package";
 export {
   generateCurrentFeature,

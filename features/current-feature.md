@@ -1,47 +1,43 @@
-# F022 - Build New-Project Onboarding Shell
+# F027 - Build Context Export
 
 ## Status
 
-Ready after F021.
+Ready after F026.
 
 ## Objective
 
-Create the initial project creation route and interaction shell that the landing start action already targets.
+Export the generated context package so a developer can place the files in a repository.
 
 ## Why this feature is next
 
-The landing now explains the product and links to `/new`. The next Web step is a focused onboarding shell before Grill Me UI.
+The Web experience can now discover, review, and preview generated context. Export is the remaining V1 Web deliverable.
 
 ## In scope
 
-- a `/new` route that can accept an initial project idea
-- a calm onboarding shell that is not a generic full-screen chat
-- enough structure for later Grill Me and completeness panels to attach
+- package the already generated artifacts
+- let the user take the context files out of the Web session
+- keep paths inside the validated artifact set
 
 ## Out of scope
 
 Do not implement:
 
-- the full Grill Me conversation
-- completeness panel
-- blueprint review
-- generated-file explorer
-- export
 - CLI
 - authentication or persistence
+- writing into an arbitrary server filesystem
+- GitHub repository mutation
 
 ## Architectural constraints
 
-- Prefer Server Components by default. Use a Client Component only for the idea input.
-- Do not put domain schemas or generators in the page.
-- Keep the shared Blueprint Core independent from this route.
+- Export the deterministic context package. Do not ask the model to rewrite documents.
+- Constrain file names and export paths.
+- Prevent generated paths from escaping their intended root.
 
 ## Acceptance criteria
 
-- `/new` is a usable project-creation shell.
-- A user can enter an initial idea.
-- The page is not a generic chat window.
-- Grill Me questioning remains a later feature.
+- An approved generated package can be exported.
+- Export does not invent additional document content.
+- Path safety from the generated artifact model is preserved.
 
 ## Verification
 
@@ -49,5 +45,5 @@ Use the scaffolded project's actual commands:
 
 - TypeScript/typecheck
 - lint
-- focused onboarding checks
-- inspect `/` and `/new` for consistent start-action behavior
+- focused export checks
+- inspect the Web export action
