@@ -22,6 +22,7 @@ export {
 export {
   architectureDecisionRecordPath,
   generateDecisionRecords,
+  shouldGenerateArchitectureDecisionRecord,
 } from "./decision-records";
 export {
   GeneratedArtifactsSchema,

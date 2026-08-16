@@ -79,7 +79,7 @@ assert.throws(() =>
   }),
 );
 
-const model = createConfiguredLanguageModel(config, approvedCall);
+const model = createConfiguredLanguageModel(config);
 assert.equal(model.modelId, "configured-test-model");
 assert.equal(model.provider, "openai.responses");
 assert.equal(typeof model.generateText, "function");
@@ -90,18 +90,24 @@ assert.equal("model" in model, false);
 
 assert.deepEqual(AiCallApprovalSchema.parse(approvedCall), approvedCall);
 assert.throws(() =>
-  createConfiguredLanguageModel(config, {
-    approvedBy: "human",
-    dataHandling: "approved-project-context",
-    includesSecrets: true,
-  } as never),
+  model.generateText(
+    { prompt: "test" } as never,
+    {
+      approvedBy: "human",
+      dataHandling: "approved-project-context",
+      includesSecrets: true,
+    } as never,
+  ),
 );
 assert.throws(() =>
-  createConfiguredLanguageModel(config, {
-    approvedBy: "system",
-    dataHandling: "approved-project-context",
-    includesSecrets: false,
-  } as never),
+  model.streamText(
+    { prompt: "test" } as never,
+    {
+      approvedBy: "system",
+      dataHandling: "approved-project-context",
+      includesSecrets: false,
+    } as never,
+  ),
 );
 
 const modelConfigSource = readFileSync("src/lib/ai/model-config.ts", "utf8");

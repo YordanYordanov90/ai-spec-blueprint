@@ -7,6 +7,7 @@ import {
   markdownDocument,
   markdownHeading,
   markdownParagraph,
+  markdownPlainText,
 } from "./markdown";
 
 const MAX_SLUG_LENGTH = 60;
@@ -34,68 +35,55 @@ export function architectureDecisionRecordPath(
   return `decisions/ADR-${decisionRecordNumber(index)}-${slugify(decision.title)}.md`;
 }
 
-function adrStatus(decision: ArchitectureDecision): string {
-  if (decision.status === "approved") {
-    return "Accepted";
-  }
-
-  if (decision.status === "rejected") {
-    return "Superseded";
-  }
-
-  return "Proposed";
+export function shouldGenerateArchitectureDecisionRecord(
+  decision: ArchitectureDecision,
+): boolean {
+  return (
+    decision.requiresAdr &&
+    decision.status === "approved" &&
+    decision.review.status === "approved"
+  );
 }
 
 function renderDecisionRecord(
   decision: ArchitectureDecision,
   index: number,
 ): string {
+  if (decision.status !== "approved" || decision.review.status !== "approved") {
+    throw new Error("Only approved architecture decisions can generate ADRs.");
+  }
+
   return markdownDocument([
     markdownHeading(
       1,
       `ADR-${decisionRecordNumber(index)} — ${decision.title}`,
     ),
     markdownHeading(2, "Status"),
-    markdownParagraph(adrStatus(decision)),
+    markdownParagraph("Accepted"),
     markdownHeading(2, "Context"),
-    markdownParagraph(
+    markdownPlainText(
       `This record captures the architecture decision for ${decision.relatedAreas.join(", ")}.`,
     ),
     markdownHeading(2, "Decision"),
-    markdownParagraph(decision.decision),
+    markdownPlainText(decision.decision),
     markdownHeading(2, "Rationale"),
-    markdownParagraph(decision.rationale),
+    markdownPlainText(decision.rationale),
     markdownHeading(2, "Constraints"),
     decision.constraints.length > 0
       ? markdownBulletList(decision.constraints)
       : markdownParagraph("No additional constraints were recorded."),
     markdownHeading(2, "Review"),
-    markdownBulletList(
-      decision.review.status === "approved"
-        ? [
-            "Review: approved",
-            `Proposed by: ${decision.review.proposedBy}`,
-            `Approved by: ${decision.review.approvedBy}`,
-          ]
-        : decision.review.status === "proposed"
-          ? [
-              "Review: proposed",
-              `Proposed by: ${decision.review.proposedBy}`,
-            ]
-          : decision.review.status === "unresolved"
-            ? ["Review: unresolved", `Reason: ${decision.review.reason}`]
-            : [
-                "Review: rejected",
-                `Rejected by: ${decision.review.rejectedBy}`,
-                `Reason: ${decision.review.reason}`,
-              ],
-    ),
+    markdownBulletList([
+      "Review: approved",
+      `Proposed by: ${decision.review.proposedBy}`,
+      `Approved by: ${decision.review.approvedBy}`,
+    ]),
   ]);
 }
 
 function renderDecisionIndex(blueprint: ProjectBlueprint): string {
   const records = blueprint.architecture.flatMap((decision, index) =>
-    decision.requiresAdr
+    shouldGenerateArchitectureDecisionRecord(decision)
       ? [
           `[${decision.title}](${architectureDecisionRecordPath(decision, index)})`,
         ]
@@ -105,7 +93,7 @@ function renderDecisionIndex(blueprint: ProjectBlueprint): string {
   return markdownDocument([
     markdownHeading(1, "Architecture Decision Records"),
     markdownParagraph(
-      "This directory contains the architecture decisions selected for durable project context.",
+      "This directory contains approved architecture decisions selected for durable project context.",
     ),
     records.length > 0
       ? joinMarkdownBlocks([
@@ -113,7 +101,7 @@ function renderDecisionIndex(blueprint: ProjectBlueprint): string {
           markdownBulletList(records),
         ])
       : markdownParagraph(
-          "No architecture decisions currently require an ADR.",
+          "No approved architecture decisions currently require an ADR.",
         ),
   ]);
 }
@@ -125,7 +113,7 @@ export const generateDecisionRecords: ContextGenerator = (blueprint) => [
     documentType: "markdown",
   },
   ...blueprint.architecture.flatMap((decision, index) =>
-    decision.requiresAdr
+    shouldGenerateArchitectureDecisionRecord(decision)
       ? [
           {
             relativePath: architectureDecisionRecordPath(decision, index),

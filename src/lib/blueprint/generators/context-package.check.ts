@@ -167,6 +167,35 @@ assert.doesNotMatch(
   /gpt-/i,
 );
 
+const blueprintWithProposedAdr = ProjectBlueprintSchema.parse({
+  ...validProjectBlueprintExample,
+  architecture: [
+    {
+      ...validProjectBlueprintExample.architecture[0],
+      status: "proposed",
+      review: {
+        status: "proposed",
+        proposedBy: "ai",
+      },
+    },
+  ],
+});
+const packageWithProposedAdr = runContextGenerator(
+  blueprintWithProposedAdr,
+  generateContextPackage,
+);
+
+assert.doesNotMatch(
+  packageWithProposedAdr.map((artifact) => artifact.relativePath).join("\n"),
+  /decisions\/ADR-/,
+);
+assert.match(
+  packageWithProposedAdr.find(
+    (artifact) => artifact.relativePath === "decisions/README.md",
+  )?.content ?? "",
+  /No approved architecture decisions currently require an ADR\./,
+);
+
 assert.throws(() =>
   runContextGenerator({} as ProjectBlueprint, generateContextPackage),
 );

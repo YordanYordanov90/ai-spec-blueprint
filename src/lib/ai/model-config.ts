@@ -49,9 +49,11 @@ export type ApprovedLanguageModel = Readonly<{
   modelId: string;
   generateText: (
     options: ApprovedGenerateTextOptions,
+    approval: AiCallApproval,
   ) => ReturnType<typeof generateText>;
   streamText: (
     options: ApprovedStreamTextOptions,
+    approval: AiCallApproval,
   ) => ReturnType<typeof streamText>;
 }>;
 
@@ -85,10 +87,8 @@ export function loadAiModelConfig(
 
 export function createConfiguredLanguageModel(
   config: AiModelConfig,
-  approval: AiCallApproval,
 ): ApprovedLanguageModel {
   const validatedConfig = AiModelConfigSchema.parse(config);
-  const validatedApproval = AiCallApprovalSchema.parse(approval);
   const openai = createOpenAI({
     apiKey: validatedConfig.apiKey,
   });
@@ -97,12 +97,18 @@ export function createConfiguredLanguageModel(
   return Object.freeze({
     provider: model.provider,
     modelId: model.modelId,
-    generateText: (options: ApprovedGenerateTextOptions) => {
-      AiCallApprovalSchema.parse(validatedApproval);
+    generateText: (
+      options: ApprovedGenerateTextOptions,
+      approval: AiCallApproval,
+    ) => {
+      AiCallApprovalSchema.parse(approval);
       return generateText({ ...options, model });
     },
-    streamText: (options: ApprovedStreamTextOptions) => {
-      AiCallApprovalSchema.parse(validatedApproval);
+    streamText: (
+      options: ApprovedStreamTextOptions,
+      approval: AiCallApproval,
+    ) => {
+      AiCallApprovalSchema.parse(approval);
       return streamText({ ...options, model });
     },
   });

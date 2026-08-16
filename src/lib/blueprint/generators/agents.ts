@@ -10,7 +10,10 @@ import type {
   VerificationDefinition,
 } from "../schemas/project-blueprint";
 import type { ContextGenerator } from "./contract";
-import { architectureDecisionRecordPath } from "./decision-records";
+import {
+  architectureDecisionRecordPath,
+  shouldGenerateArchitectureDecisionRecord,
+} from "./decision-records";
 import {
   joinMarkdownBlocks,
   markdownBulletList,
@@ -36,7 +39,7 @@ function requiredReadingOrder(blueprint: ProjectBlueprint): string[] {
     "features/current-feature.md",
     "decisions/README.md",
     ...blueprint.architecture.flatMap((decision, index) =>
-      decision.requiresAdr
+      shouldGenerateArchitectureDecisionRecord(decision)
         ? [architectureDecisionRecordPath(decision, index)]
         : [],
     ),
