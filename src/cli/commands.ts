@@ -43,6 +43,10 @@ function formatLines(title: string, lines: readonly string[]): string {
   return [title, ...lines.map((line) => `- ${line}`)].join("\n");
 }
 
+export function normalizeBlueprintSourcePath(root: string, from: string): string {
+  return relative(resolve(root), resolve(root, from)).replaceAll("\\", "/");
+}
+
 function readAnswersFile(path: string): AdoptionAnswer[] {
   const parsed = JSON.parse(readFileSync(path, "utf8")) as {
     answers?: AdoptionAnswer[];
@@ -93,10 +97,7 @@ export function runGenerate(
 
   try {
     const exported = createContextExport(blueprint);
-    const sourcePath = relative(resolve(root), resolve(root, from)).replaceAll(
-      "\\",
-      "/",
-    );
+    const sourcePath = normalizeBlueprintSourcePath(root, from);
     const artifacts =
       sourcePath === BLUEPRINT_DOCUMENT_PATH
         ? exported.files.filter(

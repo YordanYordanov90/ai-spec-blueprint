@@ -31,7 +31,9 @@ for (const file of files) {
 
 assert.match(launcher, /spawnSync/);
 assert.match(launcher, /new URL\("\.\/index\.ts", import\.meta\.url\)/);
-assert.match(launcher, /new URL\("\.\.\/\.\.\/node_modules\/tsx\/dist\/cli\.mjs/);
+assert.match(launcher, /createRequire/);
+assert.match(launcher, /require\.resolve\("tsx\/cli"\)/);
+assert.match(launcher, /tsx runtime dependency is unavailable/);
 assert.doesNotMatch(launcher, /register\(/);
 
 assert.match(CLI_HELP, /init/);

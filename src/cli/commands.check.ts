@@ -7,10 +7,25 @@ import { approveBlueprintProposal } from "@/src/lib/blueprint/discovery/approve-
 import { validProjectBlueprintExample } from "@/src/lib/blueprint/schemas/examples";
 import { ProjectBlueprintSchema } from "@/src/lib/blueprint/schemas/project-blueprint";
 
-import { runAdopt, runFeature, runGenerate, runInit } from "./commands";
+import {
+  normalizeBlueprintSourcePath,
+  runAdopt,
+  runFeature,
+  runGenerate,
+  runInit,
+} from "./commands";
 
 const root = mkdtempSync(join(tmpdir(), "blueprint-cli-"));
 const generationRoot = mkdtempSync(join(tmpdir(), "blueprint-generate-"));
+
+assert.equal(
+  normalizeBlueprintSourcePath("/repo", "./blueprint.json"),
+  "blueprint.json",
+);
+assert.equal(
+  normalizeBlueprintSourcePath("/repo", "nested/blueprint.json"),
+  "nested/blueprint.json",
+);
 
 try {
   const init = runInit(root);
