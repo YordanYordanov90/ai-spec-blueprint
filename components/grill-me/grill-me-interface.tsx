@@ -12,7 +12,7 @@ import {
   answerGrillMeQuestion,
   startGrillMeDiscovery,
 } from "@/app/new/actions";
-import type { AiFailure } from "@/src/lib/ai/ai-failure";
+import { classifyAiError, type AiFailure } from "@/src/lib/ai/ai-failure";
 import type { DiscoveryState } from "@/src/lib/blueprint/schemas/discovery";
 
 import { AiFailureNotice } from "./ai-failure-notice";
@@ -41,18 +41,24 @@ export function GrillMeInterface({
     setFailure(null);
     setStartError(null);
 
-    const result = await startGrillMeDiscovery(idea);
+    try {
+      const result = await startGrillMeDiscovery(idea);
 
-    setPending(false);
+      if (!result.ok) {
+        setFailure(result.error);
+        setStartError(result.error.message);
+        return;
+      }
 
-    if (!result.ok) {
-      setFailure(result.error);
-      setStartError(result.error.message);
-      return;
+      setState(result.value);
+      setAnswer("");
+    } catch (error) {
+      const failure = classifyAiError(error);
+      setFailure(failure);
+      setStartError(failure.message);
+    } finally {
+      setPending(false);
     }
-
-    setState(result.value);
-    setAnswer("");
   }
 
   async function submitAnswer(nextAnswer: string) {
@@ -63,17 +69,21 @@ export function GrillMeInterface({
     setPending(true);
     setFailure(null);
 
-    const result = await answerGrillMeQuestion(state, nextAnswer);
+    try {
+      const result = await answerGrillMeQuestion(state, nextAnswer);
 
-    setPending(false);
+      if (!result.ok) {
+        setFailure(result.error);
+        return;
+      }
 
-    if (!result.ok) {
-      setFailure(result.error);
-      return;
+      setState(result.value);
+      setAnswer("");
+    } catch (error) {
+      setFailure(classifyAiError(error));
+    } finally {
+      setPending(false);
     }
-
-    setState(result.value);
-    setAnswer("");
   }
 
   async function handleAnswer(event: FormEvent<HTMLFormElement>) {

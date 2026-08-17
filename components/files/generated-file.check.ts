@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 
 import { analyzeMissingInformation } from "@/src/lib/blueprint/discovery/analyze-missing-information";
 import { applyExtractedFacts } from "@/src/lib/blueprint/discovery/apply-extracted-facts";
@@ -7,6 +9,8 @@ import { approveBlueprintProposal } from "@/src/lib/blueprint/discovery/approve-
 import { createInitialDiscoveryState } from "@/src/lib/blueprint/discovery/apply-extracted-facts";
 import { proposeProjectBlueprint } from "@/src/lib/blueprint/discovery/propose-blueprint";
 import { generateApprovedContextPackage } from "@/src/lib/blueprint/generators/approved-package";
+
+import { MarkdownPreview } from "./markdown-preview";
 
 const readyState = analyzeMissingInformation(
   applyExtractedFacts(
@@ -62,6 +66,19 @@ assert.doesNotMatch(explorer, /Download package/);
 assert.match(preview, /Preview/);
 assert.match(preview, /<h1/);
 assert.match(preview, /<h2/);
+assert.match(preview, /<ol/);
+assert.match(preview, /heading/);
+
+const previewMarkup = renderToStaticMarkup(
+  React.createElement(MarkdownPreview, {
+    path: "AGENTS.md",
+    content: "# Title\nBody text\n\n## Required reading\n1. First file\n2. Second file",
+  }),
+);
+assert.match(previewMarkup, /<h1[^>]*>Title<\/h1>/);
+assert.match(previewMarkup, /<p[^>]*>Body text<\/p>/);
+assert.match(previewMarkup, /<ol[^>]*>/);
+assert.match(previewMarkup, /<li[^>]*>First file<\/li>/);
 assert.match(workspace, /generateApprovedContextPackage/);
 assert.match(workspace, /GeneratedFileExplorer/);
 assert.match(review, /Preview generated files/);

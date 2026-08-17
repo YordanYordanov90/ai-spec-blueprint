@@ -24,6 +24,8 @@ assert.match(grillMe, /Extracted facts/);
 assert.match(grillMe, /Submit answer/);
 assert.match(grillMe, /readyForBlueprintProposal/);
 assert.match(grillMe, /AiFailureNotice/);
+assert.match(grillMe, /classifyAiError/);
+assert.match(grillMe, /finally/);
 assert.doesNotMatch(grillMe, /Send message/);
 assert.doesNotMatch(grillMe, /chat transcript/);
 assert.doesNotMatch(grillMe, /generateContextPackage/);
