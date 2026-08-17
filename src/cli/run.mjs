@@ -1,8 +1,19 @@
 #!/usr/bin/env node
-import { register } from "node:module";
-import { pathToFileURL } from "node:url";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
-register("tsx/esm", pathToFileURL("./"));
+const cliEntrypoint = fileURLToPath(new URL("./index.ts", import.meta.url));
+const tsxCli = fileURLToPath(
+  new URL("../../node_modules/tsx/dist/cli.mjs", import.meta.url),
+);
+const result = spawnSync(
+  process.execPath,
+  [tsxCli, cliEntrypoint, ...process.argv.slice(2)],
+  { stdio: "inherit" },
+);
 
-const { runCli } = await import("./index.ts");
-process.exitCode = runCli(process.argv.slice(2));
+if (result.error) {
+  throw result.error;
+}
+
+process.exitCode = result.status ?? 1;

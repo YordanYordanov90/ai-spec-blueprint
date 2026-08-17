@@ -16,7 +16,11 @@ export {
   validateGeneratedArtifacts,
 } from "./generators/contract";
 export type { ContextGenerator } from "./generators/contract";
-export { createContextExport, slugifyExportName } from "./export/create-context-export";
+export {
+  BLUEPRINT_DOCUMENT_PATH,
+  createContextExport,
+  slugifyExportName,
+} from "./export/create-context-export";
 export type { ContextExport } from "./export/create-context-export";
 export { buildZipArchive, crc32 } from "./export/zip";
 export {

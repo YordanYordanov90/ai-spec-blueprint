@@ -23,11 +23,58 @@ function readOption(
     return undefined;
   }
 
-  return args[index + 1];
+  const value = args[index + 1];
+
+  if (!value || value.startsWith("-")) {
+    throw new Error(`${name} requires a value.`);
+  }
+
+  return value;
 }
 
 function hasFlag(args: readonly string[], name: string): boolean {
   return args.includes(name);
+}
+
+function readFeatureId(args: readonly string[]): string | undefined {
+  const positionals: string[] = [];
+  let selectNext = false;
+
+  for (let index = 0; index < args.length; index += 1) {
+    const argument = args[index];
+
+    if (argument === "--root" || argument === "--from") {
+      index += 1;
+      if (!args[index] || args[index].startsWith("-")) {
+        throw new Error(`${argument} requires a value.`);
+      }
+      continue;
+    }
+
+    if (argument === "--next") {
+      if (selectNext) {
+        throw new Error("--next may only be provided once.");
+      }
+      selectNext = true;
+      continue;
+    }
+
+    if (argument.startsWith("-")) {
+      throw new Error(`Unknown feature option: ${argument}`);
+    }
+
+    positionals.push(argument);
+  }
+
+  if (positionals.length > 1) {
+    throw new Error("feature accepts at most one feature ID.");
+  }
+
+  if (selectNext && positionals.length > 0) {
+    throw new Error("--next cannot be combined with a feature ID.");
+  }
+
+  return selectNext ? undefined : positionals[0];
 }
 
 export function parseCliArgs(argv: readonly string[]): CliCommand {
@@ -47,9 +94,12 @@ export function parseCliArgs(argv: readonly string[]): CliCommand {
     case "generate":
       return { name: "generate", root, from, force };
     case "feature": {
-      const positional = rest.find((value) => !value.startsWith("-"));
-      const featureId = hasFlag(rest, "--next") ? undefined : positional;
-      return { name: "feature", root, from, featureId };
+      return {
+        name: "feature",
+        root,
+        from,
+        featureId: readFeatureId(rest),
+      };
     }
     case "verify":
       return {

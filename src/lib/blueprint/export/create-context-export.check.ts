@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 import { approveBlueprintProposal } from "../discovery/approve-blueprint";
 import { proposeProjectBlueprint } from "../discovery/propose-blueprint";
@@ -43,6 +44,11 @@ const readyState = analyzeMissingInformation(
       },
     ],
   ),
+);
+
+assert.doesNotMatch(
+  readFileSync("src/lib/blueprint/export/safe-path.ts", "utf8"),
+  /node:path/,
 );
 
 const proposal = proposeProjectBlueprint(readyState);

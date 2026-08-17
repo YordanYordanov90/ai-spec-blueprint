@@ -10,6 +10,7 @@ import { ProjectBlueprintSchema } from "@/src/lib/blueprint/schemas/project-blue
 import { runAdopt, runFeature, runGenerate, runInit } from "./commands";
 
 const root = mkdtempSync(join(tmpdir(), "blueprint-cli-"));
+const generationRoot = mkdtempSync(join(tmpdir(), "blueprint-generate-"));
 
 try {
   const init = runInit(root);
@@ -23,6 +24,18 @@ try {
   const approved = approveBlueprintProposal(
     ProjectBlueprintSchema.parse(validProjectBlueprintExample),
   );
+  writeFileSync(
+    join(generationRoot, "blueprint.json"),
+    `${JSON.stringify(approved, null, 2)}\n`,
+  );
+
+  const generatedByDefault = runGenerate(
+    generationRoot,
+    "blueprint.json",
+    false,
+  );
+  assert.equal(generatedByDefault.code, 0, generatedByDefault.stderr);
+
   writeFileSync(join(root, "blueprint.json"), `${JSON.stringify(approved, null, 2)}\n`);
 
   const generated = runGenerate(root, "blueprint.json", true);
@@ -67,6 +80,7 @@ try {
   );
 } finally {
   rmSync(root, { recursive: true, force: true });
+  rmSync(generationRoot, { recursive: true, force: true });
 }
 
 console.log("CLI command checks passed.");

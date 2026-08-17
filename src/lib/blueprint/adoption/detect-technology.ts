@@ -119,22 +119,6 @@ export function detectTechnology(
     });
   }
 
-  if (!dependencies["drizzle-orm"] && !dependencies.prisma) {
-    facts.push({
-      category: "persistence",
-      choice: "No database package detected",
-      evidence: "package.json has no Drizzle or Prisma dependency",
-    });
-  }
-
-  if (!dependencies["@clerk/nextjs"] && !dependencies["next-auth"]) {
-    facts.push({
-      category: "authentication",
-      choice: "No authentication package detected",
-      evidence: "package.json has no Clerk or NextAuth dependency",
-    });
-  }
-
   return facts;
 }
 

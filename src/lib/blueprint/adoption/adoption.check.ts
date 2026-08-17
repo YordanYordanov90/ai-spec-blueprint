@@ -36,7 +36,8 @@ const filesystem = createMemoryFilesystem({
 const facts = detectTechnology(filesystem);
 assert.ok(facts.some((fact) => fact.choice === "Next.js"));
 assert.ok(facts.some((fact) => fact.choice === "Zod"));
-assert.ok(facts.some((fact) => fact.choice === "No database package detected"));
+assert.ok(!facts.some((fact) => fact.category === "persistence"));
+assert.ok(!facts.some((fact) => fact.category === "authentication"));
 assert.ok(facts.some((fact) => fact.choice === "App Router"));
 assert.ok(!facts.some((fact) => fact.choice === "PostgreSQL"));
 
@@ -48,7 +49,8 @@ assert.ok(conventions.some((item) => item.id === "path-alias"));
 const questions = collectAdoptionQuestions(filesystem, facts);
 assert.ok(questions.some((question) => question.id === "users"));
 assert.ok(questions.some((question) => question.id === "mvp-scope"));
-assert.ok(!questions.some((question) => question.id === "persistence"));
+assert.ok(questions.some((question) => question.id === "persistence"));
+assert.ok(questions.some((question) => question.id === "authentication"));
 assert.ok(!questions.some((question) => question.question.toLowerCase().includes("next.js")));
 
 const unanswered = blockingUnansweredQuestions(questions, []);

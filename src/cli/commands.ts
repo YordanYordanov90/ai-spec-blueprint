@@ -1,11 +1,12 @@
 import { spawnSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync } from "node:fs";
+import { relative, resolve } from "node:path";
 
 import {
   analyzeConventions,
   approveAdoptedBlueprint,
   assertWritablePlan,
+  BLUEPRINT_DOCUMENT_PATH,
   blockingUnansweredQuestions,
   collectAdoptionQuestions,
   createContextExport,
@@ -92,16 +93,26 @@ export function runGenerate(
 
   try {
     const exported = createContextExport(blueprint);
+    const sourcePath = relative(resolve(root), resolve(root, from)).replaceAll(
+      "\\",
+      "/",
+    );
+    const artifacts =
+      sourcePath === BLUEPRINT_DOCUMENT_PATH
+        ? exported.files.filter(
+            (artifact) => artifact.relativePath !== BLUEPRINT_DOCUMENT_PATH,
+          )
+        : exported.files;
     const plan = planArtifactWrite(
       createNodeProjectFilesystem(root),
-      exported.files,
+      artifacts,
       { force },
     );
     assertWritablePlan(plan);
     writeArtifactPlan(root, plan);
     return ok(
       formatLines(
-        `Generated ${exported.files.length} files from ${blueprint.product.name}.`,
+        `Generated ${artifacts.length} files from ${blueprint.product.name}.`,
         plan.actions.map((action) => `${action.status} ${action.relativePath}`),
       ),
     );
@@ -239,7 +250,7 @@ export function runAdopt(
       { force: options.force },
     );
     assertWritablePlan(plan);
-    writeFileSync(resolve(root, target), document, "utf8");
+    writeArtifactPlan(root, plan);
 
     return ok(
       [
