@@ -68,9 +68,9 @@ src/
       validation/
 ```
 
-Before the CLI consumes this logic, shared modules must be physically reusable without importing Web framework concerns.
+The CLI lives in `src/cli` and imports the Blueprint Core public API. Workspace packages were not introduced for V1. See `decisions/ADR-002-in-repo-cli-boundary.md`.
 
-The eventual repository may use workspace packages if justified, for example:
+The eventual repository may still use workspace packages if justified, for example:
 
 ```text
 apps/
@@ -95,7 +95,7 @@ Responsibilities:
 - streaming presentation
 - blueprint review UX
 - export actions
-- later CLI input/output
+- CLI input/output
 
 Must not own:
 

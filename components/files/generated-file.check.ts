@@ -60,9 +60,16 @@ const review = readFileSync("components/review/blueprint-review.tsx", "utf8");
 assert.match(explorer, /Generated files/);
 assert.match(explorer, /relativePath/);
 assert.match(explorer, /MarkdownPreview/);
-assert.doesNotMatch(explorer, /createObjectURL/);
-assert.doesNotMatch(explorer, /application\/zip/);
-assert.doesNotMatch(explorer, /Download package/);
+assert.match(explorer, /Download package/);
+assert.match(explorer, /downloadContextExport/);
+assert.match(
+  readFileSync("components/files/download-context-export.ts", "utf8"),
+  /application\/zip/,
+);
+assert.match(
+  readFileSync("components/files/download-context-export.ts", "utf8"),
+  /createObjectURL/,
+);
 assert.match(preview, /Preview/);
 assert.match(preview, /<h1/);
 assert.match(preview, /<h2/);
