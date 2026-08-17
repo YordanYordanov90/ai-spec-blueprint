@@ -14,6 +14,12 @@ export {
   ExtractedFactsOutputSchema,
   ProjectFactExtractionInputSchema,
 } from "./fact-extraction";
+export {
+  advanceGrillMeTurn,
+  advanceGrillMeTurnResult,
+  runGrillMeAnswer,
+  runGrillMeStart,
+} from "./grill-me-turn";
 export type { ProjectFactExtractionInput } from "./fact-extraction";
 export {
   AiCallInputSchema,

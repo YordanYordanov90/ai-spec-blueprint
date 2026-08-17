@@ -25,7 +25,12 @@
     "check:follow-up-question": "tsx src/lib/blueprint/discovery/generate-follow-up-question.check.ts",
     "check:blueprint-proposal": "tsx src/lib/blueprint/discovery/propose-blueprint.check.ts",
     "check:ai-failure": "tsx src/lib/ai/ai-failure.check.ts",
-    "check:landing": "tsx app/page.check.ts"
+    "check:landing": "tsx app/page.check.ts",
+    "check:onboarding": "tsx app/new/page.check.ts",
+    "check:grill-me": "tsx src/lib/blueprint/discovery/continue-discovery.check.ts && tsx src/lib/ai/grill-me-turn.check.ts && tsx components/grill-me/grill-me.check.ts",
+    "check:completeness": "tsx components/completeness/completeness.check.ts",
+    "check:blueprint-review": "tsx src/lib/blueprint/discovery/approve-blueprint.check.ts && tsx components/review/blueprint-review.check.ts",
+    "check:generated-files": "tsx src/lib/blueprint/generators/approved-package.check.ts && tsx components/files/generated-file.check.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.42",

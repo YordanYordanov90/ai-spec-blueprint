@@ -1,24 +1,29 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+
+import { OnboardingWorkspace } from "@/components/onboarding/onboarding-workspace";
+import { ProductHeader } from "@/components/product/product-header";
 
 export default function NewProjectPage() {
   return (
-    <main className="mx-auto flex min-h-full w-full max-w-3xl flex-col gap-6 px-6 py-24">
-      <p className="font-mono text-xs tracking-[0.18em] text-muted-foreground uppercase">
-        New project
-      </p>
-      <h1 className="font-heading text-3xl tracking-tight">
-        Onboarding continues after this landing.
-      </h1>
-      <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-        The start action is wired. Grill Me onboarding is the next feature and
-        is not implemented on this route yet.
-      </p>
-      <Link
-        href="/"
-        className="w-fit text-sm underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-      >
-        Back to landing
-      </Link>
-    </main>
+    <div className="relative isolate min-h-full overflow-hidden bg-background/70">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(circle_at_72%_10%,color-mix(in_oklch,var(--accent)_9%,transparent),transparent_38%)]"
+      />
+      <ProductHeader
+        trailing={
+          <Link
+            href="/"
+            className="flex h-9 items-center gap-2 border border-transparent px-2 font-mono text-[9px] tracking-[0.1em] text-muted-foreground uppercase transition-colors hover:border-border hover:bg-surface hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <ArrowLeft aria-hidden="true" className="size-3" />
+            Back to landing
+          </Link>
+        }
+      />
+
+      <OnboardingWorkspace />
+    </div>
   );
 }

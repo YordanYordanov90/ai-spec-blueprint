@@ -97,14 +97,14 @@ The Web application is the first major interface.
 
 It provides:
 
-- landing and product explanation
-- new-project onboarding
-- Grill Me project discovery
-- visible project completeness/progress
-- architecture proposal and review
-- project blueprint review
-- generated file preview
-- export
+- a landing experience that explains how the product prepares the environment around coding agents
+- project description and focused Grill Me discovery
+- a structured workspace where the blueprint becomes visible as facts and decisions are recorded
+- visible project completeness and unresolved areas
+- architecture and guardrail review
+- explicit fact, proposal, approval, and unresolved decision states
+- an IDE-inspired generated-file explorer and readable context preview
+- context export when the export feature is active
 
 The Web UI should make the reasoning and architecture legible. It should not be only a generic chat window.
 
