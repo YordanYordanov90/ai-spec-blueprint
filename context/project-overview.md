@@ -110,9 +110,9 @@ The Web UI should make the reasoning and architecture legible. It should not be 
 
 ### CLI
 
-The CLI is part of the target product architecture but is implemented later.
+The CLI is a developer-native interface over the same Blueprint Core.
 
-Its purpose is developer-native repository workflows such as:
+Its purpose is repository workflows such as:
 
 - initializing blueprint context
 - generating or updating project context
@@ -121,9 +121,7 @@ Its purpose is developer-native repository workflows such as:
 - verification
 - context health checks
 
-The CLI must consume the same Blueprint Core used by the Web application.
-
-The existence of the CLI in the roadmap does not authorize implementing it during Web-focused features.
+The CLI consumes the same Blueprint Core used by the Web application. It lives in `src/cli` and must not import Web interface modules.
 
 ## Grill Me
 

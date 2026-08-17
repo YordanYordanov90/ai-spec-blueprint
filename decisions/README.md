@@ -2,6 +2,11 @@
 
 This directory stores important architectural decisions that future agents must not silently reinterpret.
 
+## Included records
+
+- [ADR-001 - Shared Blueprint Core](ADR-001-shared-blueprint-core.md)
+- [ADR-002 - In-repo CLI over Blueprint Core](ADR-002-in-repo-cli-boundary.md)
+
 ## When to add an ADR
 
 Use an ADR for decisions such as:

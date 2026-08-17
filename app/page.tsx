@@ -299,9 +299,8 @@ export default function Home() {
                 One source of truth around every interface.
               </h2>
               <p className="mt-5 text-sm leading-7 text-muted-foreground">
-                The Web experience and future CLI use the same Blueprint Core:
-                the same schemas, guardrails, validation, and deterministic
-                generators.
+                The Web experience and CLI use the same Blueprint Core: the same
+                schemas, guardrails, validation, and deterministic generators.
               </p>
             </div>
             <ArchitectureMap />
@@ -349,8 +348,8 @@ export default function Home() {
             </h2>
             <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground">
               Approved structured data becomes a stable Markdown package through
-              deterministic TypeScript renderers. No document-by-document model
-              improvisation.
+              deterministic TypeScript renderers. Export the ZIP, or generate the
+              same files from the CLI.
             </p>
             <Button asChild variant="outline" className="mt-7 h-11 rounded-none px-5">
               <Link href="/new">

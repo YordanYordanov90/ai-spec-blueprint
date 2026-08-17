@@ -2,7 +2,7 @@
 
 ## Project status
 
-Status: Web experience in progress
+Status: V1 roadmap complete
 
 The application scaffold is owned by the human developer and may not yet exist when this file is first copied.
 
@@ -47,11 +47,11 @@ Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 4 - Web experience
+Phase 6 complete - existing project adoption
 
 ## Current feature
 
-`W001 - Redesign Web UI foundation`
+No feature is currently in progress.
 
 See `features/current-feature.md`.
 
@@ -95,23 +95,23 @@ See `features/current-feature.md`.
 - [x] F025 - Build blueprint review experience
 - [x] F026 - Build generated-file explorer and preview
 - [x] W001 - Redesign Web UI foundation
-- [ ] F027 - Build context export
+- [x] F027 - Build context export
 
 ### Phase 5 - CLI
 
-- [ ] F028 - Establish reusable CLI package boundary
-- [ ] F029 - Implement CLI initialization workflow
-- [ ] F030 - Generate context from CLI
-- [ ] F031 - Implement feature planning workflow
-- [ ] F032 - Implement verification workflow
-- [ ] F033 - Implement project/context doctor
+- [x] F028 - Establish reusable CLI package boundary
+- [x] F029 - Implement CLI initialization workflow
+- [x] F030 - Generate context from CLI
+- [x] F031 - Implement feature planning workflow
+- [x] F032 - Implement verification workflow
+- [x] F033 - Implement project/context doctor
 
 ### Phase 6 - Existing project adoption
 
-- [ ] F034 - Detect repository technology facts
-- [ ] F035 - Analyze existing project conventions
-- [ ] F036 - Ask only unresolved adoption questions
-- [ ] F037 - Generate adopted project blueprint
+- [x] F034 - Detect repository technology facts
+- [x] F035 - Analyze existing project conventions
+- [x] F036 - Ask only unresolved adoption questions
+- [x] F037 - Generate adopted project blueprint
 
 ## Deferred capabilities
 

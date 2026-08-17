@@ -96,6 +96,7 @@ export function OnboardingWorkspace() {
     return (
       <GeneratedFileExplorer
         artifacts={artifacts}
+        blueprint={blueprint ?? undefined}
         onBackToReview={() => setArtifacts(null)}
       />
     );
