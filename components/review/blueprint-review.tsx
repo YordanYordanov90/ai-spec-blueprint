@@ -1,15 +1,29 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { ArrowRight, Check } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { DecisionStatus } from "@/components/product/decision-status";
+import { GuardrailCard } from "@/components/guardrails/guardrail-card";
 import type { ProjectBlueprint } from "@/src/lib/blueprint/schemas/project-blueprint";
 import { blueprintHasPendingProposal } from "@/src/lib/blueprint/discovery/approve-blueprint";
 
 function ReviewStatus({ status }: { status: string }) {
+  const normalized = status.replaceAll("-", " ");
+
+  if (
+    status === "approved" ||
+    status === "proposed" ||
+    status === "unresolved" ||
+    status === "rejected"
+  ) {
+    return <DecisionStatus status={status} />;
+  }
+
   return (
-    <span className="font-mono text-[11px] tracking-[0.12em] text-muted-foreground uppercase">
-      {status.replaceAll("-", " ")}
+    <span className="inline-flex h-6 shrink-0 items-center border border-border bg-code-surface px-2 font-mono text-[9px] tracking-[0.1em] text-muted-foreground uppercase">
+      {normalized}
     </span>
   );
 }
@@ -17,16 +31,21 @@ function ReviewStatus({ status }: { status: string }) {
 function ReviewSection({
   title,
   children,
+  status,
 }: {
   title: string;
   children: ReactNode;
+  status?: "fact" | "proposed" | "approved" | "unresolved";
 }) {
   return (
-    <section className="border border-border bg-background/70 p-4">
-      <h3 className="font-mono text-[11px] tracking-[0.16em] text-muted-foreground uppercase">
-        {title}
-      </h3>
-      <div className="mt-3 flex flex-col gap-3 text-sm leading-6">{children}</div>
+    <section className="border border-border bg-surface-elevated">
+      <div className="flex items-center justify-between gap-4 border-b border-border px-4 py-3">
+        <h3 className="blueprint-kicker text-muted-foreground">{title}</h3>
+        {status ? <DecisionStatus status={status} /> : null}
+      </div>
+      <div className="flex flex-col gap-4 p-4 text-sm leading-6 sm:p-5">
+        {children}
+      </div>
     </section>
   );
 }
@@ -56,14 +75,25 @@ export function BlueprintReview({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="border border-border bg-card/60 p-5">
-        <p className="font-mono text-[11px] tracking-[0.16em] text-status uppercase">
-          {pendingProposal ? "Proposed" : "Approved"}
-        </p>
-        <h2 className="mt-3 font-heading text-xl tracking-tight">
+      <div
+        className={`relative overflow-hidden border p-5 sm:p-6 ${
+          pendingProposal
+            ? "border-warning/40 bg-warning/6"
+            : "border-success/40 bg-success/6"
+        }`}
+      >
+        <div
+          aria-hidden="true"
+          className={`absolute bottom-0 left-0 top-0 w-px ${pendingProposal ? "bg-warning" : "bg-success"}`}
+        />
+        <DecisionStatus
+          status={pendingProposal ? "proposed" : "approved"}
+          label={pendingProposal ? "Proposed" : "Approved"}
+        />
+        <h2 className="mt-4 text-2xl font-semibold tracking-[-0.04em]">
           {blueprint.product.name}
         </h2>
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
           {pendingProposal
             ? "Inspect the structured proposal before it becomes approved project context."
             : "The human approved this proposal. Generated files can now be previewed."}
@@ -72,39 +102,41 @@ export function BlueprintReview({
           <Button
             type="button"
             size="lg"
-            className="mt-5 h-11 w-fit rounded-md px-5"
+            className="mt-5 h-11 w-fit rounded-none px-5"
             disabled={pending}
             onClick={onApprove}
           >
             {pending ? "Recording approval…" : "Approve blueprint"}
           </Button>
         ) : (
-          <div className="mt-5 flex flex-col gap-3">
-            <p className="font-mono text-[11px] tracking-[0.12em] text-status uppercase">
+          <div className="mt-5 flex flex-col gap-4">
+            <p className="flex items-center gap-2 font-mono text-[9px] tracking-[0.1em] text-success uppercase">
+              <Check aria-hidden="true" className="size-3" />
               Approved by human
             </p>
             {onPreviewFiles ? (
               <Button
                 type="button"
                 size="lg"
-                className="h-11 w-fit rounded-md px-5"
+                className="h-11 w-fit rounded-none px-5"
                 onClick={onPreviewFiles}
               >
                 Preview generated files
+                <ArrowRight aria-hidden="true" />
               </Button>
             ) : null}
           </div>
         )}
       </div>
 
-      <div className="flex flex-col gap-3">
-        <ReviewSection title="Product">
+      <div className="grid gap-3 xl:grid-cols-2">
+        <ReviewSection title="Product" status="fact">
           <p>{blueprint.product.summary}</p>
           <p>{blueprint.product.problem}</p>
           <TextList items={blueprint.product.successCriteria} />
         </ReviewSection>
 
-        <ReviewSection title="Users">
+        <ReviewSection title="Users" status="fact">
           {blueprint.users.map((user) => (
             <div key={user.name}>
               <p className="font-medium">{user.name}</p>
@@ -114,15 +146,18 @@ export function BlueprintReview({
           ))}
         </ReviewSection>
 
-        <ReviewSection title="Goals">
+        <ReviewSection title="Goals" status="fact">
           <TextList items={blueprint.goals} />
         </ReviewSection>
 
-        <ReviewSection title="Non-goals">
+        <ReviewSection title="Non-goals" status="fact">
           <TextList items={blueprint.nonGoals} />
         </ReviewSection>
 
-        <ReviewSection title="Stack">
+        <ReviewSection
+          title="Stack"
+          status={pendingProposal ? "proposed" : "approved"}
+        >
           {blueprint.stack.map((decision) => (
             <div key={`${decision.category}-${decision.choice}`}>
               <div className="flex items-center justify-between gap-3">
@@ -139,7 +174,10 @@ export function BlueprintReview({
           ))}
         </ReviewSection>
 
-        <ReviewSection title="Architecture">
+        <ReviewSection
+          title="Architecture"
+          status={pendingProposal ? "proposed" : "approved"}
+        >
           {blueprint.architecture.map((decision) => (
             <div key={decision.title}>
               <div className="flex items-center justify-between gap-3">
@@ -152,7 +190,10 @@ export function BlueprintReview({
           ))}
         </ReviewSection>
 
-        <ReviewSection title="Domain">
+        <ReviewSection
+          title="Domain"
+          status={pendingProposal ? "proposed" : "approved"}
+        >
           {blueprint.domain.map((concept) => (
             <div key={concept.name}>
               <p className="font-medium">{concept.name}</p>
@@ -161,36 +202,58 @@ export function BlueprintReview({
           ))}
         </ReviewSection>
 
-        <ReviewSection title="UI">
+        <ReviewSection
+          title="UI"
+          status={pendingProposal ? "proposed" : "approved"}
+        >
           <p>{blueprint.ui.personality}</p>
           <p className="text-muted-foreground">{blueprint.ui.visualDirection}</p>
         </ReviewSection>
 
-        <ReviewSection title="Security">
+        <ReviewSection
+          title="Security"
+          status={pendingProposal ? "proposed" : "approved"}
+        >
           <TextList items={blueprint.security.constraints} />
         </ReviewSection>
 
         {blueprint.ai ? (
-          <ReviewSection title="AI">
+          <ReviewSection
+            title="AI"
+            status={pendingProposal ? "proposed" : "approved"}
+          >
             <p>{blueprint.ai.purpose}</p>
             <TextList items={blueprint.ai.allowedResponsibilities} />
           </ReviewSection>
         ) : (
-          <ReviewSection title="AI">
+          <ReviewSection title="AI" status="fact">
             <p>No AI usage was recorded for this project.</p>
           </ReviewSection>
         )}
 
-        <ReviewSection title="Guardrails">
-          {blueprint.guardrails.map((guardrail) => (
-            <div key={guardrail.id}>
-              <p className="font-medium">{guardrail.title}</p>
-              <p className="text-muted-foreground">{guardrail.rule}</p>
+        <div className="xl:col-span-2">
+          <section aria-labelledby="blueprint-guardrails-heading">
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <h3
+                id="blueprint-guardrails-heading"
+                className="blueprint-kicker text-muted-foreground"
+              >
+                Guardrails
+              </h3>
+              <DecisionStatus status={pendingProposal ? "proposed" : "approved"} />
             </div>
-          ))}
-        </ReviewSection>
+            <div className="grid gap-3 xl:grid-cols-2">
+              {blueprint.guardrails.map((guardrail) => (
+                <GuardrailCard key={guardrail.id} guardrail={guardrail} />
+              ))}
+            </div>
+          </section>
+        </div>
 
-        <ReviewSection title="Features">
+        <ReviewSection
+          title="Features"
+          status={pendingProposal ? "proposed" : "approved"}
+        >
           {blueprint.features.map((feature) => (
             <div key={feature.id}>
               <div className="flex items-center justify-between gap-3">
@@ -204,7 +267,12 @@ export function BlueprintReview({
           ))}
         </ReviewSection>
 
-        <ReviewSection title="Unresolved decisions">
+        <ReviewSection
+          title="Unresolved decisions"
+          status={
+            blueprint.unresolvedDecisions.length === 0 ? "approved" : "unresolved"
+          }
+        >
           {blueprint.unresolvedDecisions.length === 0 ? (
             <p>No unresolved decisions were recorded.</p>
           ) : (

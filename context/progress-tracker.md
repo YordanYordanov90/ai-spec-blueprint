@@ -51,7 +51,7 @@ Phase 4 - Web experience
 
 ## Current feature
 
-`F027 - Build context export`
+`W001 - Redesign Web UI foundation`
 
 See `features/current-feature.md`.
 
@@ -94,6 +94,7 @@ See `features/current-feature.md`.
 - [x] F024 - Build blueprint completeness panel
 - [x] F025 - Build blueprint review experience
 - [x] F026 - Build generated-file explorer and preview
+- [x] W001 - Redesign Web UI foundation
 - [ ] F027 - Build context export
 
 ### Phase 5 - CLI

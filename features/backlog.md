@@ -120,6 +120,10 @@ Allow the human to inspect and approve project decisions.
 
 Provide IDE-like navigation and readable Markdown preview.
 
+### W001 - Redesign Web UI foundation — complete
+
+Establish the product-specific visual system, landing-page composition, structured workspace shell, blueprint status language, guardrail card, architecture motif, and generated-artifact presentation without expanding underlying product behavior.
+
 ### F027 - Export
 
 Export the generated context package.

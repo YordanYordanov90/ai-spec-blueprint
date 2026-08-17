@@ -1,8 +1,10 @@
 "use client";
 
 import { useId, useState, type FormEvent } from "react";
+import { ArrowRight, Check, MessageSquareText, Quote } from "lucide-react";
 
 import { ProjectIdeaForm } from "@/components/onboarding/project-idea-form";
+import { DecisionStatus } from "@/components/product/decision-status";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -105,23 +107,30 @@ export function GrillMeInterface({
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <section>
-        <p className="font-mono text-[11px] tracking-[0.16em] text-muted-foreground uppercase">
-          Recorded idea
-        </p>
-        <p className="mt-3 text-sm leading-6 text-foreground/90 whitespace-pre-wrap">
-          {state.initialIdea}
-        </p>
+    <div className="flex flex-col gap-7">
+      <section className="border border-border bg-code-surface">
+        <div className="flex items-center justify-between border-b border-border px-4 py-3">
+          <p className="blueprint-kicker text-muted-foreground">Recorded idea</p>
+          <DecisionStatus status="fact" />
+        </div>
+        <div className="flex gap-4 p-4 sm:p-5">
+          <Quote aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-accent" />
+          <p className="text-sm leading-6 text-foreground/90 whitespace-pre-wrap">
+            {state.initialIdea}
+          </p>
+        </div>
       </section>
 
       <section aria-labelledby="extracted-facts-heading">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 id="extracted-facts-heading" className="font-heading text-lg tracking-tight">
+          <h2
+            id="extracted-facts-heading"
+            className="text-lg font-semibold tracking-[-0.03em]"
+          >
             Extracted facts
           </h2>
-          <p className="font-mono text-[11px] text-muted-foreground">
-            {state.facts.length} recorded
+          <p className="font-mono text-[9px] tracking-[0.08em] text-muted-foreground uppercase">
+            {state.facts.length} recorded facts
           </p>
         </div>
         {state.facts.length === 0 ? (
@@ -129,15 +138,21 @@ export function GrillMeInterface({
             No facts have been extracted yet.
           </p>
         ) : (
-          <ul className="mt-4 space-y-2">
+          <ul className="mt-4 grid gap-2 sm:grid-cols-2">
             {state.facts.map((fact) => (
               <li
                 key={fact.id}
-                className="border border-border bg-background/70 px-3 py-3"
+                className="border border-border bg-surface-elevated px-4 py-4"
               >
-                <p className="font-mono text-[11px] tracking-[0.12em] text-muted-foreground uppercase">
-                  {fact.source} · {fact.topic}
-                </p>
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-mono text-[9px] tracking-[0.1em] text-muted-foreground uppercase">
+                    {fact.topic}
+                  </p>
+                  <span className="flex items-center gap-1 font-mono text-[8px] text-success uppercase">
+                    <Check aria-hidden="true" className="size-3" />
+                    {fact.source}
+                  </span>
+                </div>
                 <p className="mt-2 text-sm leading-6">{fact.statement}</p>
               </li>
             ))}
@@ -159,11 +174,9 @@ export function GrillMeInterface({
       ) : null}
 
       {state.readyForBlueprintProposal ? (
-        <section className="border border-border bg-card/60 p-5">
-          <p className="font-mono text-[11px] tracking-[0.16em] text-status uppercase">
-            Ready
-          </p>
-          <h2 className="mt-3 font-heading text-xl tracking-tight">
+        <section className="border border-success/35 bg-success/8 p-5 sm:p-6">
+          <DecisionStatus status="approved" label="Discovery complete" />
+          <h2 className="mt-4 text-xl font-semibold tracking-[-0.035em]">
             Discovery has enough information for a blueprint proposal.
           </h2>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -174,28 +187,39 @@ export function GrillMeInterface({
             <Button
               type="button"
               size="lg"
-              className="mt-5 h-11 w-fit rounded-md px-5"
+              className="mt-5 h-11 w-fit rounded-none px-5"
               onClick={() => onProposeBlueprint(state)}
             >
               Review blueprint proposal
+              <ArrowRight aria-hidden="true" />
             </Button>
           ) : null}
         </section>
       ) : state.currentQuestion ? (
-        <section className="border border-border bg-card/60 p-5">
-          <p className="font-mono text-[11px] tracking-[0.16em] text-status uppercase">
-            Focused question
-          </p>
-          <h2 className="mt-3 font-heading text-xl tracking-tight">
-            {state.currentQuestion.prompt}
-          </h2>
-          <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            <span className="font-medium text-foreground">Why this matters. </span>
-            {state.currentQuestion.whyItMatters}
-          </p>
+        <section className="relative overflow-hidden border border-accent/35 bg-surface-elevated">
+          <div className="absolute bottom-0 left-0 top-0 w-px bg-accent" />
+          <div className="flex items-center justify-between border-b border-border px-5 py-3">
+            <p className="blueprint-kicker text-accent">Focused question</p>
+            <span className="flex items-center gap-2 font-mono text-[9px] text-muted-foreground uppercase">
+              <MessageSquareText aria-hidden="true" className="size-3" />
+              Grill Me
+            </span>
+          </div>
+          <div className="p-5 sm:p-6">
+            <h2 className="max-w-2xl text-xl font-semibold leading-8 tracking-[-0.035em] sm:text-2xl">
+              {state.currentQuestion.prompt}
+            </h2>
+            <div className="mt-5 border-l border-warning/50 bg-warning/6 px-4 py-3">
+              <p className="blueprint-kicker text-warning">Why this matters</p>
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                {state.currentQuestion.whyItMatters}
+              </p>
+            </div>
           <form className="mt-6 flex flex-col gap-4" onSubmit={handleAnswer}>
             <div className="flex flex-col gap-2">
-              <Label htmlFor={answerId}>Your answer</Label>
+              <Label htmlFor={answerId} className="text-xs">
+                Your answer
+              </Label>
               <Textarea
                 id={answerId}
                 name="grillMeAnswer"
@@ -203,18 +227,20 @@ export function GrillMeInterface({
                 onChange={(event) => setAnswer(event.target.value)}
                 disabled={pending}
                 rows={5}
-                className="min-h-28 rounded-md bg-background/80"
+                className="min-h-32 rounded-none border-border bg-code-surface px-4 py-3 font-mono text-xs leading-6"
               />
             </div>
             <Button
               type="submit"
               size="lg"
-              className="h-11 w-fit rounded-md px-5"
+              className="h-11 w-fit rounded-none px-5"
               disabled={pending}
             >
               {pending ? "Recording answer…" : "Submit answer"}
+              {!pending ? <ArrowRight aria-hidden="true" /> : null}
             </Button>
           </form>
+          </div>
         </section>
       ) : (
         <p className="text-sm leading-6 text-muted-foreground">

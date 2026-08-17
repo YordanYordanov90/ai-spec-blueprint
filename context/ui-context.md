@@ -2,7 +2,7 @@
 
 ## Product character
 
-The product is a developer tool.
+AI Spec Blueprint is a developer tool for constructing a reliable project environment before implementation begins.
 
 The UI should feel:
 
@@ -14,200 +14,282 @@ The UI should feel:
 - trustworthy
 - inspectable
 
+The product should visually communicate structure, architecture, context, and control rather than AI magic.
+
 Avoid:
 
+- generic AI-chat presentation
+- glowing AI spheres, robots, and decorative sparkles
+- excessive purple gradients
 - playful consumer-app styling
-- excessive gradients
-- decorative animation without purpose
-- generic AI-chat visual clichés
 - dense enterprise dashboards in V1
+- decoration that does not clarify state or structure
 
-## Visual inspiration
+## Core visual concept
 
-The current AI Blueprint website is useful visual inspiration for:
+The product's visual language is based on architecture being progressively constructed from approved project decisions.
 
-- strong developer-tool positioning
-- dark technical presentation
-- clear workflow visualization
-- terminal/code motifs
-- bordered information blocks
-- visible stages and status
-- restrained motion
-- high information clarity
+The core sequence is:
 
-This is inspiration, not a design specification.
+```text
+IDEA
+  -> GRILL ME
+  -> PROJECT UNDERSTANDING
+  -> ARCHITECTURE
+  -> GUARDRAILS
+  -> PROJECT BLUEPRINT
+  -> CONTEXT FILES
+  -> AI AGENT IMPLEMENTATION
+```
 
-Do not copy:
+Recurring motifs may include:
 
-- branding
-- logo
-- exact color palette
-- exact typography
-- exact layouts
-- exact illustrations
+- architecture nodes and dependency lines
+- Markdown and context-file structures
+- blueprint sections with explicit completeness
+- approved, proposed, factual, and unresolved decisions
+- guardrail enforcement metadata
+- source-of-truth relationships
+- code and schema-like labels
+
+These motifs should make product state legible. They must not become a decorative diagramming layer with no relationship to product data.
+
+## Design principles and references
+
+The following products may inform principles only:
+
+- Linear for hierarchy, typography, spacing, and workflow presentation
+- v0 and Lovable for low-friction project starting experiences
+- Raycast for a distinctive developer-tool identity
+- Resend for visual restraint and technical clarity
+- Cursor and Warp for developer-native minimalism
+- Clerk for technical diagrams and code-oriented explanation
+- the current AI Blueprint website for general developer-tool positioning
+
+Do not copy their:
+
+- layouts or card compositions
+- branding or logos
+- exact palettes
+- typography combinations
+- illustrations
 - marketing copy
-- component compositions
 
-The project needs its own visual identity.
+AI Spec Blueprint must develop its own visual language around progressively constructed architecture.
 
-## Color direction
+## Visual system
 
-Exact colors are intentionally unresolved.
+The initial direction is dark-forward, technical, and editorial:
 
-The product may use a different accent system from AI Blueprint.
+- layered graphite surfaces
+- quiet grid or drafting-line texture where it provides orientation
+- restrained construction-signal accents
+- strong display hierarchy paired with code/Markdown typography
+- subtle borders and separators
+- generous whitespace around dense technical content
+- precise corners and small status details rather than soft consumer-app decoration
 
-Until branding is approved:
+Exact brand colors remain unresolved. All reusable colors must use semantic design tokens.
 
-- use semantic design tokens
-- avoid hardcoding a brand color throughout components
-- keep contrast accessible
-- ensure dark and light token strategy remains possible
-- do not let a temporary accent become architecture
+Preferred semantic roles include:
 
-## Initial visual direction
+- `background`
+- `surface`
+- `surface-elevated`
+- `border`
+- `foreground`
+- `muted`
+- `accent`
+- `success`
+- `warning`
+- `danger`
+- `code-surface`
 
-A dark-forward developer-tool aesthetic is acceptable for early implementation, provided colors remain tokenized and replaceable.
+Do not scatter raw brand colors through components. The token structure should support a later light theme without requiring component rewrites.
 
-The UI should remain usable with an eventual light theme if that is later approved.
+Use shadcn/ui as an accessible component foundation, not as the final visual identity. Composition, typography, spacing, borders, and status treatments must feel product-specific.
 
 ## Main Web experience
 
-The important product experience is not a generic full-screen chat.
+The Web application helps a developer:
 
-A preferred conceptual layout is:
+1. describe a project
+2. go through focused Grill Me discovery
+3. see the project blueprint become structured
+4. review architecture and material decisions
+5. review guardrails and how they are enforced
+6. inspect generated context files
+7. export those files when the export feature is active
 
-```text
-+--------------------------+----------------------------------+
-| Discovery / Grill Me     | Blueprint State                  |
-|                          |                                  |
-| Conversation             | Product         complete         |
-| Focused questions        | Architecture    in progress      |
-| Human answers            | Domain model    missing          |
-|                          | Security        missing          |
-|                          | UI              partial          |
-+--------------------------+----------------------------------+
-```
+The application must not become a full-screen generic chat interface.
 
-The user should be able to see that the project definition is becoming more complete as the interview progresses.
+The central product experience is a structured workspace. Desktop may present discovery and blueprint state side by side. The current implementation can retain local component state; a new global or persistent state architecture is not authorized by the visual redesign.
 
 ## Core surfaces
 
 ### Landing page
 
-Goals:
+The landing page should immediately explain that AI Spec Blueprint prepares the environment around coding agents; it is not another coding agent.
 
-- explain the problem quickly
-- show the workflow
-- demonstrate durable context
-- show the relationship between Web, shared Core, and CLI
-- provide a strong start action
+It should communicate:
 
-### New project / Grill Me
+- a concise problem and value proposition
+- a primary route into project creation and Grill Me
+- the transformation from idea to durable context
+- a simple architecture view showing the AI agent surrounded by approved context and constraints
+- the generated context package
+- guardrails as enforceable rules, not only prose
 
-Goals:
+The workflow should be visible as:
 
-- minimize cognitive overload
-- ask one focused question or one coherent group at a time
-- show what has already been learned
-- show why a material question matters when helpful
-- allow correction of extracted assumptions
+```text
+Describe -> Discover -> Architect -> Guard -> Generate -> Build
+```
+
+### Grill Me workspace
+
+Grill Me is guided project architecture, not chat for the sake of chat.
+
+The interface should show:
+
+- what is already known
+- the current focused question
+- why the question matters
+- what remains partial or unresolved
+- how project completeness changes as facts are recorded
+
+Preserve working conversational behavior where it exists. Do not replace it with static mockups.
+
+A preferred desktop composition is:
+
+```text
++-------------------------------+-------------------------------+
+| GRILL ME                      | PROJECT BLUEPRINT             |
+|                               |                               |
+| focused question              | Product          complete     |
+| why this matters              | Architecture     in progress  |
+| user response                 | Security         unresolved   |
+| extracted facts               | UI               partial      |
++-------------------------------+-------------------------------+
+```
+
+The exact composition may adapt to current routes and components.
+
+### Blueprint completeness
+
+Completeness must come from actual discovery state when available. Do not calculate fake percentages.
+
+Allowed states include complete, partial, missing, unresolved, and not assessed. Each state must have a text label and a non-color-only indicator.
+
+Static or demo states are acceptable only when clearly presented as product explanation rather than live project state.
+
+### Architecture visualization
+
+Architecture should be a recognizable part of the product identity.
+
+Simple, product-specific node and connector compositions may explain relationships such as:
+
+```text
+Web UI
+  -> Application Layer
+  -> Blueprint Core
+       |- Schemas
+       |- Guardrails
+       |- Generators
+       `- Validation
+```
+
+The current UI task does not authorize a diagramming engine. User-project diagrams should only become data-driven when an active feature supports them.
+
+### Guardrail cards
+
+Guardrails have a distinctive reusable visual pattern. A card may show:
+
+- title and category
+- rule
+- rationale or why it matters
+- source of truth
+- enforcement methods
+- applicability or severity where existing data supports it
+- approval status where existing data supports it
+
+Do not expand the domain model solely to fill a visual card. Omit unavailable metadata or use clearly labeled explanatory examples on the landing page.
 
 ### Blueprint review
 
-Should make structured decisions inspectable.
+The review experience must distinguish:
 
-Possible sections:
+- Fact: explicitly provided or reliably detected
+- Proposal: an AI recommendation awaiting human review
+- Approved: a human-approved durable decision
+- Unresolved: a decision intentionally left open
 
-- Product
-- Users
-- Goals
-- Stack
-- Architecture
-- Domain
-- UI
-- Security
-- AI
-- Guardrails
-- Features
-- Unresolved Decisions
+States must differ by icon, label, or shape as well as color.
 
-Approval/review state should be visually clear.
+Blueprint sections may include Product, Users, Goals, Non-goals, Stack, Architecture, Domain, UI, Security, AI, Guardrails, Features, and Unresolved Decisions.
 
-### Generated files
+### Generated file explorer
 
-An IDE-like file explorer and document preview is a strong direction.
+Generated artifacts should use an IDE-inspired explorer and readable Markdown preview.
 
-Concept:
+The explorer should communicate hierarchy without trying to recreate a full code editor. File navigation must remain keyboard accessible, and the preview should prioritize reading comfort.
 
 ```text
-+-----------------------+--------------------------------------+
-| AGENTS.md             | # Architecture                       |
-| context/              |                                      |
-|   project-overview    | ## Core boundaries                   |
-|   architecture        | ...                                  |
-|   schemas             |                                      |
-|   code-standards      |                                      |
-|   ui-context          |                                      |
-|   ai-workflow-rules   |                                      |
-|   progress-tracker    |                                      |
-+-----------------------+--------------------------------------+
+Blueprint
+|- AGENTS.md
+|- context/
+|  |- project-overview.md
+|  |- architecture.md
+|  |- schemas.md
+|  |- code-standards.md
+|  |- ui-context.md
+|  |- ai-workflow-rules.md
+|  `- progress-tracker.md
+`- decisions/
+   `- ADR-001.md
 ```
 
-The preview should prioritize readability over imitating a real IDE perfectly.
-
-## shadcn/ui usage
-
-Good candidates:
-
-- Button
-- Card
-- Tabs
-- Accordion
-- Dialog
-- Sheet
-- ScrollArea
-- Tooltip
-- Badge
-- Progress
-- Separator
-- Textarea
-- Input
-
-Use only components that serve the interaction.
+The explorer and preview do not imply that download/export is implemented. Export remains a separate feature.
 
 ## Responsive behavior
 
-The Web experience must be usable on mobile, but the product is developer-oriented and can prioritize desktop information density.
+Desktop may use higher information density and split workspace layouts.
 
 On smaller screens:
 
-- stacked discovery and blueprint panels are acceptable
-- preserve access to blueprint completeness
-- avoid tiny split-pane layouts
-- make generated file preview navigable
+- stack major discovery and blueprint areas
+- keep blueprint status accessible
+- avoid tiny split panels
+- make file navigation horizontally safe and touch friendly
+- preserve readable typography
+- prevent horizontal overflow from paths, code, or diagrams
+- keep primary actions visible in the natural content flow
+
+## Motion
+
+Use restrained motion only to communicate:
+
+- blueprint sections becoming complete
+- state transitions
+- panel changes
+- architecture nodes appearing
+- generated artifacts becoming available
+
+Avoid continuous ambient animation. Respect `prefers-reduced-motion`.
 
 ## Accessibility
 
 Minimum expectations:
 
-- semantic controls
-- visible focus states
-- keyboard-accessible dialogs and navigation
-- sufficient contrast
-- no meaning conveyed by color alone
-- motion reduction where applicable
-- readable code/Markdown typography
-
-## Animation
-
-Motion may communicate:
-
-- progression
-- status transitions
-- panel changes
-- newly completed blueprint sections
-
-Avoid continuous decorative motion.
+- semantic HTML and controls
+- visible keyboard focus
+- keyboard-accessible navigation, dialogs, and sheets
+- sufficient contrast on every layered surface
+- no color-only meaning
+- descriptive labels
+- readable code and Markdown typography
+- reduced-motion support
+- responsive type and touch targets
 
 ## Copy style
 
