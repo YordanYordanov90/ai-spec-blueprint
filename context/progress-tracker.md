@@ -2,9 +2,7 @@
 
 ## Project status
 
-Status: V1 roadmap complete
-
-The application scaffold is owned by the human developer and may not yet exist when this file is first copied.
+Status: Core V1 workflow complete; Guardrail documentation library in progress
 
 ## Confirmed product decisions
 
@@ -31,27 +29,32 @@ The application scaffold is owned by the human developer and may not yet exist w
 - [x] Agents may install feature-level dependencies after scaffolding.
 - [x] Final Markdown generation should be deterministic.
 - [x] AI should produce validated structured blueprint data rather than independently generating every context document.
+- [x] Web context export uses a ZIP containing generated Markdown and `blueprint.json`.
+- [x] V1 CLI commands are `init`, `generate`, `feature`, `verify`, `doctor`, and `adopt`.
+- [x] Long-form guardrail education belongs in a separate Web documentation surface.
+- [x] The source PDF is research material and must not become a runtime prompt, application dependency, or generated-project artifact.
+- [x] Documentation must distinguish source concepts from AI Spec Blueprint adaptations and use original wording and examples.
 
 ## Open product decisions
 
 - [ ] Final product name
 - [ ] Final brand color / accent system
 - [ ] Exact OpenAI model for V1
-- [ ] Exact export packaging format
 - [ ] Whether V1 preserves unfinished onboarding across browser refreshes
 - [ ] Exact timing of extracting Blueprint Core into a physical workspace package
-- [ ] Exact CLI command naming
 - [ ] Initial framework profiles beyond the product's own Next.js-oriented experience
+- [ ] Whether a later feature adds AI-assisted discussion to guardrail topic pages
+- [ ] Whether a later CLI feature adds short topic explanations or documentation links
 
 Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 6 complete - existing project adoption
+Phase 7 in progress - Guardrail education and documentation
 
 ## Current feature
 
-No feature is currently in progress.
+F038 - Build Guardrail documentation library
 
 See `features/current-feature.md`.
 
@@ -113,6 +116,10 @@ See `features/current-feature.md`.
 - [x] F036 - Ask only unresolved adoption questions
 - [x] F037 - Generate adopted project blueprint
 
+### Phase 7 - Guardrail education and documentation
+
+- [ ] F038 - Build Guardrail documentation library (in progress)
+
 ## Deferred capabilities
 
 - authentication
@@ -124,3 +131,5 @@ See `features/current-feature.md`.
 - automatic deployment
 - broad multi-framework support
 - autonomous code generation as the primary product
+- AI-assisted guardrail discussion that mutates blueprint state
+- CLI reproduction of long-form Web documentation

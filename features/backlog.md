@@ -171,3 +171,11 @@ Ask only questions not answerable from the codebase and approved context.
 ### F037 - Adopted blueprint generation — complete
 
 Generate a blueprint representing the existing project rather than an imaginary clean-slate architecture.
+
+## Phase 7 - Guardrail education and documentation
+
+### F038 - Guardrail documentation library — in progress
+
+Create a dedicated Web documentation surface for the architectural guardrail topics that informed AI Spec Blueprint.
+
+The library must explain the topics in original product language, distinguish source concepts from AI Spec Blueprint adaptations, and keep long-form education separate from Blueprint Core, generated project context, Grill Me prompts, and CLI output.
