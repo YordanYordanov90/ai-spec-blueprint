@@ -38,7 +38,7 @@
     "check:generated-files": "tsx src/lib/blueprint/generators/approved-package.check.ts && tsx components/files/generated-file.check.ts",
     "check:export": "tsx src/lib/blueprint/export/create-context-export.check.ts",
     "check:cli-workflows": "tsx src/lib/blueprint/cli-workflows/cli-workflows.check.ts",
-    "check:cli-boundary": "tsx src/cli/package-boundary.check.ts && tsx src/cli/commands.check.ts",
+    "check:cli-boundary": "tsx src/cli/package-boundary.check.ts && tsx src/cli/commands.check.ts && tsx src/cli/node-filesystem.check.ts",
     "check:adoption": "tsx src/lib/blueprint/adoption/adoption.check.ts",
     "check:docs": "tsx src/content/guardrails/index.check.ts"
   },
