@@ -2,6 +2,12 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { generateText, Output, streamText } from "ai";
 import { z } from "zod";
 
+import {
+  AI_MAX_OUTPUT_TOKENS,
+  AI_MAX_PROMPT_CHARS,
+  AI_MAX_SYSTEM_PROMPT_CHARS,
+} from "./limits";
+
 const NonEmptyTextSchema = z.string().trim().min(1);
 
 export const AiProviderSchema = z.literal("openai");
@@ -35,8 +41,8 @@ export type AiCallApproval = z.infer<typeof AiCallApprovalSchema>;
 
 export const AiCallInputSchema = z
   .object({
-    prompt: NonEmptyTextSchema,
-    system: NonEmptyTextSchema.optional(),
+    prompt: NonEmptyTextSchema.max(AI_MAX_PROMPT_CHARS),
+    system: NonEmptyTextSchema.max(AI_MAX_SYSTEM_PROMPT_CHARS).optional(),
   })
   .strict();
 
@@ -106,7 +112,11 @@ export function createConfiguredLanguageModel(
     ) => {
       const validatedInput = AiCallInputSchema.parse(input);
       AiCallApprovalSchema.parse(approval);
-      return generateText({ ...validatedInput, model });
+      return generateText({
+        ...validatedInput,
+        maxOutputTokens: AI_MAX_OUTPUT_TOKENS,
+        model,
+      });
     },
     streamText: (
       input: AiCallInput,
@@ -114,7 +124,11 @@ export function createConfiguredLanguageModel(
     ) => {
       const validatedInput = AiCallInputSchema.parse(input);
       AiCallApprovalSchema.parse(approval);
-      return streamText({ ...validatedInput, model });
+      return streamText({
+        ...validatedInput,
+        maxOutputTokens: AI_MAX_OUTPUT_TOKENS,
+        model,
+      });
     },
     generateStructured: async <Schema extends z.ZodType>(
       input: AiCallInput,
@@ -125,6 +139,7 @@ export function createConfiguredLanguageModel(
       AiCallApprovalSchema.parse(approval);
       const result = await generateText({
         ...validatedInput,
+        maxOutputTokens: AI_MAX_OUTPUT_TOKENS,
         model,
         output: Output.object({ schema }),
       });

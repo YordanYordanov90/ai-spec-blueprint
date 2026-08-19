@@ -22,8 +22,13 @@ import {
   type AiCallApproval,
   type ApprovedLanguageModel,
 } from "./model-config";
+import { AI_MAX_USER_INPUT_CHARS } from "./limits";
 
-const NonEmptyTextSchema = z.string().trim().min(1);
+const NonEmptyTextSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(AI_MAX_USER_INPUT_CHARS);
 
 const START_APPROVAL = AiCallApprovalSchema.parse({
   approvedBy: "human",

@@ -37,3 +37,11 @@ export type {
   AiModelConfig,
   ApprovedLanguageModel,
 } from "./model-config";
+export {
+  AI_RATE_LIMIT_ID,
+  AI_RATE_LIMIT_RETRY_AFTER_SECONDS,
+  AiRateLimitDecisionSchema,
+  checkAiRateLimit,
+  createAiRateLimitGuard,
+} from "./rate-limit";
+export type { AiRateLimitDecision } from "./rate-limit";

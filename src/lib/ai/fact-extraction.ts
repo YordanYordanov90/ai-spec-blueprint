@@ -15,13 +15,18 @@ import {
   type AiCallApproval,
   type ApprovedLanguageModel,
 } from "./model-config";
+import { AI_MAX_USER_INPUT_CHARS } from "./limits";
 
-const NonEmptyTextSchema = z.string().trim().min(1);
+const UserInputSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(AI_MAX_USER_INPUT_CHARS);
 
 export const ProjectFactExtractionInputSchema = z
   .object({
-    initialIdea: NonEmptyTextSchema,
-    additionalUserInput: NonEmptyTextSchema.optional(),
+    initialIdea: UserInputSchema,
+    additionalUserInput: UserInputSchema.optional(),
     existingState: DiscoveryStateSchema.optional(),
   })
   .strict();

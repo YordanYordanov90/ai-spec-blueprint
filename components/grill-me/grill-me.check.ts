@@ -35,6 +35,8 @@ assert.match(actions, /["']use server["']/);
 assert.match(actions, /runGrillMeStart/);
 assert.match(actions, /runGrillMeAnswer/);
 assert.match(actions, /loadAiModelConfig/);
+assert.match(actions, /checkAiRateLimit/);
+assert.match(actions, /enforceAiRateLimit/);
 assert.doesNotMatch(actions, /generateContextPackage/);
 
 console.log("Grill Me interface checks passed.");

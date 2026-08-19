@@ -121,6 +121,10 @@ See `features/current-feature.md`.
 
 - [ ] F038 - Build Guardrail documentation library (in progress)
 
+### Phase 8 - Deployment protection
+
+- [ ] F039 - Add server-side AI abuse protection
+
 ## Deferred capabilities
 
 - authentication
