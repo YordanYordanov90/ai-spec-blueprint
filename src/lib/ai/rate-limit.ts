@@ -23,10 +23,11 @@ type FirewallRateLimitResult = {
 
 type FirewallRateLimitCheck = (
   rateLimitId: string,
-  options: { headers: Headers },
+  options: { headers: Headers; firewallHostForDevelopment?: string },
 ) => Promise<FirewallRateLimitResult>;
 
-type AiRateLimitEnvironment = "development" | "production";
+type AiRateLimitEnvironment = "local" | "deployment";
+type RuntimeEnvironment = "development" | "production";
 
 function allowedDecision(): AiRateLimitDecision {
   return AiRateLimitDecisionSchema.parse({
@@ -55,25 +56,41 @@ function unavailableDecision(): AiRateLimitDecision {
 export function createAiRateLimitGuard(
   firewallCheck: FirewallRateLimitCheck = checkRateLimit,
   environment: AiRateLimitEnvironment =
+    process.env.AI_ABUSE_PROTECTION_MODE === "local"
+      ? "local"
+      : "deployment",
+  runtimeEnvironment: RuntimeEnvironment =
     process.env.NODE_ENV === "production" ? "production" : "development",
 ): (requestHeaders: Headers) => Promise<AiRateLimitDecision> {
   return async (requestHeaders: Headers): Promise<AiRateLimitDecision> => {
+    const firewallHostForDevelopment =
+      process.env.VERCEL_FIREWALL_HOST_FOR_DEVELOPMENT;
+
+    if (
+      environment === "deployment" &&
+      runtimeEnvironment !== "production" &&
+      !firewallHostForDevelopment
+    ) {
+      return unavailableDecision();
+    }
+
     try {
       const result = await firewallCheck(AI_RATE_LIMIT_ID, {
         headers: requestHeaders,
+        firewallHostForDevelopment,
       });
 
       if (result.rateLimited || result.error === "blocked") {
         return rateLimitedDecision();
       }
 
-      if (result.error === "not-found" && environment === "production") {
+      if (result.error === "not-found" && environment === "deployment") {
         return unavailableDecision();
       }
 
       return allowedDecision();
     } catch {
-      return environment === "production"
+      return environment === "deployment"
         ? unavailableDecision()
         : allowedDecision();
     }

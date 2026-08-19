@@ -15,7 +15,12 @@ import {
   type AiCallApproval,
   type ApprovedLanguageModel,
 } from "./model-config";
-import { AI_MAX_USER_INPUT_CHARS } from "./limits";
+import {
+  AI_MAX_FACT_CONTEXT_CHARS,
+  AI_MAX_MESSAGE_CONTEXT_CHARS,
+  AI_MAX_PROMPT_CHARS,
+  AI_MAX_USER_INPUT_CHARS,
+} from "./limits";
 
 const UserInputSchema = z
   .string()
@@ -51,26 +56,61 @@ const FACT_EXTRACTION_SYSTEM = [
   "Do not create gaps, questions, or draft decisions.",
 ].join(" ");
 
+function truncateText(value: string, maxChars: number): string {
+  if (value.length <= maxChars) {
+    return value;
+  }
+
+  const marker = "\n[… older context omitted …]";
+  return `${value.slice(0, maxChars - marker.length)}${marker}`;
+}
+
+function takeRecentLines(lines: readonly string[], maxChars: number): string {
+  const selected: string[] = [];
+  let size = 0;
+
+  for (let index = lines.length - 1; index >= 0; index -= 1) {
+    const line = truncateText(lines[index] ?? "", maxChars);
+    const nextSize = size + line.length + (selected.length > 0 ? 1 : 0);
+
+    if (nextSize > maxChars) {
+      break;
+    }
+
+    selected.unshift(line);
+    size = nextSize;
+  }
+
+  return selected.length > 0 ? selected.join("\n") : "None yet.";
+}
+
 function buildFactExtractionPrompt(state: DiscoveryState): string {
   const existingFacts =
     state.facts.length === 0
       ? "None yet."
-      : state.facts
-          .map((fact) => `- [${fact.source}/${fact.topic}] ${fact.statement}`)
-          .join("\n");
+      : truncateText(
+          state.facts
+            .map((fact) => `- [${fact.source}/${fact.topic}] ${fact.statement}`)
+            .join("\n"),
+          AI_MAX_FACT_CONTEXT_CHARS,
+        );
 
-  const messages = state.messages
-    .map((message) => `${message.role}: ${message.content}`)
-    .join("\n");
+  const messages = takeRecentLines(
+    state.messages.map((message) => `${message.role}: ${message.content}`),
+    AI_MAX_MESSAGE_CONTEXT_CHARS,
+  );
 
-  return [
-    `Initial idea: ${state.initialIdea}`,
-    "Messages:",
-    messages,
-    "Already extracted facts:",
-    existingFacts,
-    "Extract only new facts supported by this input.",
-  ].join("\n\n");
+  return truncateText(
+    [
+      `Initial idea: ${truncateText(state.initialIdea, AI_MAX_USER_INPUT_CHARS)}`,
+      "Messages:",
+      messages,
+      "Already extracted facts:",
+      existingFacts,
+      "Extract only new facts supported by this input.",
+    ].join("\n\n"),
+    AI_MAX_PROMPT_CHARS,
+  );
 }
 
 function discoveryStateFromInput(

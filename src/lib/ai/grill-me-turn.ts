@@ -22,7 +22,10 @@ import {
   type AiCallApproval,
   type ApprovedLanguageModel,
 } from "./model-config";
-import { AI_MAX_USER_INPUT_CHARS } from "./limits";
+import {
+  AI_MAX_DISCOVERY_STATE_BYTES,
+  AI_MAX_USER_INPUT_CHARS,
+} from "./limits";
 
 const NonEmptyTextSchema = z
   .string()
@@ -43,6 +46,13 @@ const ANSWER_APPROVAL = AiCallApprovalSchema.parse({
   dataScope: ["discovery-state"],
   includesSecrets: false,
 });
+
+function isWithinDiscoveryStateBudget(state: DiscoveryState): boolean {
+  return (
+    new TextEncoder().encode(JSON.stringify(state)).byteLength <=
+    AI_MAX_DISCOVERY_STATE_BYTES
+  );
+}
 
 export async function advanceGrillMeTurn(options: {
   input: z.input<typeof ProjectFactExtractionInputSchema>;
@@ -139,6 +149,16 @@ export async function runGrillMeAnswer(options: {
         error instanceof Error
           ? error.message
           : "The Grill Me answer could not be recorded.",
+      ),
+    };
+  }
+
+  if (!isWithinDiscoveryStateBudget(prepared)) {
+    return {
+      ok: false,
+      error: createAiFailure(
+        "user-input-failure",
+        "This discovery has reached its context limit. Start a new discovery to continue.",
       ),
     };
   }

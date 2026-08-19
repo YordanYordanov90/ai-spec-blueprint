@@ -174,7 +174,7 @@ Generate a blueprint representing the existing project rather than an imaginary 
 
 ## Phase 7 - Guardrail education and documentation
 
-### F038 - Guardrail documentation library — in progress
+### F038 - Guardrail documentation library — complete
 
 Create a dedicated Web documentation surface for the architectural guardrail topics that informed AI Spec Blueprint.
 
@@ -182,7 +182,7 @@ The library must explain the topics in original product language, distinguish so
 
 ## Phase 8 - Deployment protection
 
-### F039 - Server-side AI abuse protection — planned
+### F039 - Server-side AI abuse protection — in progress
 
 Protect public AI operations with server-side rate limiting before provider calls.
 

@@ -18,6 +18,7 @@ async function runChecks(): Promise<void> {
       calls.push({ id, requestHeaders: options.headers });
       return { rateLimited: false };
     },
+    "deployment",
     "production",
   );
 
@@ -31,6 +32,7 @@ async function runChecks(): Promise<void> {
 
   const rateLimitedGuard = createAiRateLimitGuard(
     async () => ({ rateLimited: true }),
+    "deployment",
     "production",
   );
   assert.deepEqual(await rateLimitedGuard(headers), {
@@ -41,6 +43,7 @@ async function runChecks(): Promise<void> {
 
   const missingRuleGuard = createAiRateLimitGuard(
     async () => ({ rateLimited: false, error: "not-found" }),
+    "deployment",
     "production",
   );
   assert.deepEqual(await missingRuleGuard(headers), {
@@ -51,6 +54,7 @@ async function runChecks(): Promise<void> {
 
   const localMissingRuleGuard = createAiRateLimitGuard(
     async () => ({ rateLimited: false, error: "not-found" }),
+    "local",
     "development",
   );
   assert.deepEqual(await localMissingRuleGuard(headers), {
@@ -63,6 +67,7 @@ async function runChecks(): Promise<void> {
     async () => {
       throw new Error("Firewall unavailable");
     },
+    "deployment",
     "production",
   );
   assert.deepEqual(await failingGuard(headers), {

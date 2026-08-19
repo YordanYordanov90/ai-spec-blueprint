@@ -54,12 +54,10 @@ async function enforceAiRateLimit(): Promise<ReturnType<typeof createAiFailure> 
     );
   }
 
-  const unit = decision.retryAfterSeconds === 1 ? "second" : "seconds";
-
   return createAiFailure(
     "rate-limit",
-    `AI usage limit reached. Try again in ${decision.retryAfterSeconds} ${unit}.`,
-    [`Retry after ${decision.retryAfterSeconds} ${unit}.`],
+    "AI usage limit reached.",
+    [],
     decision.retryAfterSeconds,
   );
 }
