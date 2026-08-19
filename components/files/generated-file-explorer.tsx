@@ -27,8 +27,25 @@ export function GeneratedFileExplorer({
   const [selectedPath, setSelectedPath] = useState(
     files[0]?.relativePath ?? "",
   );
+  const [isDownloadPending, setIsDownloadPending] = useState(false);
   const selected =
     files.find((file) => file.relativePath === selectedPath) ?? files[0];
+
+  function handleDownload() {
+    if (!blueprint || isDownloadPending) {
+      return;
+    }
+
+    setIsDownloadPending(true);
+
+    try {
+      downloadContextExport(blueprint);
+      window.setTimeout(() => setIsDownloadPending(false), 1100);
+    } catch (error) {
+      setIsDownloadPending(false);
+      throw error;
+    }
+  }
 
   return (
     <main className="relative z-10 mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
@@ -60,11 +77,13 @@ export function GeneratedFileExplorer({
           {blueprint ? (
             <button
               type="button"
-              onClick={() => downloadContextExport(blueprint)}
+              onClick={handleDownload}
+              disabled={isDownloadPending}
+              aria-busy={isDownloadPending}
               className="flex h-10 w-fit items-center gap-2 border border-accent bg-accent/10 px-3 font-mono text-[9px] tracking-[0.08em] text-accent uppercase transition-colors hover:bg-accent/16 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Download aria-hidden="true" className="size-3" />
-              Download package
+              {isDownloadPending ? "Preparing package..." : "Download package"}
             </button>
           ) : null}
         </div>

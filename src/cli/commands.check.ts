@@ -14,6 +14,7 @@ import {
   runGenerate,
   runInit,
 } from "./commands";
+import { readBlueprintFile } from "./read-blueprint";
 
 const root = mkdtempSync(join(tmpdir(), "blueprint-cli-"));
 const generationRoot = mkdtempSync(join(tmpdir(), "blueprint-generate-"));
@@ -52,6 +53,16 @@ try {
   assert.equal(generatedByDefault.code, 0, generatedByDefault.stderr);
 
   writeFileSync(join(root, "blueprint.json"), `${JSON.stringify(approved, null, 2)}\n`);
+
+  assert.deepEqual(readBlueprintFile(root, "./blueprint.json"), approved);
+  assert.throws(
+    () => readBlueprintFile(root, "../blueprint.json"),
+    /inside project root/,
+  );
+  assert.throws(
+    () => readBlueprintFile(root, join(root, "blueprint.json")),
+    /inside project root/,
+  );
 
   const generated = runGenerate(root, "blueprint.json", true);
   assert.equal(generated.code, 0, generated.stderr);

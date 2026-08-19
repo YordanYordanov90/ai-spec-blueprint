@@ -1,14 +1,16 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
-
 import {
   ProjectBlueprintSchema,
   type ProjectBlueprint,
 } from "@/src/lib/blueprint";
 
+import { createNodeProjectFilesystem } from "./node-filesystem";
+
 export function readBlueprintFile(root: string, from: string): ProjectBlueprint {
-  const absolute = resolve(root, from);
-  const raw = readFileSync(absolute, "utf8");
+  const raw = createNodeProjectFilesystem(root).readText(from);
+  if (raw === null) {
+    throw new Error(`Could not read blueprint file inside project root: ${from}`);
+  }
+
   return ProjectBlueprintSchema.parse(JSON.parse(raw));
 }
 

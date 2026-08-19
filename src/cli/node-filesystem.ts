@@ -46,39 +46,98 @@ function isMissingPathError(error: unknown): boolean {
   return code === "ENOENT" || code === "ENOTDIR";
 }
 
-export function createNodeProjectFilesystem(root: string): ProjectFilesystem {
+function normalizeNodeProjectRelativePath(relativePath: string): string {
+  const input = relativePath.trim();
+
+  if (input !== relativePath && input === "") {
+    throw new Error("Project paths must not be blank.");
+  }
+
+  if (
+    isAbsolute(input) ||
+    input.startsWith("\\") ||
+    /^[A-Za-z]:[\\/]/.test(input) ||
+    input.includes("\\")
+  ) {
+    throw new Error("Project paths must be relative and use forward slashes.");
+  }
+
+  const segments = input.split("/");
+  if (segments.some((segment) => segment === "..")) {
+    throw new Error("Project paths must not contain parent traversal.");
+  }
+
+  const withoutCurrentSegments = segments.filter((segment) => segment !== ".");
+  return assertProjectRelativePath(withoutCurrentSegments.join("/"));
+}
+
+export function resolveNodeProjectPath(
+  root: string,
+  relativePath: string,
+): string {
   const resolvedRoot = resolve(root);
+  const safePath = normalizeNodeProjectRelativePath(relativePath);
+  const absolute = safePath ? resolve(resolvedRoot, safePath) : resolvedRoot;
 
-  function resolveInside(relativePath: string): string {
-    const safePath = assertProjectRelativePath(relativePath);
-    const absolute = safePath ? resolve(resolvedRoot, safePath) : resolvedRoot;
+  if (!isInside(resolvedRoot, absolute)) {
+    throw new Error("Path escapes the project root.");
+  }
 
-    if (!isInside(resolvedRoot, absolute)) {
-      throw new Error("Path escapes the project root.");
+  let canonicalRoot: string;
+  let canonicalAbsolute: string;
+
+  try {
+    canonicalRoot = realpathSync.native(resolvedRoot);
+    canonicalAbsolute = realpathSync.native(absolute);
+  } catch (error) {
+    if (!isMissingPathError(error)) {
+      throw error;
     }
 
-    let canonicalRoot: string;
-    let canonicalAbsolute: string;
+    // Missing paths are safe to return after lexical containment. Read-only
+    // operations will report them as missing, while existing paths receive
+    // the real-path containment check below.
+    return absolute;
+  }
 
-    try {
-      canonicalRoot = realpathSync.native(resolvedRoot);
-      canonicalAbsolute = realpathSync.native(absolute);
-    } catch (error) {
-      if (!isMissingPathError(error)) {
-        throw error;
-      }
+  if (!isInside(canonicalRoot, canonicalAbsolute)) {
+    throw new Error("Path escapes the project root through a symlink.");
+  }
 
-      // Missing paths are safe to return after lexical containment. Read-only
-      // operations will report them as missing, while existing paths receive
-      // the real-path containment check below.
-      return absolute;
-    }
+  return canonicalAbsolute;
+}
+
+export function normalizeNodeProjectPath(
+  root: string,
+  relativePath: string,
+): string {
+  const resolvedRoot = resolve(root);
+  const safePath = normalizeNodeProjectRelativePath(relativePath);
+  const absolute = safePath ? resolve(resolvedRoot, safePath) : resolvedRoot;
+
+  try {
+    const canonicalRoot = realpathSync.native(resolvedRoot);
+    const canonicalAbsolute = realpathSync.native(absolute);
 
     if (!isInside(canonicalRoot, canonicalAbsolute)) {
       throw new Error("Path escapes the project root through a symlink.");
     }
 
-    return canonicalAbsolute;
+    return toPosix(relative(canonicalRoot, canonicalAbsolute));
+  } catch (error) {
+    if (!isMissingPathError(error)) {
+      throw error;
+    }
+
+    return safePath;
+  }
+}
+
+export function createNodeProjectFilesystem(root: string): ProjectFilesystem {
+  const resolvedRoot = resolve(root);
+
+  function resolveInside(relativePath: string): string {
+    return resolveNodeProjectPath(resolvedRoot, relativePath);
   }
 
   return {

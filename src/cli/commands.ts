@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { relative, resolve } from "node:path";
+import { resolve } from "node:path";
 
 import {
   analyzeConventions,
@@ -21,7 +21,10 @@ import {
   type ProjectBlueprint,
 } from "@/src/lib/blueprint";
 
-import { createNodeProjectFilesystem } from "./node-filesystem";
+import {
+  createNodeProjectFilesystem,
+  normalizeNodeProjectPath,
+} from "./node-filesystem";
 import { readBlueprintFile, tryReadBlueprintFile } from "./read-blueprint";
 import { writeArtifactPlan } from "./write-plan";
 
@@ -44,7 +47,7 @@ function formatLines(title: string, lines: readonly string[]): string {
 }
 
 export function normalizeBlueprintSourcePath(root: string, from: string): string {
-  return relative(resolve(root), resolve(root, from)).replaceAll("\\", "/");
+  return normalizeNodeProjectPath(root, from);
 }
 
 function readAnswersFile(path: string): AdoptionAnswer[] {

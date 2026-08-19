@@ -62,6 +62,8 @@ assert.match(explorer, /relativePath/);
 assert.match(explorer, /MarkdownPreview/);
 assert.match(explorer, /Download package/);
 assert.match(explorer, /downloadContextExport/);
+assert.match(explorer, /isDownloadPending/);
+assert.match(explorer, /disabled={isDownloadPending}/);
 assert.match(
   readFileSync("components/files/download-context-export.ts", "utf8"),
   /application\/zip/,
