@@ -21,6 +21,7 @@ Status: Core V1 workflow complete; Guardrail documentation library in progress
 - [x] Zod is required.
 - [x] Vercel AI SDK is used for AI integration.
 - [x] OpenAI is the initial model provider.
+- [x] AI usage is rate-limited server-side before provider calls; Vercel Firewall or shared rate limiting will be added when deployment begins.
 - [x] Exact model selection is unresolved.
 - [x] V1 does not require a database.
 - [x] V1 does not require authentication.

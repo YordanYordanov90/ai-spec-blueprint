@@ -5,6 +5,7 @@ const failureKindLabels: Record<AiFailure["kind"], string> = {
   "invalid-structured-output": "Invalid structured output",
   "application-validation-failure": "Application validation failure",
   "user-input-failure": "User input failure",
+  "rate-limit": "Rate limit reached",
 };
 
 export function AiFailureNotice({
