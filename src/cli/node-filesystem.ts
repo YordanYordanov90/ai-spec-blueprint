@@ -46,6 +46,27 @@ function isMissingPathError(error: unknown): boolean {
   return code === "ENOENT" || code === "ENOTDIR";
 }
 
+function nearestExistingRealPath(path: string): string {
+  let candidate = path;
+
+  while (true) {
+    try {
+      return realpathSync.native(candidate);
+    } catch (error) {
+      if (!isMissingPathError(error)) {
+        throw error;
+      }
+
+      const parent = resolve(candidate, "..");
+      if (parent === candidate) {
+        throw error;
+      }
+
+      candidate = parent;
+    }
+  }
+}
+
 function normalizeNodeProjectRelativePath(relativePath: string): string {
   const input = relativePath.trim();
 
@@ -94,9 +115,22 @@ export function resolveNodeProjectPath(
       throw error;
     }
 
-    // Missing paths are safe to return after lexical containment. Read-only
-    // operations will report them as missing, while existing paths receive
-    // the real-path containment check below.
+    let existingCanonicalRoot: string;
+    try {
+      existingCanonicalRoot = realpathSync.native(resolvedRoot);
+    } catch (rootError) {
+      if (!isMissingPathError(rootError)) {
+        throw rootError;
+      }
+
+      return absolute;
+    }
+
+    const canonicalAncestor = nearestExistingRealPath(absolute);
+    if (!isInside(existingCanonicalRoot, canonicalAncestor)) {
+      throw new Error("Path escapes the project root through a symlink.");
+    }
+
     return absolute;
   }
 
@@ -127,6 +161,22 @@ export function normalizeNodeProjectPath(
   } catch (error) {
     if (!isMissingPathError(error)) {
       throw error;
+    }
+
+    let canonicalRoot: string;
+    try {
+      canonicalRoot = realpathSync.native(resolvedRoot);
+    } catch (rootError) {
+      if (!isMissingPathError(rootError)) {
+        throw rootError;
+      }
+
+      return safePath;
+    }
+
+    const canonicalAncestor = nearestExistingRealPath(absolute);
+    if (!isInside(canonicalRoot, canonicalAncestor)) {
+      throw new Error("Path escapes the project root through a symlink.");
     }
 
     return safePath;
