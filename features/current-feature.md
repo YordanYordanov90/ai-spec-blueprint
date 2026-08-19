@@ -1,6 +1,53 @@
 # Current Feature
 
-## F038 - Build Guardrail documentation library
+## F039 - Add server-side AI abuse protection
+
+- Status: in-progress
+- Phase: Deployment protection
+- Surface: Web / server-side AI boundary
+
+## Objective
+
+Protect public AI operations before provider calls with deployment-trusted identity, shared Vercel Firewall enforcement, structured retry guidance, and bounded request, context, and model-output sizes.
+
+## Product decisions
+
+- Vercel Firewall is the production enforcement boundary; process-local memory is not a production security control.
+- The `ai-grill-me` rate-limit ID is checked with the current server-side request headers so Vercel supplies the deployment-trusted client identity.
+- Production fails closed when the Firewall rule is missing or unavailable.
+- Local development may explicitly use `AI_ABUSE_PROTECTION_MODE=local`; client-side controls do not provide protection.
+- The AI provider receives bounded prompts and a bounded output-token budget.
+- F039 does not add authentication, persistence, QStash, billing, or a second AI workflow.
+
+## Scope
+
+- Enforce the shared rate limit before both Grill Me provider calls.
+- Return a typed rate-limit failure with `retryAfterSeconds` for rejected calls.
+- Limit Server Action request bodies and individual user inputs.
+- Bound serialized discovery state and compact older messages/facts before prompt construction.
+- Set a model output-token cap in the shared AI model wrapper.
+- Keep the change inside the server-side AI boundary and preserve the existing Grill Me UI flow.
+
+## Acceptance criteria
+
+- Both public AI actions check Vercel Firewall before loading or calling the provider.
+- No process-local counter or client-only limit is used as the production control.
+- Missing or unavailable production protection rejects the request safely.
+- Oversized state returns a structured user-input failure before a provider call.
+- Prompts remain within the configured prompt budget after context compaction.
+- Rate-limit failures expose one clear retry instruction.
+- Existing Web, AI, Blueprint Core, and CLI checks continue to pass.
+
+## Verification
+
+- Run `npm run typecheck`.
+- Run `npm run lint`.
+- Run the focused AI and Grill Me checks.
+- Run the production build.
+
+## Previous Feature
+
+### F038 - Build Guardrail documentation library
 
 - Status: in-progress
 - Phase: Guardrail education and documentation

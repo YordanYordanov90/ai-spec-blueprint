@@ -28,6 +28,17 @@ export function ProductHeader({
               Docs
             </Link>
           </nav>
+          <Link
+            href="/docs/guardrails"
+            aria-current={activeSection === "docs" ? "page" : undefined}
+            className={`flex min-h-9 items-center border px-3 font-mono text-[9px] tracking-[0.12em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:hidden ${
+              activeSection === "docs"
+                ? "border-accent/50 bg-accent/8 text-foreground"
+                : "border-transparent text-muted-foreground hover:border-border hover:bg-surface hover:text-foreground"
+            }`}
+          >
+            Docs
+          </Link>
           {trailing ? <div className="shrink-0">{trailing}</div> : null}
         </div>
       </div>

@@ -174,8 +174,16 @@ Generate a blueprint representing the existing project rather than an imaginary 
 
 ## Phase 7 - Guardrail education and documentation
 
-### F038 - Guardrail documentation library — in progress
+### F038 - Guardrail documentation library — complete
 
 Create a dedicated Web documentation surface for the architectural guardrail topics that informed AI Spec Blueprint.
 
 The library must explain the topics in original product language, distinguish source concepts from AI Spec Blueprint adaptations, and keep long-form education separate from Blueprint Core, generated project context, Grill Me prompts, and CLI output.
+
+## Phase 8 - Deployment protection
+
+### F039 - Server-side AI abuse protection — in progress
+
+Protect public AI operations with server-side rate limiting before provider calls.
+
+The feature must use deployment-trusted request identity and edge or shared enforcement suitable for Vercel, return structured retry guidance, cap request and model-output size, and avoid treating client controls or process-local memory as production security. QStash is not required.

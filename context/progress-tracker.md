@@ -2,7 +2,7 @@
 
 ## Project status
 
-Status: Core V1 workflow complete; Guardrail documentation library in progress
+Status: Core V1 workflow and server-side AI abuse protection complete
 
 ## Confirmed product decisions
 
@@ -21,7 +21,7 @@ Status: Core V1 workflow complete; Guardrail documentation library in progress
 - [x] Zod is required.
 - [x] Vercel AI SDK is used for AI integration.
 - [x] OpenAI is the initial model provider.
-- [x] AI usage protection is a server-side deployment concern; rate limiting will be implemented as a separately scoped feature before public deployment.
+- [x] AI usage protection is enforced server-side through deployment-trusted Vercel Firewall checks before provider calls.
 - [x] Exact model selection is unresolved.
 - [x] V1 does not require a database.
 - [x] V1 does not require authentication.
@@ -51,11 +51,11 @@ Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 7 in progress - Guardrail education and documentation
+Phase 8 complete - Deployment protection
 
 ## Current feature
 
-F038 - Build Guardrail documentation library
+F039 - Add server-side AI abuse protection (complete)
 
 See `features/current-feature.md`.
 
@@ -119,7 +119,11 @@ See `features/current-feature.md`.
 
 ### Phase 7 - Guardrail education and documentation
 
-- [ ] F038 - Build Guardrail documentation library (in progress)
+- [x] F038 - Build Guardrail documentation library
+
+### Phase 8 - Deployment protection
+
+- [x] F039 - Add server-side AI abuse protection
 
 ## Deferred capabilities
 

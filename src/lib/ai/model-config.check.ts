@@ -98,6 +98,11 @@ assert.equal("model" in model, false);
 assert.deepEqual(AiCallApprovalSchema.parse(approvedCall), approvedCall);
 assert.deepEqual(AiCallInputSchema.parse(approvedInput), approvedInput);
 assert.throws(() =>
+  AiCallInputSchema.parse({
+    prompt: "x".repeat(24_001),
+  }),
+);
+assert.throws(() =>
   model.generateText(
     approvedInput,
     {

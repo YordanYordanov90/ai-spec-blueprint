@@ -167,6 +167,25 @@ async function runAsyncChecks(): Promise<void> {
     throw new Error("Expected ready discovery to reject another answer.");
   }
   assert.equal(alreadyReady.error.kind, "application-validation-failure");
+
+  const oversizedState = {
+    ...started.value,
+    messages: Array.from({ length: 30 }, (_, index) => ({
+      role: "user" as const,
+      content: `Long answer ${index} ${"x".repeat(4_000)}`,
+    })),
+  };
+  const oversized = await runGrillMeAnswer({
+    state: oversizedState,
+    answer: "Another answer",
+    model: createStubModel({ facts: [] }),
+  });
+  assert.equal(oversized.ok, false);
+  if (oversized.ok) {
+    throw new Error("Expected oversized discovery state to fail.");
+  }
+  assert.equal(oversized.error.kind, "user-input-failure");
+  assert.match(oversized.error.message, /context limit/);
 }
 
 void runAsyncChecks()

@@ -5,6 +5,8 @@ const failureKindLabels: Record<AiFailure["kind"], string> = {
   "invalid-structured-output": "Invalid structured output",
   "application-validation-failure": "Application validation failure",
   "user-input-failure": "User input failure",
+  "rate-limit": "Rate limit reached",
+  "abuse-protection-failure": "AI protection unavailable",
 };
 
 export function AiFailureNotice({
@@ -23,6 +25,11 @@ export function AiFailureNotice({
         {failureKindLabels[failure.kind]}
       </p>
       <p className="mt-2 text-sm leading-6 text-foreground">{failure.message}</p>
+      {failure.retryAfterSeconds ? (
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Retry after {failure.retryAfterSeconds} seconds.
+        </p>
+      ) : null}
       {failure.details.length > 0 ? (
         <ul className="mt-3 space-y-1 text-sm leading-6 text-muted-foreground">
           {failure.details.map((detail) => (

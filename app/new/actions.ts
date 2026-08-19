@@ -1,6 +1,9 @@
 "use server";
 
+import { headers } from "next/headers";
+
 import {
+  checkAiRateLimit,
   createAiFailure,
   createConfiguredLanguageModel,
   loadAiModelConfig,
@@ -30,9 +33,44 @@ function loadDiscoveryModel(): AiResult<
   }
 }
 
+async function enforceAiRateLimit(): Promise<ReturnType<typeof createAiFailure> | null> {
+  const decision = await checkAiRateLimit(await headers());
+
+  if (decision.allowed) {
+    return null;
+  }
+
+  if (decision.reason === "unavailable") {
+    return createAiFailure(
+      "abuse-protection-failure",
+      "AI protection is temporarily unavailable. Please try again later.",
+    );
+  }
+
+  if (decision.retryAfterSeconds === null) {
+    return createAiFailure(
+      "abuse-protection-failure",
+      "AI protection is temporarily unavailable. Please try again later.",
+    );
+  }
+
+  return createAiFailure(
+    "rate-limit",
+    "AI usage limit reached.",
+    [],
+    decision.retryAfterSeconds,
+  );
+}
+
 export async function startGrillMeDiscovery(
   initialIdea: string,
 ): Promise<AiResult<DiscoveryState>> {
+  const rateLimitFailure = await enforceAiRateLimit();
+
+  if (rateLimitFailure) {
+    return { ok: false, error: rateLimitFailure };
+  }
+
   const model = loadDiscoveryModel();
 
   if (!model.ok) {
@@ -49,6 +87,12 @@ export async function answerGrillMeQuestion(
   state: DiscoveryState,
   answer: string,
 ): Promise<AiResult<DiscoveryState>> {
+  const rateLimitFailure = await enforceAiRateLimit();
+
+  if (rateLimitFailure) {
+    return { ok: false, error: rateLimitFailure };
+  }
+
   const model = loadDiscoveryModel();
 
   if (!model.ok) {

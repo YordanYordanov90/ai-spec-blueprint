@@ -11,6 +11,8 @@ export const AiFailureKindSchema = z.enum([
   "invalid-structured-output",
   "application-validation-failure",
   "user-input-failure",
+  "rate-limit",
+  "abuse-protection-failure",
 ]);
 
 export const AiFailureSchema = z
@@ -18,6 +20,7 @@ export const AiFailureSchema = z
     kind: AiFailureKindSchema,
     message: NonEmptyTextSchema,
     details: z.array(NonEmptyTextSchema),
+    retryAfterSeconds: z.number().int().positive().optional(),
   })
   .strict();
 
@@ -46,11 +49,13 @@ export function createAiFailure(
   kind: AiFailureKind,
   message: string,
   details: readonly string[] = [],
+  retryAfterSeconds?: number,
 ): AiFailure {
   return AiFailureSchema.parse({
     kind,
     message: redactSecrets(message),
     details: details.map(redactSecrets),
+    ...(retryAfterSeconds === undefined ? {} : { retryAfterSeconds }),
   });
 }
 
