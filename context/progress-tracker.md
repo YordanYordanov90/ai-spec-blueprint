@@ -2,7 +2,7 @@
 
 ## Project status
 
-Status: Core V1 workflow complete; server-side AI abuse protection in progress
+Status: Core V1 workflow and server-side AI abuse protection complete
 
 ## Confirmed product decisions
 
@@ -51,11 +51,11 @@ Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 8 in progress - Deployment protection
+Phase 8 complete - Deployment protection
 
 ## Current feature
 
-F039 - Add server-side AI abuse protection
+F039 - Add server-side AI abuse protection (complete)
 
 See `features/current-feature.md`.
 
@@ -123,7 +123,7 @@ See `features/current-feature.md`.
 
 ### Phase 8 - Deployment protection
 
-- [ ] F039 - Add server-side AI abuse protection (in progress)
+- [x] F039 - Add server-side AI abuse protection
 
 ## Deferred capabilities
 
