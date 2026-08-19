@@ -119,7 +119,7 @@ The Web application helps a developer:
 4. review architecture and material decisions
 5. review guardrails and how they are enforced
 6. inspect generated context files
-7. export those files when the export feature is active
+7. export those files as a ZIP for a repository
 
 The application must not become a full-screen generic chat interface.
 
@@ -249,7 +249,7 @@ Blueprint
    `- ADR-001.md
 ```
 
-The explorer and preview do not imply that download/export is implemented. Export remains a separate feature.
+The explorer previews generated artifacts and can export the approved package as a ZIP containing the Markdown files plus `blueprint.json`.
 
 ## Responsive behavior
 

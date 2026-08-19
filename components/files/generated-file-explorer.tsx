@@ -1,17 +1,21 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowLeft, FileText, Folder, GitBranch } from "lucide-react";
+import { ArrowLeft, Download, FileText, Folder, GitBranch } from "lucide-react";
 
 import type { GeneratedArtifact } from "@/src/lib/blueprint/schemas/generated-artifact";
+import type { ProjectBlueprint } from "@/src/lib/blueprint/schemas/project-blueprint";
 
+import { downloadContextExport } from "./download-context-export";
 import { MarkdownPreview } from "./markdown-preview";
 
 export function GeneratedFileExplorer({
   artifacts,
+  blueprint,
   onBackToReview,
 }: {
   artifacts: readonly GeneratedArtifact[];
+  blueprint?: ProjectBlueprint;
   onBackToReview?: () => void;
 }) {
   const files = useMemo(
@@ -23,8 +27,25 @@ export function GeneratedFileExplorer({
   const [selectedPath, setSelectedPath] = useState(
     files[0]?.relativePath ?? "",
   );
+  const [isDownloadPending, setIsDownloadPending] = useState(false);
   const selected =
     files.find((file) => file.relativePath === selectedPath) ?? files[0];
+
+  function handleDownload() {
+    if (!blueprint || isDownloadPending) {
+      return;
+    }
+
+    setIsDownloadPending(true);
+
+    try {
+      downloadContextExport(blueprint);
+      window.setTimeout(() => setIsDownloadPending(false), 1100);
+    } catch (error) {
+      setIsDownloadPending(false);
+      throw error;
+    }
+  }
 
   return (
     <main className="relative z-10 mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
@@ -39,19 +60,33 @@ export function GeneratedFileExplorer({
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
             Deterministic renderers produced these files from the approved
-            blueprint. Export remains a separate packaging feature.
+            blueprint. Export downloads a ZIP of the package plus blueprint.json.
           </p>
         </div>
-        {onBackToReview ? (
-          <button
-            type="button"
-            onClick={onBackToReview}
-            className="flex h-10 w-fit items-center gap-2 border border-border px-3 font-mono text-[9px] tracking-[0.08em] text-muted-foreground uppercase transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <ArrowLeft aria-hidden="true" className="size-3" />
-            Back to review
-          </button>
-        ) : null}
+        <div className="flex flex-wrap gap-2">
+          {onBackToReview ? (
+            <button
+              type="button"
+              onClick={onBackToReview}
+              className="flex h-10 w-fit items-center gap-2 border border-border px-3 font-mono text-[9px] tracking-[0.08em] text-muted-foreground uppercase transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <ArrowLeft aria-hidden="true" className="size-3" />
+              Back to review
+            </button>
+          ) : null}
+          {blueprint ? (
+            <button
+              type="button"
+              onClick={handleDownload}
+              disabled={isDownloadPending}
+              aria-busy={isDownloadPending}
+              className="flex h-10 w-fit items-center gap-2 border border-accent bg-accent/10 px-3 font-mono text-[9px] tracking-[0.08em] text-accent uppercase transition-colors hover:bg-accent/16 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <Download aria-hidden="true" className="size-3" />
+              {isDownloadPending ? "Preparing package..." : "Download package"}
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <div className="grid min-w-0 border border-border bg-border lg:grid-cols-[minmax(15rem,0.62fr)_minmax(0,1.38fr)]">
@@ -103,7 +138,7 @@ export function GeneratedFileExplorer({
             </ul>
         </nav>
           <div className="border-t border-border px-4 py-3 font-mono text-[9px] leading-4 text-muted-foreground">
-            Preview only · no files have been written or exported.
+            Preview the package, then export a ZIP to place in a repository.
           </div>
       </aside>
       {selected ? (

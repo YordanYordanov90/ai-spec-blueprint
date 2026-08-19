@@ -2,11 +2,16 @@
   "name": "ai-blueprint",
   "version": "0.1.0",
   "private": true,
+  "bin": {
+    "blueprint": "src/cli/run.mjs"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "blueprint": "tsx src/cli/index.ts",
     "check:generator-contract": "tsx src/lib/blueprint/generators/contract.check.ts",
     "check:project-overview": "tsx src/lib/blueprint/generators/project-overview.check.ts",
     "check:architecture": "tsx src/lib/blueprint/generators/architecture.check.ts",
@@ -30,7 +35,12 @@
     "check:grill-me": "tsx src/lib/blueprint/discovery/continue-discovery.check.ts && tsx src/lib/ai/grill-me-turn.check.ts && tsx components/grill-me/grill-me.check.ts",
     "check:completeness": "tsx components/completeness/completeness.check.ts",
     "check:blueprint-review": "tsx src/lib/blueprint/discovery/approve-blueprint.check.ts && tsx components/review/blueprint-review.check.ts",
-    "check:generated-files": "tsx src/lib/blueprint/generators/approved-package.check.ts && tsx components/files/generated-file.check.ts"
+    "check:generated-files": "tsx src/lib/blueprint/generators/approved-package.check.ts && tsx components/files/generated-file.check.ts",
+    "check:export": "tsx src/lib/blueprint/export/create-context-export.check.ts",
+    "check:cli-workflows": "tsx src/lib/blueprint/cli-workflows/cli-workflows.check.ts",
+    "check:cli-boundary": "tsx src/cli/package-boundary.check.ts && tsx src/cli/commands.check.ts && tsx src/cli/node-filesystem.check.ts",
+    "check:adoption": "tsx src/lib/blueprint/adoption/adoption.check.ts",
+    "check:docs": "tsx src/content/guardrails/index.check.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.42",
@@ -45,6 +55,7 @@
     "shadcn": "^4.18.0",
     "tailwind-merge": "^3.6.0",
     "tw-animate-css": "^1.4.0",
+    "tsx": "^4.23.12",
     "zod": "4.4.3"
   },
   "devDependencies": {
@@ -55,7 +66,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "tailwindcss": "^4",
-    "tsx": "^4.23.12",
     "typescript": "^5"
   }
 }

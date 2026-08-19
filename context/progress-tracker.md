@@ -2,9 +2,7 @@
 
 ## Project status
 
-Status: Web experience in progress
-
-The application scaffold is owned by the human developer and may not yet exist when this file is first copied.
+Status: Core V1 workflow complete; Guardrail documentation library in progress
 
 ## Confirmed product decisions
 
@@ -31,27 +29,32 @@ The application scaffold is owned by the human developer and may not yet exist w
 - [x] Agents may install feature-level dependencies after scaffolding.
 - [x] Final Markdown generation should be deterministic.
 - [x] AI should produce validated structured blueprint data rather than independently generating every context document.
+- [x] Web context export uses a ZIP containing generated Markdown and `blueprint.json`.
+- [x] V1 CLI commands are `init`, `generate`, `feature`, `verify`, `doctor`, and `adopt`.
+- [x] Long-form guardrail education belongs in a separate Web documentation surface.
+- [x] The source PDF is research material and must not become a runtime prompt, application dependency, or generated-project artifact.
+- [x] Documentation must distinguish source concepts from AI Spec Blueprint adaptations and use original wording and examples.
 
 ## Open product decisions
 
 - [ ] Final product name
 - [ ] Final brand color / accent system
 - [ ] Exact OpenAI model for V1
-- [ ] Exact export packaging format
 - [ ] Whether V1 preserves unfinished onboarding across browser refreshes
 - [ ] Exact timing of extracting Blueprint Core into a physical workspace package
-- [ ] Exact CLI command naming
 - [ ] Initial framework profiles beyond the product's own Next.js-oriented experience
+- [ ] Whether a later feature adds AI-assisted discussion to guardrail topic pages
+- [ ] Whether a later CLI feature adds short topic explanations or documentation links
 
 Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 4 - Web experience
+Phase 7 in progress - Guardrail education and documentation
 
 ## Current feature
 
-`W001 - Redesign Web UI foundation`
+F038 - Build Guardrail documentation library
 
 See `features/current-feature.md`.
 
@@ -95,23 +98,27 @@ See `features/current-feature.md`.
 - [x] F025 - Build blueprint review experience
 - [x] F026 - Build generated-file explorer and preview
 - [x] W001 - Redesign Web UI foundation
-- [ ] F027 - Build context export
+- [x] F027 - Build context export
 
 ### Phase 5 - CLI
 
-- [ ] F028 - Establish reusable CLI package boundary
-- [ ] F029 - Implement CLI initialization workflow
-- [ ] F030 - Generate context from CLI
-- [ ] F031 - Implement feature planning workflow
-- [ ] F032 - Implement verification workflow
-- [ ] F033 - Implement project/context doctor
+- [x] F028 - Establish reusable CLI package boundary
+- [x] F029 - Implement CLI initialization workflow
+- [x] F030 - Generate context from CLI
+- [x] F031 - Implement feature planning workflow
+- [x] F032 - Implement verification workflow
+- [x] F033 - Implement project/context doctor
 
 ### Phase 6 - Existing project adoption
 
-- [ ] F034 - Detect repository technology facts
-- [ ] F035 - Analyze existing project conventions
-- [ ] F036 - Ask only unresolved adoption questions
-- [ ] F037 - Generate adopted project blueprint
+- [x] F034 - Detect repository technology facts
+- [x] F035 - Analyze existing project conventions
+- [x] F036 - Ask only unresolved adoption questions
+- [x] F037 - Generate adopted project blueprint
+
+### Phase 7 - Guardrail education and documentation
+
+- [ ] F038 - Build Guardrail documentation library (in progress)
 
 ## Deferred capabilities
 
@@ -124,3 +131,5 @@ See `features/current-feature.md`.
 - automatic deployment
 - broad multi-framework support
 - autonomous code generation as the primary product
+- AI-assisted guardrail discussion that mutates blueprint state
+- CLI reproduction of long-form Web documentation

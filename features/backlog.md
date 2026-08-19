@@ -124,50 +124,58 @@ Provide IDE-like navigation and readable Markdown preview.
 
 Establish the product-specific visual system, landing-page composition, structured workspace shell, blueprint status language, guardrail card, architecture motif, and generated-artifact presentation without expanding underlying product behavior.
 
-### F027 - Export
+### F027 - Export — complete
 
 Export the generated context package.
 
 ## Phase 5 - CLI
 
-### F028 - Reusable CLI package boundary
+### F028 - Reusable CLI package boundary — complete
 
 Physically expose the shared core to a CLI without duplicating Web logic.
 
-### F029 - CLI initialization workflow
+### F029 - CLI initialization workflow — complete
 
 Create the first developer-facing CLI workflow.
 
-### F030 - CLI context generation
+### F030 - CLI context generation — complete
 
 Generate the same context package through the CLI.
 
-### F031 - Feature planning workflow
+### F031 - Feature planning workflow — complete
 
 Prepare a scoped current feature from durable project context.
 
-### F032 - Verification workflow
+### F032 - Verification workflow — complete
 
 Run or orchestrate configured project verification.
 
-### F033 - Project/context doctor
+### F033 - Project/context doctor — complete
 
 Detect missing context and important mismatch between declared and actual project state.
 
 ## Phase 6 - Adoption
 
-### F034 - Technology detection
+### F034 - Technology detection — complete
 
 Read an existing repository and detect verifiable stack facts.
 
-### F035 - Convention analysis
+### F035 - Convention analysis — complete
 
 Identify real implementation patterns before proposing context.
 
-### F036 - Adoption questions
+### F036 - Adoption questions — complete
 
 Ask only questions not answerable from the codebase and approved context.
 
-### F037 - Adopted blueprint generation
+### F037 - Adopted blueprint generation — complete
 
 Generate a blueprint representing the existing project rather than an imaginary clean-slate architecture.
+
+## Phase 7 - Guardrail education and documentation
+
+### F038 - Guardrail documentation library — in progress
+
+Create a dedicated Web documentation surface for the architectural guardrail topics that informed AI Spec Blueprint.
+
+The library must explain the topics in original product language, distinguish source concepts from AI Spec Blueprint adaptations, and keep long-form education separate from Blueprint Core, generated project context, Grill Me prompts, and CLI output.
