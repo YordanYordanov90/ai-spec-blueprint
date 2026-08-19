@@ -24,7 +24,6 @@
     "check:agents": "tsx src/lib/blueprint/generators/agents.check.ts",
     "check:context-package": "tsx src/lib/blueprint/generators/context-package.check.ts",
     "check:ai-model-config": "tsx src/lib/ai/model-config.check.ts",
-    "check:ai-rate-limit": "tsx src/lib/ai/rate-limit.check.ts",
     "check:discovery-state": "tsx src/lib/blueprint/schemas/discovery.check.ts",
     "check:fact-extraction": "tsx src/lib/ai/fact-extraction.check.ts",
     "check:missing-information": "tsx src/lib/blueprint/discovery/analyze-missing-information.check.ts",

@@ -11,7 +11,6 @@ export const AiFailureKindSchema = z.enum([
   "invalid-structured-output",
   "application-validation-failure",
   "user-input-failure",
-  "rate-limit",
 ]);
 
 export const AiFailureSchema = z
