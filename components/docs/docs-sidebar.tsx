@@ -52,7 +52,7 @@ function SidebarTopicLink({
       <Link
         href={`/docs/guardrails/${topic.slug}`}
         aria-current={active ? "page" : undefined}
-        className={`flex min-h-8 items-start gap-2 border-l-2 py-1.5 pl-3 text-[11px] leading-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+        className={`flex min-h-9 items-start gap-2 border-l-2 py-1.5 pl-3 text-[11px] leading-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
           active
             ? "-ml-px border-accent bg-accent/8 text-foreground"
             : "border-transparent text-muted-foreground hover:border-border hover:text-foreground"

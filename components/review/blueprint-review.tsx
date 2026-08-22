@@ -38,12 +38,12 @@ function ReviewSection({
   status?: "fact" | "proposed" | "approved" | "unresolved";
 }) {
   return (
-    <section className="border border-border bg-surface-elevated">
-      <div className="flex items-center justify-between gap-4 border-b border-border px-4 py-3">
+    <section className="border-t border-border pt-4 first:border-t-0 first:pt-0">
+      <div className="flex items-center justify-between gap-4 border-b border-border pb-3">
         <h3 className="blueprint-kicker text-muted-foreground">{title}</h3>
         {status ? <DecisionStatus status={status} /> : null}
       </div>
-      <div className="flex flex-col gap-4 p-4 text-sm leading-6 sm:p-5">
+      <div className="flex flex-col gap-4 pt-4 text-sm leading-6">
         {children}
       </div>
     </section>

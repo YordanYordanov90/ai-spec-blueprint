@@ -21,7 +21,7 @@ export function DocsMobileNavigation({ currentSlug }: { currentSlug?: string }) 
                   <Link
                     href={`/docs/guardrails/${topic.slug}`}
                     aria-current={topic.slug === currentSlug ? "page" : undefined}
-                    className={`flex min-h-9 items-center gap-2 px-2 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    className={`flex min-h-11 items-center gap-2 px-2 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                       topic.slug === currentSlug
                         ? "bg-accent/10 text-foreground"
                         : "text-muted-foreground hover:bg-surface-elevated hover:text-foreground"
