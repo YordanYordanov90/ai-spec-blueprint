@@ -8,7 +8,6 @@ export default function NewProjectPage() {
   return (
     <div className="relative isolate min-h-full overflow-x-clip bg-background/70">
       <ProductHeader
-        showMobileDocs={false}
         trailing={
           <Link
             href="/"
