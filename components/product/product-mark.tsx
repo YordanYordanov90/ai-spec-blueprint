@@ -5,7 +5,7 @@ export function ProductMark() {
     <Link
       href="/"
       aria-label="AI Spec Blueprint home"
-      className="group flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+      className="group flex min-h-11 min-w-0 items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
     >
       <span
         aria-hidden="true"
@@ -16,11 +16,11 @@ export function ProductMark() {
         <span className="border border-border" />
         <span className="bg-foreground/75" />
       </span>
-      <span className="flex flex-col">
-        <span className="text-[13px] font-semibold tracking-[-0.02em]">
+      <span className="flex min-w-0 flex-col">
+        <span className="truncate text-[12px] font-semibold tracking-[-0.02em] min-[414px]:text-[13px]">
           AI Spec Blueprint
         </span>
-        <span className="font-mono text-[9px] tracking-[0.14em] text-muted-foreground uppercase">
+        <span className="hidden font-mono text-[9px] tracking-[0.14em] text-muted-foreground uppercase min-[414px]:inline">
           system definition layer
         </span>
       </span>

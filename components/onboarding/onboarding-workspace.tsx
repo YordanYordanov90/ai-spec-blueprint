@@ -192,7 +192,7 @@ export function OnboardingWorkspace() {
 
         <div className="space-y-5 lg:sticky lg:top-6">
           <CompletenessPanel entries={completeness} />
-          <aside className="border border-border bg-code-surface p-5">
+          <aside className="border-t border-border pt-4">
             <p className="blueprint-kicker text-muted-foreground">Source of truth</p>
             <div className="mt-4 flex gap-3">
               <FileText aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-accent" />

@@ -63,8 +63,7 @@ function ArchitectureMap() {
       />
       <div className="relative grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
         <div>
-          <p className="blueprint-kicker text-accent">System relationship</p>
-          <h3 className="mt-4 max-w-sm text-2xl font-semibold tracking-[-0.04em] sm:text-3xl">
+          <h3 className="max-w-sm text-2xl font-semibold tracking-[-0.04em] sm:text-3xl">
             The agent works inside the architecture, not above it.
           </h3>
           <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground">
@@ -92,7 +91,7 @@ function ArchitectureMap() {
             <ArrowRight className="-ml-1 size-4" />
           </div>
 
-          <div className="relative border border-accent/55 bg-accent/8 p-4 shadow-[0_0_40px_color-mix(in_oklch,var(--accent)_8%,transparent)] sm:p-5">
+          <div className="relative border border-accent/55 bg-accent/8 p-4 sm:p-5">
             <span className="absolute -left-1.5 -top-1.5 size-3 border border-accent bg-background" />
             <span className="absolute -bottom-1.5 -right-1.5 size-3 border border-accent bg-background" />
             <Braces aria-hidden="true" className="mb-5 size-5 text-accent" />
@@ -114,7 +113,7 @@ function ArchitectureMap() {
 
 export default function Home() {
   return (
-    <div className="relative isolate min-h-full overflow-hidden">
+    <div className="blueprint-grid-bg relative isolate min-h-full overflow-x-clip">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-[42rem] bg-[radial-gradient(circle_at_74%_18%,color-mix(in_oklch,var(--accent)_12%,transparent),transparent_34%)]"
@@ -294,8 +293,7 @@ export default function Home() {
         <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28">
           <div className="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
             <div>
-              <p className="blueprint-kicker text-accent">Blueprint Core</p>
-              <h2 className="mt-4 text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">
+              <h2 className="text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">
                 One source of truth around every interface.
               </h2>
               <p className="mt-5 text-sm leading-7 text-muted-foreground">
@@ -312,8 +310,7 @@ export default function Home() {
             <div className="grid gap-8 lg:grid-cols-[0.62fr_1.38fr]">
               <div>
                 <ShieldCheck aria-hidden="true" className="size-6 text-accent" />
-                <p className="blueprint-kicker mt-6 text-accent">Guardrail language</p>
-                <h2 className="mt-4 text-3xl font-semibold tracking-[-0.045em]">
+                <h2 className="mt-5 text-3xl font-semibold tracking-[-0.045em]">
                   Rules that say what, why, and how.
                 </h2>
                 <p className="mt-5 max-w-md text-sm leading-7 text-muted-foreground">
@@ -342,8 +339,7 @@ export default function Home() {
 
         <section className="mx-auto grid max-w-7xl gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
-            <p className="blueprint-kicker text-accent">Generated artifacts</p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">
+            <h2 className="text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">
               Context that survives the conversation.
             </h2>
             <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground">
@@ -382,10 +378,7 @@ export default function Home() {
         <section className="border-t border-border bg-accent text-accent-foreground">
           <div className="mx-auto flex max-w-7xl flex-col justify-between gap-8 px-5 py-14 sm:px-8 md:flex-row md:items-center">
             <div>
-              <p className="font-mono text-[10px] tracking-[0.16em] uppercase opacity-70">
-                Begin with definition
-              </p>
-              <h2 className="mt-3 text-2xl font-semibold tracking-[-0.04em] sm:text-3xl">
+              <h2 className="text-2xl font-semibold tracking-[-0.04em] sm:text-3xl">
                 Build the environment before the implementation.
               </h2>
             </div>
