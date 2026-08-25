@@ -7,6 +7,7 @@ import {
 } from "../schemas/project-blueprint";
 
 const SECTION_KEYS = [
+  "metadata",
   "product",
   "users",
   "goals",

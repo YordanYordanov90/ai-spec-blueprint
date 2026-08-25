@@ -90,3 +90,14 @@ export function assessBlueprintReadiness(
   };
 }
 
+export function assertBlueprintReadyForGeneration(
+  blueprint: ProjectBlueprint,
+): void {
+  const report = assessBlueprintReadiness(blueprint);
+
+  if (report.status === "blocking") {
+    throw new Error(
+      "Cannot generate durable context while blocking blueprint decisions remain unresolved.",
+    );
+  }
+}

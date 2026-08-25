@@ -1,4 +1,5 @@
 import { blueprintHasPendingProposal } from "../discovery/approve-blueprint";
+import { assertBlueprintReadyForGeneration } from "../lifecycle/readiness";
 import {
   ProjectBlueprintSchema,
   type ProjectBlueprint,
@@ -16,6 +17,8 @@ export function generateApprovedContextPackage(
       "Cannot generate context files from an unapproved blueprint proposal.",
     );
   }
+
+  assertBlueprintReadyForGeneration(validated);
 
   return generateContextPackage(validated);
 }

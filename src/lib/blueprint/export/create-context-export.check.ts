@@ -76,6 +76,15 @@ assert.ok(first.zipBytes.byteLength > 100);
 assert.equal(first.zipBytes[0], 0x50);
 assert.equal(first.zipBytes[1], 0x4b);
 
+const blockingBlueprint = ProjectBlueprintSchema.parse({
+  ...approved,
+  unresolvedDecisions: approved.unresolvedDecisions.map((decision) => ({
+    ...decision,
+    blocking: true,
+  })),
+});
+assert.throws(() => createContextExport(blockingBlueprint));
+
 const example = ProjectBlueprintSchema.parse(validProjectBlueprintExample);
 assert.equal(slugifyExportName(example.product.name), "release-notes-hub");
 

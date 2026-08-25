@@ -221,3 +221,9 @@ Surface blocking decisions, pending proposals, deferred decisions, and missing a
 ### F047 - Guided example project — complete
 
 Provide a deterministic, no-provider-call example that lets a visitor inspect review, readiness, generated files, diffs, and repository handoff before starting discovery.
+
+## Phase 10 - Review follow-up
+
+### F048 - Address PR review findings — complete
+
+Close the confirmed Codex and DiffGuard findings for lifecycle generation, import versioning, artifact diffs, and repository handoff. Keep the fix inside the existing Blueprint Core and Web boundaries.

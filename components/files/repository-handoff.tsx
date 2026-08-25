@@ -5,8 +5,10 @@ import { useState } from "react";
 
 const commands = [
   "unzip <project>-context.zip -d /path/to/repository",
-  "blueprint doctor --root /path/to/repository",
-  "blueprint feature --next --root /path/to/repository",
+  "git clone https://github.com/YordanYordanov90/ai-spec-blueprint.git /tmp/ai-spec-blueprint",
+  "npm --prefix /tmp/ai-spec-blueprint install",
+  "npm --prefix /tmp/ai-spec-blueprint run blueprint -- doctor --root /path/to/repository",
+  "npm --prefix /tmp/ai-spec-blueprint run blueprint -- feature --next --root /path/to/repository",
 ] as const;
 
 export function RepositoryHandoff({ downloaded }: { downloaded: boolean }) {
@@ -27,7 +29,7 @@ export function RepositoryHandoff({ downloaded }: { downloaded: boolean }) {
             {downloaded ? "Package downloaded. Put it to work." : "After download"}
           </h2>
           <p className="mt-2 max-w-2xl text-xs leading-5 text-muted-foreground">
-            Extract the reviewed package into the target repository, inspect its context health, then prepare exactly one active feature.
+            Extract the reviewed package into the target repository, install the CLI from the public source repository, inspect context health, then prepare exactly one active feature.
           </p>
         </div>
         <button type="button" onClick={() => void copyCommands()} className="flex h-10 items-center gap-2 border border-border px-3 font-mono text-[9px] uppercase hover:bg-surface-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
@@ -35,7 +37,7 @@ export function RepositoryHandoff({ downloaded }: { downloaded: boolean }) {
           {copied ? "Copied" : "Copy commands"}
         </button>
       </div>
-      <ol className="mt-5 grid gap-px bg-border lg:grid-cols-3">
+      <ol className="mt-5 grid gap-px bg-border lg:grid-cols-2">
         {commands.map((command, index) => (
           <li key={command} className="min-w-0 bg-code-surface p-4">
             <span className="flex items-center gap-2 font-mono text-[9px] text-accent">

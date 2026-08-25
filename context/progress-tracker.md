@@ -40,6 +40,9 @@ Status: Core V1 workflow, deployment protection, and local-first blueprint lifec
 - [x] Blueprint changes and generated-artifact changes are visible before export.
 - [x] Blocking unresolved decisions prevent durable artifact generation.
 - [x] Lifecycle features remain local-first and require no authentication or database.
+- [x] Shared Web and CLI generation paths reject blocking unresolved blueprint decisions.
+- [x] Imported blueprint files accept only supported extensions and schema version `1.0`.
+- [x] Review follow-up fixes are recorded as F048 and verified.
 
 ## Open product decisions
 
@@ -55,11 +58,11 @@ Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 9 complete - Blueprint lifecycle
+Phase 10 complete - Review follow-up
 
 ## Current feature
 
-No active feature. F047 - Guided example project is the most recently completed feature.
+No active feature. F048 - Address PR review findings is the most recently completed feature.
 
 See `features/current-feature.md`.
 
@@ -139,6 +142,10 @@ See `features/current-feature.md`.
 - [x] F045 - Add discovery history, undo, and defer
 - [x] F046 - Add a blueprint readiness report
 - [x] F047 - Add a guided example project
+
+### Phase 10 - Review follow-up
+
+- [x] F048 - Address PR review findings
 
 ## Deferred capabilities
 
