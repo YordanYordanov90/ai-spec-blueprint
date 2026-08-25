@@ -7,15 +7,19 @@ import type { GeneratedArtifact } from "@/src/lib/blueprint/schemas/generated-ar
 import type { ProjectBlueprint } from "@/src/lib/blueprint/schemas/project-blueprint";
 
 import { downloadContextExport } from "./download-context-export";
+import { BlueprintDiffPanel } from "./blueprint-diff-panel";
 import { MarkdownPreview } from "./markdown-preview";
+import { RepositoryHandoff } from "./repository-handoff";
 
 export function GeneratedFileExplorer({
   artifacts,
   blueprint,
+  baseline = null,
   onBackToReview,
 }: {
   artifacts: readonly GeneratedArtifact[];
   blueprint?: ProjectBlueprint;
+  baseline?: ProjectBlueprint | null;
   onBackToReview?: () => void;
 }) {
   const files = useMemo(
@@ -28,6 +32,7 @@ export function GeneratedFileExplorer({
     files[0]?.relativePath ?? "",
   );
   const [isDownloadPending, setIsDownloadPending] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
   const selected =
     files.find((file) => file.relativePath === selectedPath) ?? files[0];
 
@@ -40,6 +45,7 @@ export function GeneratedFileExplorer({
 
     try {
       downloadContextExport(blueprint);
+      setDownloaded(true);
       window.setTimeout(() => setIsDownloadPending(false), 1100);
     } catch (error) {
       setIsDownloadPending(false);
@@ -88,6 +94,10 @@ export function GeneratedFileExplorer({
           ) : null}
         </div>
       </div>
+
+      {blueprint ? (
+        <BlueprintDiffPanel baseline={baseline} blueprint={blueprint} />
+      ) : null}
 
       <div className="grid min-w-0 border border-border bg-border lg:grid-cols-[minmax(15rem,0.62fr)_minmax(0,1.38fr)]">
         <aside className="min-w-0 bg-code-surface">
@@ -147,6 +157,7 @@ export function GeneratedFileExplorer({
         <p className="text-sm text-muted-foreground">No generated files.</p>
       )}
       </div>
+      <RepositoryHandoff downloaded={downloaded} />
     </main>
   );
 }

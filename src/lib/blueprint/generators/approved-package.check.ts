@@ -50,4 +50,13 @@ assert.ok(
 assert.ok(first.every((artifact) => !artifact.relativePath.startsWith("/")));
 assert.ok(first.every((artifact) => !artifact.relativePath.includes("..")));
 
+const blocked = {
+  ...approved,
+  unresolvedDecisions: approved.unresolvedDecisions.map((decision) => ({
+    ...decision,
+    blocking: true,
+  })),
+};
+assert.throws(() => generateApprovedContextPackage(blocked));
+
 console.log("Approved context package checks passed.");

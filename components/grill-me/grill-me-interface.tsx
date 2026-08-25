@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState, type FormEvent } from "react";
-import { ArrowRight, Check, MessageSquareText, Quote } from "lucide-react";
+import { ArrowRight, Check, History, MessageSquareText, Quote, RotateCcw } from "lucide-react";
 
 import { ProjectIdeaForm } from "@/components/onboarding/project-idea-form";
 import { DecisionStatus } from "@/components/product/decision-status";
@@ -18,14 +18,17 @@ import type { DiscoveryState } from "@/src/lib/blueprint/schemas/discovery";
 import { AiFailureNotice } from "./ai-failure-notice";
 
 export function GrillMeInterface({
+  initialState = null,
   onStateChange,
   onProposeBlueprint,
 }: {
+  initialState?: DiscoveryState | null;
   onStateChange?: (state: DiscoveryState | null) => void;
   onProposeBlueprint?: (state: DiscoveryState) => void;
 }) {
   const answerId = useId();
-  const [state, setDiscoveryState] = useState<DiscoveryState | null>(null);
+  const [state, setDiscoveryState] = useState<DiscoveryState | null>(initialState);
+  const [history, setHistory] = useState<DiscoveryState[]>([]);
   const [answer, setAnswer] = useState("");
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<AiFailure | null>(null);
@@ -51,6 +54,7 @@ export function GrillMeInterface({
       }
 
       setState(result.value);
+      setHistory([]);
       setAnswer("");
     } catch (error) {
       const failure = classifyAiError(error);
@@ -77,6 +81,7 @@ export function GrillMeInterface({
         return;
       }
 
+      setHistory((entries) => [...entries, state]);
       setState(result.value);
       setAnswer("");
     } catch (error) {
@@ -101,6 +106,15 @@ export function GrillMeInterface({
     }
 
     await submitAnswer(nextAnswer);
+  }
+
+  function undoLastAnswer() {
+    const previous = history.at(-1);
+    if (!previous || pending) return;
+    setHistory((entries) => entries.slice(0, -1));
+    setState(previous);
+    setAnswer("");
+    setFailure(null);
   }
 
   if (!state) {
@@ -170,6 +184,38 @@ export function GrillMeInterface({
         )}
       </section>
 
+      {state.messages.some((message) => message.role === "user") ? (
+        <details className="border border-border bg-surface">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring">
+            <span className="flex items-center gap-2 text-xs font-medium">
+              <History aria-hidden="true" className="size-3 text-accent" />
+              Answer history
+            </span>
+            <span className="font-mono text-[9px] text-muted-foreground uppercase">
+              {state.messages.filter((message) => message.role === "user").length} entries
+            </span>
+          </summary>
+          <ol className="max-h-64 divide-y divide-border overflow-auto border-t border-border">
+            {state.messages
+              .filter((message) => message.role === "user")
+              .map((message, index) => (
+                <li key={`${index}-${message.content.slice(0, 16)}`} className="grid grid-cols-[2rem_1fr] gap-3 px-4 py-3 text-xs leading-5">
+                  <span className="font-mono text-[9px] text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
+                  <span>{message.content}</span>
+                </li>
+              ))}
+          </ol>
+          {history.length > 0 ? (
+            <div className="border-t border-border p-3">
+              <button type="button" onClick={undoLastAnswer} disabled={pending} className="flex min-h-10 items-center gap-2 border border-border px-3 font-mono text-[9px] uppercase hover:bg-surface-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <RotateCcw aria-hidden="true" className="size-3" />
+                Undo last answer
+              </button>
+            </div>
+          ) : null}
+        </details>
+      ) : null}
+
       {failure ? (
         <AiFailureNotice
           failure={failure}
@@ -212,7 +258,7 @@ export function GrillMeInterface({
             <p className="blueprint-kicker text-accent">Focused question</p>
             <span className="flex items-center gap-2 font-mono text-[9px] text-muted-foreground uppercase">
               <MessageSquareText aria-hidden="true" className="size-3" />
-              Grill Me
+              {state.currentQuestion.topic.replaceAll("-", " ")} · {state.gaps.filter((gap) => gap.blocking).length} blocking
             </span>
           </div>
           <div className="p-5 sm:p-6">
@@ -240,15 +286,27 @@ export function GrillMeInterface({
                 className="min-h-32 rounded-none border-border bg-code-surface px-4 py-3 font-mono text-xs leading-6"
               />
             </div>
-            <Button
-              type="submit"
-              size="lg"
-              className="h-11 w-fit rounded-none px-5"
-              disabled={pending}
-            >
-              {pending ? "Recording answer…" : "Submit answer"}
-              {!pending ? <ArrowRight aria-hidden="true" /> : null}
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                type="submit"
+                size="lg"
+                className="h-11 w-fit rounded-none px-5"
+                disabled={pending}
+              >
+                {pending ? "Recording answer…" : "Submit answer"}
+                {!pending ? <ArrowRight aria-hidden="true" /> : null}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                className="h-11 w-fit rounded-none px-5"
+                disabled={pending}
+                onClick={() => void submitAnswer("I do not know yet. Record this as unresolved and non-blocking if the project can safely proceed without it.")}
+              >
+                Decide later
+              </Button>
+            </div>
           </form>
           </div>
         </section>

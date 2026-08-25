@@ -182,8 +182,60 @@ The library must explain the topics in original product language, distinguish so
 
 ## Phase 8 - Deployment protection
 
-### F039 - Server-side AI abuse protection — in progress
+### F039 - Server-side AI abuse protection — complete
 
 Protect public AI operations with server-side rate limiting before provider calls.
 
 The feature must use deployment-trusted request identity and edge or shared enforcement suitable for Vercel, return structured retry guidance, cap request and model-output size, and avoid treating client controls or process-local memory as production security. QStash is not required.
+
+## Phase 9 - Blueprint lifecycle
+
+### F040 - Local draft recovery — complete
+
+Persist schema-validated discovery and blueprint working state in the browser, offer explicit resume and reset controls, and communicate that recovery is device-local rather than cloud storage.
+
+### F041 - Section-level blueprint revision and approval — complete
+
+Allow individual stack and architecture proposals to be approved or rejected, provide a schema-validated structured editor for any blueprint section, and preserve the human approval boundary.
+
+### F042 - Import and resume blueprint — complete
+
+Import a validated `blueprint.json` or an AI Spec Blueprint ZIP export and reopen it in the review workspace without authentication or server persistence.
+
+### F043 - Blueprint and generated-artifact diff — complete
+
+Compare the current blueprint with an imported baseline and show changed blueprint sections plus added, changed, and removed generated artifacts before export.
+
+### F044 - Repository handoff experience — complete
+
+Connect export to the existing CLI workflow with extraction, doctor, and next-feature instructions that remain copyable and do not mutate an external repository.
+
+### F045 - Discovery history, undo, and defer — complete
+
+Expose recorded user-answer history, allow the most recent successful discovery turn to be undone locally, and provide an explicit decide-later response for uncertainty.
+
+### F046 - Blueprint readiness report — complete
+
+Surface blocking decisions, pending proposals, deferred decisions, and missing active-feature state, and prevent artifact generation while a blocking decision remains.
+
+### F047 - Guided example project — complete
+
+Provide a deterministic, no-provider-call example that lets a visitor inspect review, readiness, generated files, diffs, and repository handoff before starting discovery.
+
+## Phase 10 - Review follow-up
+
+### F048 - Address PR review findings — complete
+
+Close the confirmed Codex and DiffGuard findings for lifecycle generation, import versioning, artifact diffs, and repository handoff. Keep the fix inside the existing Blueprint Core and Web boundaries.
+
+## Phase 11 - Review hardening
+
+### F049 - Harden lifecycle review boundaries — complete
+
+Address the second DiffGuard review pass for untrusted ZIP imports, clipboard failure recovery, workspace restore/autosave transitions, and structured editor synchronization. Keep the implementation local-first and within the existing Blueprint Core and Web boundaries.
+
+## Phase 12 - Import compatibility hardening
+
+### F050 - Harden import format and snapshot compatibility — complete
+
+Sniff imported bytes before selecting the ZIP or JSON parser, fail clearly on filename/content mismatches, and safely handle local workspace snapshots that are no longer compatible with the current schema or lifecycle expectations.

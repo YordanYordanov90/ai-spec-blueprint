@@ -258,6 +258,17 @@ This prevents the model from inventing certainty.
 
 The conversation itself is not the durable domain model.
 
+## Local workspace snapshot
+
+The Web interface may persist a versioned workspace snapshot containing the
+current `DiscoveryState`, current `ProjectBlueprint`, and optional imported
+baseline. The snapshot is an interface-owned recovery envelope rather than a
+new domain aggregate.
+
+Every restored snapshot must be validated against its envelope schema and the
+canonical discovery and blueprint schemas. Invalid or incompatible snapshots
+must be ignored safely rather than partially applied.
+
 Implemented temporary discovery state is `DiscoveryState` and contains:
 
 - `initialIdea`

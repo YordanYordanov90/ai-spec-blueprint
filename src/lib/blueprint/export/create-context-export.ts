@@ -10,6 +10,7 @@ import {
 import type { GeneratedArtifact } from "../schemas/generated-artifact";
 import { assertSafeArtifactPaths } from "./safe-path";
 import { buildZipArchive } from "./zip";
+import { assertBlueprintReadyForGeneration } from "../lifecycle/readiness";
 
 export const BLUEPRINT_DOCUMENT_PATH = "blueprint.json";
 
@@ -48,6 +49,8 @@ export function createContextExport(
   if (blueprintHasPendingProposal(validated)) {
     throw new Error("Cannot export context from an unapproved blueprint proposal.");
   }
+
+  assertBlueprintReadyForGeneration(validated);
 
   const generated = generateApprovedContextPackage(validated);
   const files = validateGeneratedArtifacts([

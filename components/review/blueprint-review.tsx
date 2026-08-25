@@ -1,13 +1,19 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { ArrowRight, Check } from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { ArrowLeft, ArrowRight, Check, Code2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { DecisionStatus } from "@/components/product/decision-status";
 import { GuardrailCard } from "@/components/guardrails/guardrail-card";
 import type { ProjectBlueprint } from "@/src/lib/blueprint/schemas/project-blueprint";
+import { ProjectBlueprintSchema } from "@/src/lib/blueprint/schemas/project-blueprint";
 import { blueprintHasPendingProposal } from "@/src/lib/blueprint/discovery/approve-blueprint";
+import {
+  reviewBlueprintDecision,
+  type ReviewDecisionAction,
+  type ReviewDecisionTarget,
+} from "@/src/lib/blueprint/lifecycle/review-blueprint";
 
 function ReviewStatus({ status }: { status: string }) {
   const normalized = status.replaceAll("-", " ");
@@ -60,18 +66,101 @@ function TextList({ items }: { items: readonly string[] }) {
   );
 }
 
+function DecisionActions({
+  target,
+  index,
+  onReview,
+}: {
+  target: ReviewDecisionTarget;
+  index: number;
+  onReview: (target: ReviewDecisionTarget, index: number, action: ReviewDecisionAction) => void;
+}) {
+  return (
+    <div className="mt-3 flex flex-wrap gap-2">
+      <button type="button" onClick={() => onReview(target, index, "approve")} className="flex min-h-9 items-center gap-2 border border-success/35 bg-success/8 px-3 font-mono text-[8px] text-success uppercase hover:bg-success/14 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <Check aria-hidden="true" className="size-3" /> Approve decision
+      </button>
+      <button type="button" onClick={() => onReview(target, index, "reject")} className="flex min-h-9 items-center gap-2 border border-danger/35 bg-danger/8 px-3 font-mono text-[8px] text-danger uppercase hover:bg-danger/14 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <X aria-hidden="true" className="size-3" /> Reject
+      </button>
+    </div>
+  );
+}
+
+function StructuredBlueprintEditor({
+  blueprint,
+  onChange,
+}: {
+  blueprint: ProjectBlueprint;
+  onChange: (blueprint: ProjectBlueprint) => void;
+}) {
+  const [document, setDocument] = useState(() => JSON.stringify(blueprint, null, 2));
+  const [error, setError] = useState<string | null>(null);
+  const serializedBlueprint = JSON.stringify(blueprint, null, 2);
+  const lastAppliedBlueprint = useRef(serializedBlueprint);
+
+  useEffect(() => {
+    if (serializedBlueprint === lastAppliedBlueprint.current) return;
+    lastAppliedBlueprint.current = serializedBlueprint;
+    setDocument(serializedBlueprint);
+    setError(null);
+  }, [serializedBlueprint]);
+
+  function applyChanges() {
+    try {
+      const parsed = ProjectBlueprintSchema.parse(JSON.parse(document));
+      onChange(parsed);
+      setError(null);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "The edited blueprint is invalid.");
+    }
+  }
+
+  return (
+    <details className="border border-border bg-code-surface">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring">
+        <span className="flex items-center gap-2 text-xs font-medium">
+          <Code2 aria-hidden="true" className="size-4 text-accent" />
+          Edit structured blueprint
+        </span>
+        <span className="font-mono text-[8px] text-muted-foreground uppercase">Advanced · schema validated</span>
+      </summary>
+      <div className="border-t border-border p-4">
+        <p className="mb-3 text-xs leading-5 text-muted-foreground">
+          Edit any section without asking the model again. Changes are accepted only when the complete ProjectBlueprint remains valid.
+        </p>
+        <textarea aria-label="ProjectBlueprint JSON" value={document} onChange={(event) => setDocument(event.target.value)} spellCheck={false} className="min-h-96 w-full resize-y border border-border bg-background p-4 font-mono text-[11px] leading-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+        {error ? <p className="mt-3 text-xs leading-5 text-danger" role="alert">{error}</p> : null}
+        <Button type="button" className="mt-3 h-10 rounded-none" onClick={applyChanges}>Apply validated changes</Button>
+      </div>
+    </details>
+  );
+}
+
 export function BlueprintReview({
   blueprint,
   onApprove,
   onPreviewFiles,
+  onChange,
+  onReturnToDiscovery,
   pending = false,
 }: {
   blueprint: ProjectBlueprint;
   onApprove: () => void;
   onPreviewFiles?: () => void;
+  onChange?: (blueprint: ProjectBlueprint) => void;
+  onReturnToDiscovery?: () => void;
   pending?: boolean;
 }) {
   const pendingProposal = blueprintHasPendingProposal(blueprint);
+
+  function handleDecisionReview(
+    target: ReviewDecisionTarget,
+    index: number,
+    action: ReviewDecisionAction,
+  ) {
+    onChange?.(reviewBlueprintDecision(blueprint, target, index, action));
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -99,15 +188,16 @@ export function BlueprintReview({
             : "The human approved this proposal. Generated files can now be previewed."}
         </p>
         {pendingProposal ? (
-          <Button
-            type="button"
-            size="lg"
-            className="mt-5 h-11 w-fit rounded-none px-5"
-            disabled={pending}
-            onClick={onApprove}
-          >
-            {pending ? "Recording approval…" : "Approve blueprint"}
-          </Button>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <Button type="button" size="lg" className="h-11 w-fit rounded-none px-5" disabled={pending} onClick={onApprove}>
+              {pending ? "Recording approval…" : "Approve blueprint · remaining proposals"}
+            </Button>
+            {onReturnToDiscovery ? (
+              <Button type="button" variant="outline" size="lg" className="h-11 w-fit rounded-none px-5" onClick={onReturnToDiscovery}>
+                <ArrowLeft aria-hidden="true" /> Return to discovery
+              </Button>
+            ) : null}
+          </div>
         ) : (
           <div className="mt-5 flex flex-col gap-4">
             <p className="flex items-center gap-2 font-mono text-[9px] tracking-[0.1em] text-success uppercase">
@@ -158,8 +248,8 @@ export function BlueprintReview({
           title="Stack"
           status={pendingProposal ? "proposed" : "approved"}
         >
-          {blueprint.stack.map((decision) => (
-            <div key={`${decision.category}-${decision.choice}`}>
+          {blueprint.stack.map((decision, index) => (
+            <div key={`${decision.category}-${decision.choice}`} className="border-b border-border/70 pb-4 last:border-b-0 last:pb-0">
               <div className="flex items-center justify-between gap-3">
                 <p className="font-medium">
                   {decision.category}: {decision.choice}
@@ -170,6 +260,9 @@ export function BlueprintReview({
               <p className="font-mono text-[11px] uppercase">
                 Decision {decision.status.replaceAll("-", " ")}
               </p>
+              {decision.review.status === "proposed" && onChange ? (
+                <DecisionActions target="stack" index={index} onReview={handleDecisionReview} />
+              ) : null}
             </div>
           ))}
         </ReviewSection>
@@ -178,14 +271,17 @@ export function BlueprintReview({
           title="Architecture"
           status={pendingProposal ? "proposed" : "approved"}
         >
-          {blueprint.architecture.map((decision) => (
-            <div key={decision.title}>
+          {blueprint.architecture.map((decision, index) => (
+            <div key={decision.title} className="border-b border-border/70 pb-4 last:border-b-0 last:pb-0">
               <div className="flex items-center justify-between gap-3">
                 <p className="font-medium">{decision.title}</p>
                 <ReviewStatus status={decision.review.status} />
               </div>
               <p>{decision.decision}</p>
               <p className="text-muted-foreground">{decision.rationale}</p>
+              {decision.review.status === "proposed" && onChange ? (
+                <DecisionActions target="architecture" index={index} onReview={handleDecisionReview} />
+              ) : null}
             </div>
           ))}
         </ReviewSection>
@@ -288,6 +384,12 @@ export function BlueprintReview({
           )}
         </ReviewSection>
       </div>
+      {onChange ? (
+        <StructuredBlueprintEditor
+          blueprint={blueprint}
+          onChange={onChange}
+        />
+      ) : null}
     </div>
   );
 }
