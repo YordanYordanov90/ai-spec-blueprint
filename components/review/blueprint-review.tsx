@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight, Check, Code2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -96,6 +96,15 @@ function StructuredBlueprintEditor({
 }) {
   const [document, setDocument] = useState(() => JSON.stringify(blueprint, null, 2));
   const [error, setError] = useState<string | null>(null);
+  const serializedBlueprint = JSON.stringify(blueprint, null, 2);
+  const lastAppliedBlueprint = useRef(serializedBlueprint);
+
+  useEffect(() => {
+    if (serializedBlueprint === lastAppliedBlueprint.current) return;
+    lastAppliedBlueprint.current = serializedBlueprint;
+    setDocument(serializedBlueprint);
+    setError(null);
+  }, [serializedBlueprint]);
 
   function applyChanges() {
     try {
@@ -377,7 +386,6 @@ export function BlueprintReview({
       </div>
       {onChange ? (
         <StructuredBlueprintEditor
-          key={JSON.stringify(blueprint)}
           blueprint={blueprint}
           onChange={onChange}
         />

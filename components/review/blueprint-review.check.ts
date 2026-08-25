@@ -65,6 +65,7 @@ assert.match(review, /Unresolved decisions/);
 assert.match(review, /review.status/);
 assert.doesNotMatch(review, /generateContextPackage/);
 assert.match(review, /Preview generated files/);
+assert.doesNotMatch(review, /key=\{JSON\.stringify\(blueprint\)/);
 assert.match(workspace, /proposeProjectBlueprintResult/);
 assert.match(workspace, /approveBlueprintProposal/);
 assert.match(workspace, /BlueprintReview/);

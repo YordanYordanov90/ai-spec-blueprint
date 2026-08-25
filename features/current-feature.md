@@ -4,21 +4,21 @@
 
 Status: ready for planning
 
-F048 is complete. Do not begin another implementation feature until it is promoted from `features/backlog.md` and specified here.
+F049 is complete. Do not begin another implementation feature until it is promoted from `features/backlog.md` and specified here.
 
 ## Most recently completed feature
 
-### F048 - Address PR review findings
+### F049 - Harden lifecycle review boundaries
 
 - Status: complete
-- Phase: Review follow-up
-- Surface: Blueprint Core / Web handoff
+- Phase: Review hardening
+- Surface: Blueprint Core / Web lifecycle
 
-Resolved the confirmed lifecycle review findings by enforcing blocking readiness in shared generation/export paths, making CLI handoff setup reproducible, validating supported import extensions and schema version `1.0`, and including metadata in blueprint diffs.
+Hardened the untrusted ZIP import boundary with size caps, central-directory validation, duplicate-name rejection, and local-header integrity checks; made clipboard failures recoverable with a legacy fallback and visible guidance; suppressed autosave during workspace transitions; and synchronized the structured editor without forced remounts.
 
 ## Verification
 
-- lifecycle, storage, export, generated-file, and CLI boundary checks
+- lifecycle, generated-file, blueprint-review, export, CLI boundary, context, and Markdown checks
 - TypeScript typecheck
 - lint
 - production Webpack build

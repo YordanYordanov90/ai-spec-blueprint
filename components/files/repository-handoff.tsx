@@ -13,11 +13,54 @@ const commands = [
 
 export function RepositoryHandoff({ downloaded }: { downloaded: boolean }) {
   const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState<string | null>(null);
 
   async function copyCommands() {
-    await navigator.clipboard.writeText(commands.join("\n"));
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1500);
+    const commandText = commands.join("\n");
+    let didCopy = false;
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(commandText);
+      } else {
+        throw new Error("Clipboard API unavailable");
+      }
+      setCopied(true);
+      setCopyError(null);
+      didCopy = true;
+    } catch {
+      let fallbackCopied = false;
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = commandText;
+        textarea.setAttribute("readonly", "true");
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.append(textarea);
+        textarea.select();
+        try {
+          fallbackCopied =
+            typeof document.execCommand === "function" &&
+            document.execCommand("copy");
+        } finally {
+          textarea.remove();
+        }
+      } catch {
+        fallbackCopied = false;
+      }
+
+      setCopied(fallbackCopied);
+      setCopyError(
+        fallbackCopied
+          ? null
+          : "Copy is unavailable here. Select the commands below manually.",
+      );
+      didCopy = fallbackCopied;
+    }
+
+    if (didCopy) {
+      window.setTimeout(() => setCopied(false), 1500);
+    }
   }
 
   return (
@@ -37,6 +80,7 @@ export function RepositoryHandoff({ downloaded }: { downloaded: boolean }) {
           {copied ? "Copied" : "Copy commands"}
         </button>
       </div>
+      {copyError ? <p className="mt-3 text-xs leading-5 text-danger" role="status">{copyError}</p> : null}
       <ol className="mt-5 grid gap-px bg-border lg:grid-cols-2">
         {commands.map((command, index) => (
           <li key={command} className="min-w-0 bg-code-surface p-4">

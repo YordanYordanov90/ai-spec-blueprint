@@ -62,7 +62,7 @@ Phase 10 complete - Review follow-up
 
 ## Current feature
 
-No active feature. F048 - Address PR review findings is the most recently completed feature.
+No active feature. F049 - Harden lifecycle review boundaries is the most recently completed feature.
 
 See `features/current-feature.md`.
 
@@ -146,6 +146,10 @@ See `features/current-feature.md`.
 ### Phase 10 - Review follow-up
 
 - [x] F048 - Address PR review findings
+
+### Phase 11 - Review hardening
+
+- [x] F049 - Harden lifecycle review boundaries
 
 ## Deferred capabilities
 

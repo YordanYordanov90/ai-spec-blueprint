@@ -2,11 +2,17 @@ import assert from "node:assert/strict";
 
 import { approveBlueprintProposal } from "../discovery/approve-blueprint";
 import { buildZipArchive } from "../export/zip";
-import { createBlueprintDocument } from "../export/create-context-export";
+import {
+  createBlueprintDocument,
+  createContextExport,
+} from "../export/create-context-export";
 import { ProjectBlueprintSchema } from "../schemas/project-blueprint";
 import { validProjectBlueprintExample } from "../schemas/examples";
 import { compareBlueprints } from "./compare-blueprints";
-import { importBlueprintBytes } from "./import-blueprint";
+import {
+  importBlueprintBytes,
+  MAX_BLUEPRINT_IMPORT_BYTES,
+} from "./import-blueprint";
 import {
   assessBlueprintReadiness,
   assertBlueprintReadyForGeneration,
@@ -44,6 +50,12 @@ assert.deepEqual(
 
 const zip = buildZipArchive([json]);
 assert.deepEqual(importBlueprintBytes(zip, "project.zip"), approved);
+assert.deepEqual(
+  importBlueprintBytes(createContextExport(approved).zipBytes, "full-export.zip"),
+  approved,
+);
+assert.throws(() => importBlueprintBytes(buildZipArchive([json, json]), "duplicate.zip"));
+assert.throws(() => importBlueprintBytes(new Uint8Array(MAX_BLUEPRINT_IMPORT_BYTES + 1), "large.json"));
 assert.throws(() => importBlueprintBytes(new TextEncoder().encode(json.content), "blueprint.txt"));
 assert.throws(
   () =>

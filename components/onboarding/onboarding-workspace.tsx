@@ -52,6 +52,7 @@ export function OnboardingWorkspace() {
   const [recoverable, setRecoverable] = useState<WorkspaceSnapshot | null>(null);
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [storageReady, setStorageReady] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(true);
   const [sessionKey, setSessionKey] = useState(0);
 
   useEffect(() => {
@@ -60,13 +61,14 @@ export function OnboardingWorkspace() {
       setRecoverable(snapshot);
       setSavedAt(snapshot?.savedAt ?? null);
       setStorageReady(true);
+      setIsRestoring(false);
     }, 0);
 
     return () => window.clearTimeout(timeout);
   }, []);
 
   useEffect(() => {
-    if (!storageReady || (!discovery && !blueprint)) return;
+    if (isRestoring || !storageReady || (!discovery && !blueprint)) return;
 
     const timeout = window.setTimeout(() => {
       const nextSavedAt = new Date().toISOString();
@@ -84,7 +86,7 @@ export function OnboardingWorkspace() {
     }, 250);
 
     return () => window.clearTimeout(timeout);
-  }, [baseline, blueprint, discovery, storageReady]);
+  }, [baseline, blueprint, discovery, isRestoring, storageReady]);
 
   function handleStateChange(state: DiscoveryState | null) {
     setDiscovery(state);
@@ -97,6 +99,7 @@ export function OnboardingWorkspace() {
 
   function resumeWorkspace() {
     if (!recoverable) return;
+    setIsRestoring(true);
     setDiscovery(recoverable.discovery);
     setCompleteness(recoverable.discovery?.completeness ?? []);
     setBlueprint(recoverable.blueprint);
@@ -105,9 +108,11 @@ export function OnboardingWorkspace() {
     setSavedAt(recoverable.savedAt);
     setRecoverable(null);
     setSessionKey((key) => key + 1);
+    window.setTimeout(() => setIsRestoring(false), 0);
   }
 
   function startOver() {
+    setIsRestoring(true);
     clearWorkspaceSnapshot(window.localStorage);
     setDiscovery(null);
     setCompleteness([]);
@@ -118,6 +123,7 @@ export function OnboardingWorkspace() {
     setSavedAt(null);
     setProposalFailure(null);
     setSessionKey((key) => key + 1);
+    window.setTimeout(() => setIsRestoring(false), 0);
   }
 
   async function handleImport(event: ChangeEvent<HTMLInputElement>) {
@@ -125,6 +131,7 @@ export function OnboardingWorkspace() {
     event.target.value = "";
     if (!file) return;
 
+    setIsRestoring(true);
     try {
       const imported = importBlueprintBytes(
         new Uint8Array(await file.arrayBuffer()),
@@ -138,7 +145,9 @@ export function OnboardingWorkspace() {
       setProposalFailure(null);
       setRecoverable(null);
       setSessionKey((key) => key + 1);
+      window.setTimeout(() => setIsRestoring(false), 0);
     } catch (error) {
+      setIsRestoring(false);
       setProposalFailure({
         kind: "application-validation-failure",
         message: error instanceof Error ? error.message : "The blueprint could not be imported.",
@@ -148,6 +157,7 @@ export function OnboardingWorkspace() {
   }
 
   function loadGuidedExample() {
+    setIsRestoring(true);
     const example = approveBlueprintProposal(
       ProjectBlueprintSchema.parse(validProjectBlueprintExample),
     );
@@ -159,6 +169,7 @@ export function OnboardingWorkspace() {
     setProposalFailure(null);
     setRecoverable(null);
     setSessionKey((key) => key + 1);
+    window.setTimeout(() => setIsRestoring(false), 0);
   }
 
   function handleProposeBlueprint(state: DiscoveryState) {

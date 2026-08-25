@@ -227,3 +227,9 @@ Provide a deterministic, no-provider-call example that lets a visitor inspect re
 ### F048 - Address PR review findings — complete
 
 Close the confirmed Codex and DiffGuard findings for lifecycle generation, import versioning, artifact diffs, and repository handoff. Keep the fix inside the existing Blueprint Core and Web boundaries.
+
+## Phase 11 - Review hardening
+
+### F049 - Harden lifecycle review boundaries — complete
+
+Address the second DiffGuard review pass for untrusted ZIP imports, clipboard failure recovery, workspace restore/autosave transitions, and structured editor synchronization. Keep the implementation local-first and within the existing Blueprint Core and Web boundaries.

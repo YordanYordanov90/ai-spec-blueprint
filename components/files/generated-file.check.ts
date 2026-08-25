@@ -91,9 +91,10 @@ assert.match(previewMarkup, /<li[^>]*>First file<\/li>/);
 assert.match(workspace, /generateApprovedContextPackage/);
 assert.match(workspace, /GeneratedFileExplorer/);
 assert.match(review, /Preview generated files/);
-assert.match(
-  readFileSync("components/files/repository-handoff.tsx", "utf8"),
-  /npm --prefix \/tmp\/ai-spec-blueprint run blueprint/,
-);
+const handoff = readFileSync("components/files/repository-handoff.tsx", "utf8");
+assert.match(handoff, /npm --prefix \/tmp\/ai-spec-blueprint run blueprint/);
+assert.match(handoff, /navigator\.clipboard/);
+assert.match(handoff, /execCommand\("copy"\)/);
+assert.match(handoff, /Copy is unavailable here/);
 
 console.log("Generated file explorer checks passed.");
