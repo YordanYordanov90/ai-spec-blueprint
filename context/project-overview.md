@@ -105,6 +105,10 @@ It provides:
 - explicit fact, proposal, approval, and unresolved decision states
 - an IDE-inspired generated-file explorer and readable context preview
 - context export when the export feature is active
+- browser-local recovery for unfinished work without an account
+- import and revision of an existing blueprint
+- readiness and diff review before an updated export
+- repository handoff guidance after export
 
 The Web UI should make the reasoning and architecture legible. It should not be only a generic chat window.
 
@@ -223,3 +227,8 @@ The project is successful when a developer can:
 6. export those files
 7. place them in a repository
 8. give a coding agent enough durable context to begin controlled feature work
+
+After the initial export, the developer can import the durable blueprint again,
+make a reviewed revision, inspect the resulting artifact changes, and export an
+updated package. Browser-local recovery improves continuity but does not replace
+repository context as the durable source of truth.

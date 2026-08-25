@@ -41,7 +41,8 @@
     "check:cli-workflows": "tsx src/lib/blueprint/cli-workflows/cli-workflows.check.ts",
     "check:cli-boundary": "tsx src/cli/package-boundary.check.ts && tsx src/cli/commands.check.ts && tsx src/cli/node-filesystem.check.ts",
     "check:adoption": "tsx src/lib/blueprint/adoption/adoption.check.ts",
-    "check:docs": "tsx src/content/guardrails/index.check.ts"
+    "check:docs": "tsx src/content/guardrails/index.check.ts",
+    "check:lifecycle": "tsx src/lib/blueprint/lifecycle/lifecycle.check.ts && tsx components/onboarding/workspace-storage.check.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.42",

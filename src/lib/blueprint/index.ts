@@ -23,6 +23,14 @@ export {
 } from "./export/create-context-export";
 export type { ContextExport } from "./export/create-context-export";
 export { buildZipArchive, crc32 } from "./export/zip";
+export { compareBlueprints } from "./lifecycle/compare-blueprints";
+export {
+  extractBlueprintDocumentFromZip,
+  importBlueprintBytes,
+  parseImportedBlueprintDocument,
+} from "./lifecycle/import-blueprint";
+export { assessBlueprintReadiness } from "./lifecycle/readiness";
+export { reviewBlueprintDecision } from "./lifecycle/review-blueprint";
 export {
   assertSafeArtifactPaths,
   resolveArtifactPath,

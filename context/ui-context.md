@@ -120,8 +120,15 @@ The Web application helps a developer:
 5. review guardrails and how they are enforced
 6. inspect generated context files
 7. export those files as a ZIP for a repository
+8. import the durable blueprint later and review a controlled revision
 
 The application must not become a full-screen generic chat interface.
+
+The workspace supports a local-first lifecycle without authentication. It may
+offer browser-local recovery, explicit reset, validated JSON or product-ZIP
+import, a deterministic example, actionable readiness findings, and change
+review before export. The UI must always distinguish local recovery from cloud
+or repository durability.
 
 The central product experience is a structured workspace. Desktop may present discovery and blueprint state side by side. The current implementation can retain local component state; a new global or persistent state architecture is not authorized by the visual redesign.
 
@@ -228,6 +235,10 @@ States must differ by icon, label, or shape as well as color.
 
 Blueprint sections may include Product, Users, Goals, Non-goals, Stack, Architecture, Domain, UI, Security, AI, Guardrails, Features, and Unresolved Decisions.
 
+Review should support decision-level approval or rejection and a validated way
+to revise any structured section. Blocking unresolved decisions prevent
+artifact generation; non-blocking decisions remain visibly recorded.
+
 ### Generated file explorer
 
 Generated artifacts should use an IDE-inspired explorer and readable Markdown preview.
@@ -250,6 +261,10 @@ Blueprint
 ```
 
 The explorer previews generated artifacts and can export the approved package as a ZIP containing the Markdown files plus `blueprint.json`.
+
+When a baseline blueprint is available, the explorer should summarize changed
+blueprint sections and changed generated artifacts. Export should lead into a
+repository handoff checklist rather than ending the user journey abruptly.
 
 ## Responsive behavior
 

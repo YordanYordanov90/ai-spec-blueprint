@@ -2,7 +2,7 @@
 
 ## Project status
 
-Status: Core V1 workflow and server-side AI abuse protection complete
+Status: Core V1 workflow, deployment protection, and local-first blueprint lifecycle complete
 
 ## Confirmed product decisions
 
@@ -35,13 +35,17 @@ Status: Core V1 workflow and server-side AI abuse protection complete
 - [x] Long-form guardrail education belongs in a separate Web documentation surface.
 - [x] The source PDF is research material and must not become a runtime prompt, application dependency, or generated-project artifact.
 - [x] Documentation must distinguish source concepts from AI Spec Blueprint adaptations and use original wording and examples.
+- [x] Unfinished Web workspaces are recoverable through schema-validated browser-local storage.
+- [x] Existing blueprints can be imported from `blueprint.json` or product-generated ZIP exports.
+- [x] Blueprint changes and generated-artifact changes are visible before export.
+- [x] Blocking unresolved decisions prevent durable artifact generation.
+- [x] Lifecycle features remain local-first and require no authentication or database.
 
 ## Open product decisions
 
 - [ ] Final product name
 - [ ] Final brand color / accent system
 - [ ] Exact OpenAI model for V1
-- [ ] Whether V1 preserves unfinished onboarding across browser refreshes
 - [ ] Exact timing of extracting Blueprint Core into a physical workspace package
 - [ ] Initial framework profiles beyond the product's own Next.js-oriented experience
 - [ ] Whether a later feature adds AI-assisted discussion to guardrail topic pages
@@ -51,11 +55,11 @@ Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 8 complete - Deployment protection
+Phase 9 complete - Blueprint lifecycle
 
 ## Current feature
 
-F039 - Add server-side AI abuse protection (complete)
+No active feature. F047 - Guided example project is the most recently completed feature.
 
 See `features/current-feature.md`.
 
@@ -124,6 +128,17 @@ See `features/current-feature.md`.
 ### Phase 8 - Deployment protection
 
 - [x] F039 - Add server-side AI abuse protection
+
+### Phase 9 - Blueprint lifecycle
+
+- [x] F040 - Add local draft recovery
+- [x] F041 - Add section-level blueprint revision and approval
+- [x] F042 - Import and resume a blueprint
+- [x] F043 - Show blueprint and generated-artifact diffs
+- [x] F044 - Add repository handoff guidance
+- [x] F045 - Add discovery history, undo, and defer
+- [x] F046 - Add a blueprint readiness report
+- [x] F047 - Add a guided example project
 
 ## Deferred capabilities
 

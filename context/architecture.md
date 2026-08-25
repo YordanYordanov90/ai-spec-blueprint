@@ -96,6 +96,7 @@ Responsibilities:
 - blueprint review UX
 - export actions
 - CLI input/output
+- browser-local recovery and file import controls
 
 Must not own:
 
@@ -103,6 +104,15 @@ Must not own:
 - blueprint rules
 - Markdown document formats
 - architecture policies
+
+Browser-local workspace snapshots are a Web interface concern. They must be
+versioned and schema validated when restored. They are convenience state, not
+the authoritative project record and not a reason to couple Blueprint Core to
+browser storage APIs.
+
+Lifecycle calculations that are useful across interfaces—blueprint readiness,
+validated import parsing, decision review transitions, and deterministic
+blueprint/artifact comparison—remain framework-independent Blueprint Core logic.
 
 ### 2. AI interaction layer
 
