@@ -10,6 +10,7 @@ import { ProjectBlueprintSchema } from "../schemas/project-blueprint";
 import { validProjectBlueprintExample } from "../schemas/examples";
 import { compareBlueprints } from "./compare-blueprints";
 import {
+  extractBlueprintDocumentFromZip,
   importBlueprintBytes,
   MAX_BLUEPRINT_IMPORT_BYTES,
 } from "./import-blueprint";
@@ -56,6 +57,18 @@ assert.deepEqual(
 );
 assert.throws(() => importBlueprintBytes(buildZipArchive([json, json]), "duplicate.zip"));
 assert.throws(() => importBlueprintBytes(new Uint8Array(MAX_BLUEPRINT_IMPORT_BYTES + 1), "large.json"));
+assert.throws(
+  () => extractBlueprintDocumentFromZip(new TextEncoder().encode(json.content)),
+  /ZIP local-file signature/,
+);
+assert.throws(
+  () => importBlueprintBytes(new TextEncoder().encode(json.content), "renamed.zip"),
+  /contains JSON, not a ZIP/,
+);
+assert.throws(
+  () => importBlueprintBytes(zip, "renamed.json"),
+  /contains a ZIP export/,
+);
 assert.throws(() => importBlueprintBytes(new TextEncoder().encode(json.content), "blueprint.txt"));
 assert.throws(
   () =>

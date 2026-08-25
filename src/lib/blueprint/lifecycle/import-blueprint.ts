@@ -1,5 +1,6 @@
 import { crc32 } from "../export/zip";
 import {
+  CURRENT_BLUEPRINT_SCHEMA_VERSION,
   ProjectBlueprintSchema,
   type ProjectBlueprint,
 } from "../schemas/project-blueprint";
@@ -9,7 +10,6 @@ const CENTRAL_DIRECTORY_HEADER = 0x02014b50;
 const END_OF_CENTRAL_DIRECTORY = 0x06054b50;
 const STORE_METHOD = 0;
 const BLUEPRINT_PATH = "blueprint.json";
-const SUPPORTED_BLUEPRINT_SCHEMA_VERSION = "1.0";
 export const MAX_BLUEPRINT_IMPORT_BYTES = 5 * 1024 * 1024;
 const MAX_ZIP_ENTRIES = 1_024;
 
@@ -45,9 +45,27 @@ function decodeUtf8(decoder: TextDecoder, bytes: Uint8Array, label: string): str
   }
 }
 
+function hasZipLocalFileSignature(bytes: Uint8Array): boolean {
+  return (
+    bytes.byteLength >= 4 &&
+    bytes[0] === 0x50 &&
+    bytes[1] === 0x4b &&
+    bytes[2] === 0x03 &&
+    bytes[3] === 0x04
+  );
+}
+
+function looksLikeJson(bytes: Uint8Array): boolean {
+  const sample = new TextDecoder().decode(bytes.subarray(0, 512));
+  return sample.replace(/^\uFEFF/, "").trimStart().startsWith("{");
+}
+
 export function extractBlueprintDocumentFromZip(bytes: Uint8Array): string {
   if (bytes.byteLength > MAX_BLUEPRINT_IMPORT_BYTES) {
     throw new Error("The imported ZIP is too large. Keep exports under 5 MB.");
+  }
+  if (!hasZipLocalFileSignature(bytes)) {
+    throw new Error("The imported file does not start with a ZIP local-file signature.");
   }
   if (bytes.byteLength < 22) {
     throw new Error("The ZIP is missing a valid end-of-central-directory record.");
@@ -245,9 +263,9 @@ export function parseImportedBlueprintDocument(document: string): ProjectBluepri
     throw new Error(`The imported blueprint does not match schema 1.0${location}.`);
   }
 
-  if (result.data.metadata.schemaVersion !== SUPPORTED_BLUEPRINT_SCHEMA_VERSION) {
+  if (result.data.metadata.schemaVersion !== CURRENT_BLUEPRINT_SCHEMA_VERSION) {
     throw new Error(
-      `Unsupported blueprint schema version ${result.data.metadata.schemaVersion}. Expected ${SUPPORTED_BLUEPRINT_SCHEMA_VERSION}.`,
+      `Unsupported blueprint schema version ${result.data.metadata.schemaVersion}. Expected ${CURRENT_BLUEPRINT_SCHEMA_VERSION}.`,
     );
   }
 
@@ -262,12 +280,29 @@ export function importBlueprintBytes(
     throw new Error("The imported file is too large. Keep exports under 5 MB.");
   }
   const normalizedFilename = filename.toLowerCase();
+  const isZipFilename = normalizedFilename.endsWith(".zip");
+  const isJsonFilename = normalizedFilename.endsWith(".json");
+  const hasZipSignature = hasZipLocalFileSignature(bytes);
+  const appearsJson = looksLikeJson(bytes);
 
-  if (!normalizedFilename.endsWith(".zip") && !normalizedFilename.endsWith(".json")) {
-    throw new Error("Import a blueprint.json file or an AI Spec Blueprint ZIP export.");
+  if (!isZipFilename && !isJsonFilename) {
+    const detectedFormat = hasZipSignature ? "ZIP" : appearsJson ? "JSON" : "unknown";
+    throw new Error(
+      `Unsupported import filename. Rename the ${detectedFormat} export to .zip or .json before importing.`,
+    );
+  }
+  if (isZipFilename && !hasZipSignature) {
+    throw new Error(
+      appearsJson
+        ? "This .zip file contains JSON, not a ZIP export. Rename it to .json."
+        : "This .zip file does not start with a valid ZIP local-file signature.",
+    );
+  }
+  if (isJsonFilename && hasZipSignature) {
+    throw new Error("This .json file contains a ZIP export. Rename it to .zip.");
   }
 
-  const document = normalizedFilename.endsWith(".zip")
+  const document = isZipFilename
     ? extractBlueprintDocumentFromZip(bytes)
     : new TextDecoder().decode(bytes);
 

@@ -4,21 +4,21 @@
 
 Status: ready for planning
 
-F049 is complete. Do not begin another implementation feature until it is promoted from `features/backlog.md` and specified here.
+F050 is complete. Do not begin another implementation feature until it is promoted from `features/backlog.md` and specified here.
 
 ## Most recently completed feature
 
-### F049 - Harden lifecycle review boundaries
+### F050 - Harden import format and snapshot compatibility
 
 - Status: complete
-- Phase: Review hardening
+- Phase: Import compatibility hardening
 - Surface: Blueprint Core / Web lifecycle
 
-Hardened the untrusted ZIP import boundary with size caps, central-directory validation, duplicate-name rejection, and local-header integrity checks; made clipboard failures recoverable with a legacy fallback and visible guidance; suppressed autosave during workspace transitions; and synchronized the structured editor without forced remounts.
+Added content sniffing and ZIP magic validation before import parsing, clear extension/content mismatch errors, centralized the current blueprint schema version, and made local snapshot restoration compatibility-aware with safe partial recovery.
 
 ## Verification
 
-- lifecycle, generated-file, blueprint-review, export, CLI boundary, context, and Markdown checks
+- lifecycle, workspace storage, generated-file, blueprint-review, export, and context checks
 - TypeScript typecheck
 - lint
 - production Webpack build

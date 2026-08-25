@@ -10,6 +10,8 @@ import {
 const NonEmptyTextSchema = z.string().trim().min(1);
 const TextListSchema = z.array(NonEmptyTextSchema).min(1);
 
+export const CURRENT_BLUEPRINT_SCHEMA_VERSION = "1.0";
+
 export const BlueprintMetadataSchema = z
   .object({
     schemaVersion: z.string().trim().regex(/^\d+\.\d+$/),

@@ -233,3 +233,9 @@ Close the confirmed Codex and DiffGuard findings for lifecycle generation, impor
 ### F049 - Harden lifecycle review boundaries — complete
 
 Address the second DiffGuard review pass for untrusted ZIP imports, clipboard failure recovery, workspace restore/autosave transitions, and structured editor synchronization. Keep the implementation local-first and within the existing Blueprint Core and Web boundaries.
+
+## Phase 12 - Import compatibility hardening
+
+### F050 - Harden import format and snapshot compatibility — complete
+
+Sniff imported bytes before selecting the ZIP or JSON parser, fail clearly on filename/content mismatches, and safely handle local workspace snapshots that are no longer compatible with the current schema or lifecycle expectations.

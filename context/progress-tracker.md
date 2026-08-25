@@ -62,7 +62,7 @@ Phase 10 complete - Review follow-up
 
 ## Current feature
 
-No active feature. F049 - Harden lifecycle review boundaries is the most recently completed feature.
+No active feature. F050 - Harden import format and snapshot compatibility is the most recently completed feature.
 
 See `features/current-feature.md`.
 
@@ -150,6 +150,10 @@ See `features/current-feature.md`.
 ### Phase 11 - Review hardening
 
 - [x] F049 - Harden lifecycle review boundaries
+
+### Phase 12 - Import compatibility hardening
+
+- [x] F050 - Harden import format and snapshot compatibility
 
 ## Deferred capabilities
 
