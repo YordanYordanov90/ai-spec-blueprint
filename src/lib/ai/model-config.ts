@@ -64,6 +64,18 @@ export type ApprovedLanguageModel = Readonly<{
     approval: AiCallApproval,
     schema: Schema,
   ) => Promise<z.infer<Schema>>;
+  generateStructuredWithMetrics?: <Schema extends z.ZodType>(
+    input: AiCallInput,
+    approval: AiCallApproval,
+    schema: Schema,
+  ) => Promise<{
+    output: z.infer<Schema>;
+    usage: {
+      inputTokens: number | null;
+      outputTokens: number | null;
+      totalTokens: number | null;
+    };
+  }>;
 }>;
 
 const AiModelEnvSchema = z
@@ -103,6 +115,41 @@ export function createConfiguredLanguageModel(
   });
   const model = openai(validatedConfig.model);
 
+  const generateStructuredWithMetrics = async <Schema extends z.ZodType>(
+    input: AiCallInput,
+    approval: AiCallApproval,
+    schema: Schema,
+  ): Promise<{
+    output: z.infer<Schema>;
+    usage: {
+      inputTokens: number | null;
+      outputTokens: number | null;
+      totalTokens: number | null;
+    };
+  }> => {
+    const validatedInput = AiCallInputSchema.parse(input);
+    AiCallApprovalSchema.parse(approval);
+    const result = await generateText({
+      ...validatedInput,
+      maxOutputTokens: AI_MAX_OUTPUT_TOKENS,
+      model,
+      output: Output.object({ schema }),
+    });
+
+    if (result.output == null) {
+      throw new Error("Model did not return structured output.");
+    }
+
+    return {
+      output: schema.parse(result.output),
+      usage: {
+        inputTokens: result.usage.inputTokens ?? null,
+        outputTokens: result.usage.outputTokens ?? null,
+        totalTokens: result.usage.totalTokens ?? null,
+      },
+    };
+  };
+
   return Object.freeze({
     provider: model.provider,
     modelId: model.modelId,
@@ -135,20 +182,9 @@ export function createConfiguredLanguageModel(
       approval: AiCallApproval,
       schema: Schema,
     ): Promise<z.infer<Schema>> => {
-      const validatedInput = AiCallInputSchema.parse(input);
-      AiCallApprovalSchema.parse(approval);
-      const result = await generateText({
-        ...validatedInput,
-        maxOutputTokens: AI_MAX_OUTPUT_TOKENS,
-        model,
-        output: Output.object({ schema }),
-      });
-
-      if (result.output == null) {
-        throw new Error("Model did not return structured output.");
-      }
-
-      return schema.parse(result.output);
+      const result = await generateStructuredWithMetrics(input, approval, schema);
+      return result.output;
     },
+    generateStructuredWithMetrics,
   });
 }
