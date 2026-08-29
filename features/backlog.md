@@ -239,3 +239,9 @@ Address the second DiffGuard review pass for untrusted ZIP imports, clipboard fa
 ### F050 - Harden import format and snapshot compatibility — complete
 
 Sniff imported bytes before selecting the ZIP or JSON parser, fail clearly on filename/content mismatches, and safely handle local workspace snapshots that are no longer compatible with the current schema or lifecycle expectations.
+
+## Phase 13 - AI quality improvement
+
+### F051 - Establish AI quality evaluations and baseline — complete
+
+Add a versioned offline evaluation corpus, deterministic quality graders, a human semantic-review rubric, an opt-in provider-backed runner with sanitized metrics, and a baseline report for the current discovery/proposal path.
