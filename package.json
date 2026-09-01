@@ -39,6 +39,8 @@
     "check:onboarding": "tsx app/new/page.check.ts",
     "check:not-found": "tsx app/not-found.check.ts",
     "check:favicon": "tsx app/favicon.check.ts",
+    "check:error": "tsx app/error.check.ts",
+    "check:loading": "tsx app/loading.check.ts",
     "check:grill-me": "tsx src/lib/blueprint/discovery/continue-discovery.check.ts && tsx src/lib/ai/grill-me-turn.check.ts && tsx components/grill-me/grill-me.check.ts",
     "check:completeness": "tsx components/completeness/completeness.check.ts",
     "check:blueprint-review": "tsx src/lib/blueprint/discovery/approve-blueprint.check.ts && tsx components/review/blueprint-review.check.ts",

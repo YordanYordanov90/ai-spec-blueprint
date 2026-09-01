@@ -58,12 +58,12 @@ Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 14 complete - Production regression fixes
+Phase 15 complete - Web system-state pages
 
 ## Current feature
 
-No active feature. B001 - Resolve reported production regressions is the most
-recently completed feature.
+No active feature. B002 - Add custom system-state pages is the most recently
+completed feature.
 
 See `features/current-feature.md`.
 
@@ -163,6 +163,10 @@ See `features/current-feature.md`.
 ### Phase 14 - Production bug fixes
 
 - [x] B001 - Resolve reported production regressions
+
+### Phase 15 - Web experience hardening
+
+- [x] B002 - Add custom system-state pages
 
 ## Deferred capabilities
 

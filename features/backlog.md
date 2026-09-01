@@ -253,3 +253,11 @@ Add a versioned offline evaluation corpus, deterministic quality graders, a huma
 Resolve the reported Grill Me fact-ID and Users discovery regressions, add a
 branded unknown-route experience, replace native empty-submit validation with
 accessible inline feedback, and reduce the favicon to a small valid PNG.
+
+## Phase 15 - Web experience hardening
+
+### B002 - Add custom system-state pages — complete
+
+Add branded, accessible 404, unexpected-error, and loading states using the
+approved Next.js App Router conventions while preserving the existing product
+visual system.

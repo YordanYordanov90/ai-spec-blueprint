@@ -2,12 +2,42 @@
 
 ## No active feature
 
-Status: ready for planning. B001 - Resolve reported production regressions is
-the most recently completed feature.
+Status: ready for planning. B002 - Add custom system-state pages is the most
+recently completed feature.
 
 See `features/backlog.md` for planned work.
 
 ## Most recently completed feature
+
+### B002 - Add custom system-state pages
+
+- Status: complete
+- Phase: Web experience hardening
+- Surface: Web application shell
+
+### Objective
+
+Add branded, accessible 404, unexpected-error, and loading states using the
+approved Next.js App Router conventions while preserving the existing product
+visual system.
+
+### Delivered
+
+- Preserved the branded root 404 with home and start-project navigation.
+- Added route-level and root-layout error recovery with retry and home actions.
+- Added an accessible global loading shell with workspace-oriented skeletons.
+- Added focused checks for the route-state files.
+
+### Verification
+
+- TypeScript typecheck
+- lint
+- `npm run check:not-found`
+- `npm run check:error`
+- `npm run check:loading`
+- `npm run build -- --webpack`
+
+## Previous completed feature
 
 ### B001 - Resolve reported production regressions
 
@@ -38,7 +68,7 @@ changing the approved product architecture or adding persistence/authentication.
 - Adaptive discovery analysis from the AI quality improvement plan.
 - Provider/model changes, authentication, persistence, or database work.
 
-## Previous completed feature
+## Earlier completed feature
 
 ### F051 - Establish AI quality evaluations and baseline
 
