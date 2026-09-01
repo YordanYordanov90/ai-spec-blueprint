@@ -58,12 +58,12 @@ Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 16 complete - Blueprint review and favicon fixes
+Phase 17 complete - Favicon decoder compatibility
 
 ## Current feature
 
-No active feature. B003 - Fix blueprint review duplication and favicon metadata
-is the most recently completed feature.
+No active feature. B004 - Fix favicon RGBA compatibility is the most recently
+completed feature.
 
 See `features/current-feature.md`.
 
@@ -171,6 +171,10 @@ See `features/current-feature.md`.
 ### Phase 16 - Web experience hardening
 
 - [x] B003 - Fix blueprint review duplication and favicon metadata
+
+### Phase 17 - Web experience hardening
+
+- [x] B004 - Fix favicon RGBA compatibility
 
 ## Deferred capabilities
 

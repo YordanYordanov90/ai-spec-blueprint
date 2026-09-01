@@ -2,12 +2,35 @@
 
 ## No active feature
 
-Status: ready for planning. B003 - Fix blueprint review duplication and
-favicon metadata is the most recently completed feature.
+Status: ready for planning. B004 - Fix favicon RGBA compatibility is the most
+recently completed feature.
 
 See `features/backlog.md` for planned work.
 
 ## Most recently completed feature
+
+### B004 - Fix favicon RGBA compatibility
+
+- Status: complete
+- Phase: Web experience hardening
+- Surface: Web application shell
+
+### Objective
+
+Make the ICO favicon compatible with the Next.js Turbopack production image
+decoder by embedding an RGBA PNG payload.
+
+### Delivered
+
+- Converted the embedded favicon image from RGB to RGBA.
+- Extended the favicon check to require PNG color type 6.
+
+### Verification
+
+- `npm run check:favicon`
+- `npm run build -- --webpack`
+
+## Previous completed feature
 
 ### B003 - Fix blueprint review duplication and favicon metadata
 

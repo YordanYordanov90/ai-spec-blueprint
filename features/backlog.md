@@ -269,3 +269,10 @@ visual system.
 Remove repeated fact lines from Blueprint Review, keep goals distinct from
 MVP-scope/product success criteria, and serve the favicon with matching ICO
 bytes and metadata.
+
+## Phase 17 - Web experience hardening
+
+### B004 - Fix favicon RGBA compatibility — complete
+
+Make the ICO favicon compatible with the Next.js Turbopack production image
+decoder by embedding an RGBA PNG payload.
