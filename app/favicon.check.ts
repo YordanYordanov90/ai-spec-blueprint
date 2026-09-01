@@ -11,6 +11,7 @@ assert.deepEqual(
 assert.equal(favicon.readUInt8(6), 64);
 assert.equal(favicon.readUInt8(7), 64);
 assert.equal(favicon.readUInt32LE(18), 22);
+assert.equal(favicon.readUInt8(22 + 25), 6);
 assert.deepEqual(
   [...favicon.subarray(22, 30)],
   [137, 80, 78, 71, 13, 10, 26, 10],
