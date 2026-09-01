@@ -9,13 +9,14 @@ import {
   ProjectBlueprintSchema,
   type ProjectBlueprint,
 } from "../schemas/project-blueprint";
+import { factCoversTopic } from "./fact-coverage";
 
 function factStatements(
   facts: readonly ExtractedFact[],
   topic: DiscoveryTopic,
 ): string[] {
   return facts
-    .filter((fact) => fact.topic === topic)
+    .filter((fact) => factCoversTopic(fact, topic))
     .map((fact) => fact.statement);
 }
 

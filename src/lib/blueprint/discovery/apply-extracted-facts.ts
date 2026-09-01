@@ -21,16 +21,35 @@ export function createInitialDiscoveryState(
   });
 }
 
-function assertUniqueIncomingFactIds(facts: readonly ExtractedFact[]): void {
-  const seenIds = new Set<string>();
+function factIdSuffix(fact: ExtractedFact): string {
+  let hash = 2166136261;
 
-  for (const fact of facts) {
-    if (seenIds.has(fact.id)) {
-      throw new Error(`Duplicate extracted fact id: ${fact.id}`);
-    }
-
-    seenIds.add(fact.id);
+  for (const character of `${fact.topic}:${fact.statement}`) {
+    hash ^= character.charCodeAt(0);
+    hash = Math.imul(hash, 16777619);
   }
+
+  return (hash >>> 0).toString(36);
+}
+
+function resolveFactId(
+  fact: ExtractedFact,
+  factsById: Map<string, ExtractedFact>,
+): string {
+  if (!factsById.has(fact.id)) {
+    return fact.id;
+  }
+
+  const baseId = `fact-${fact.topic}-${factIdSuffix(fact)}`;
+  let resolvedId = baseId;
+  let collision = 2;
+
+  while (factsById.has(resolvedId)) {
+    resolvedId = `${baseId}-${collision}`;
+    collision += 1;
+  }
+
+  return resolvedId;
 }
 
 export function applyExtractedFacts(
@@ -39,24 +58,19 @@ export function applyExtractedFacts(
 ): DiscoveryState {
   const facts = z.array(ExtractedFactSchema).parse(incomingFacts);
 
-  assertUniqueIncomingFactIds(facts);
-
   const factsById = new Map(state.facts.map((fact) => [fact.id, fact]));
   const existingStatements = new Set(
     state.facts.map((fact) => fact.statement),
   );
   const mergedFacts = [...state.facts];
 
-  for (const fact of facts) {
-    const existing = factsById.get(fact.id);
-
-    if (existing && existing.statement !== fact.statement) {
-      throw new Error(`Duplicate extracted fact id: ${fact.id}`);
-    }
-
-    if (existing || existingStatements.has(fact.statement)) {
+  for (const incomingFact of facts) {
+    if (existingStatements.has(incomingFact.statement)) {
       continue;
     }
+
+    const id = resolveFactId(incomingFact, factsById);
+    const fact = id === incomingFact.id ? incomingFact : { ...incomingFact, id };
 
     mergedFacts.push(fact);
     factsById.set(fact.id, fact);

@@ -8,6 +8,7 @@ import {
   type ExtractedFact,
   type InformationGap,
 } from "../schemas/discovery";
+import { factCoversTopic } from "./fact-coverage";
 
 type MaterialTopicRule = {
   topic: DiscoveryTopic;
@@ -58,7 +59,7 @@ function hasTopicFact(
   facts: readonly ExtractedFact[],
   topic: DiscoveryTopic,
 ): boolean {
-  return facts.some((fact) => fact.topic === topic);
+  return facts.some((fact) => factCoversTopic(fact, topic));
 }
 
 function completenessStatus(

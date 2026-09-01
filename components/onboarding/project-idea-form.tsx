@@ -67,8 +67,7 @@ export function ProjectIdeaForm({
               setLocalError(null);
             }
           }}
-          required
-          minLength={1}
+          aria-required="true"
           rows={8}
           disabled={pending}
           aria-describedby={

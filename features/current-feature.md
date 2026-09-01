@@ -2,12 +2,43 @@
 
 ## No active feature
 
-Status: ready for planning
+Status: ready for planning. B001 - Resolve reported production regressions is
+the most recently completed feature.
 
-F051 is complete. Do not begin F052 until it is promoted from the quality
-improvement plan into this file with bounded acceptance criteria.
+See `features/backlog.md` for planned work.
 
 ## Most recently completed feature
+
+### B001 - Resolve reported production regressions
+
+- Status: complete
+- Phase: Production bug fixes
+- Surface: Blueprint Core / Web discovery shell
+
+### Objective
+
+Resolve the reported high-, medium-, and low-severity regressions without
+changing the approved product architecture or adding persistence/authentication.
+
+### Acceptance criteria
+
+- Repeated or colliding model fact IDs are merged deterministically without
+  producing an invalid-structured-output failure.
+- A first-user answer classified as `user-roles` clears the Users completeness
+  gap and allows discovery to advance.
+- Unknown routes render a branded 404 with home and start-project navigation.
+- Empty initial-idea submission shows inline accessible validation without the
+  browser's native validation bubble covering the submit action.
+- The favicon remains a valid PNG favicon at a small size.
+- Add focused regression checks for each changed behavior.
+- Typecheck, lint, focused checks, and production build pass.
+
+### Out of scope
+
+- Adaptive discovery analysis from the AI quality improvement plan.
+- Provider/model changes, authentication, persistence, or database work.
+
+## Previous completed feature
 
 ### F051 - Establish AI quality evaluations and baseline
 

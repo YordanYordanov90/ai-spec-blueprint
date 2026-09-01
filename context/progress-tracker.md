@@ -58,12 +58,12 @@ Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 13 complete - AI quality evaluation baseline
+Phase 14 complete - Production regression fixes
 
 ## Current feature
 
-No active feature. F051 - Establish AI quality evaluations and baseline is the
-most recently completed feature.
+No active feature. B001 - Resolve reported production regressions is the most
+recently completed feature.
 
 See `features/current-feature.md`.
 
@@ -159,6 +159,10 @@ See `features/current-feature.md`.
 ### Phase 13 - AI quality improvement
 
 - [x] F051 - Establish AI quality evaluations and baseline
+
+### Phase 14 - Production bug fixes
+
+- [x] B001 - Resolve reported production regressions
 
 ## Deferred capabilities
 

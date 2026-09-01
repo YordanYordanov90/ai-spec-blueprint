@@ -65,16 +65,23 @@ assert.equal(
   1,
 );
 
-assert.throws(() =>
-  applyExtractedFacts(initialState, [
-    extractedFacts[0],
-    { ...extractedFacts[0], statement: "A different statement." },
-  ]),
-);
-assert.throws(() =>
+const collidingIncomingFacts = applyExtractedFacts(initialState, [
+  extractedFacts[0],
+  { ...extractedFacts[0], statement: "A different statement." },
+]);
+const collidingIncomingFactsAgain = applyExtractedFacts(initialState, [
+  extractedFacts[0],
+  { ...extractedFacts[0], statement: "A different statement." },
+]);
+
+assert.equal(collidingIncomingFacts.facts.length, 2);
+assert.notEqual(collidingIncomingFacts.facts[1]?.id, extractedFacts[0].id);
+assert.deepEqual(collidingIncomingFacts, collidingIncomingFactsAgain);
+assert.equal(
   applyExtractedFacts(applied, [
     { ...extractedFacts[0], statement: "A different statement." },
-  ]),
+  ]).facts.length,
+  3,
 );
 assert.throws(() =>
   applyExtractedFacts(initialState, [

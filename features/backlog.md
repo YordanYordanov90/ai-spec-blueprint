@@ -245,3 +245,11 @@ Sniff imported bytes before selecting the ZIP or JSON parser, fail clearly on fi
 ### F051 - Establish AI quality evaluations and baseline — complete
 
 Add a versioned offline evaluation corpus, deterministic quality graders, a human semantic-review rubric, an opt-in provider-backed runner with sanitized metrics, and a baseline report for the current discovery/proposal path.
+
+## Phase 14 - Production bug fixes
+
+### B001 - Resolve reported production regressions — complete
+
+Resolve the reported Grill Me fact-ID and Users discovery regressions, add a
+branded unknown-route experience, replace native empty-submit validation with
+accessible inline feedback, and reduce the favicon to a small valid PNG.

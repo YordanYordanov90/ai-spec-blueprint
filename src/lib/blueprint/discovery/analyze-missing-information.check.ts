@@ -123,6 +123,41 @@ assert.equal(
   "complete",
 );
 
+const userRoleCoverage = analyzeMissingInformation(
+  applyExtractedFacts(
+    createInitialDiscoveryState("A disposable todo app for checking spec generation."),
+    [
+      {
+        id: "fact-problem-user-role",
+        statement: "The first user is a single disposable tester.",
+        source: "explicit",
+        topic: "user-roles",
+      },
+      {
+        id: "fact-problem-user-role-scope",
+        statement: "V1 must create and complete disposable todo items.",
+        source: "explicit",
+        topic: "mvp-scope",
+      },
+      {
+        id: "fact-problem-user-role-problem",
+        statement: "A disposable tester needs a quick way to check generated specs.",
+        source: "explicit",
+        topic: "product-problem",
+      },
+    ],
+  ),
+);
+
+assert.equal(
+  userRoleCoverage.completeness.find((entry) => entry.area === "users")?.status,
+  "complete",
+);
+assert.equal(
+  userRoleCoverage.gaps.some((gap) => gap.topic === "users"),
+  false,
+);
+
 const staleQuestionState = analyzeMissingInformation({
   ...requiredFacts,
   gaps: [
