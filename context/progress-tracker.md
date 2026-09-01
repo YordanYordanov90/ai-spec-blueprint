@@ -58,12 +58,12 @@ Open decisions are not implementation authorization.
 
 ## Current phase
 
-Phase 15 complete - Web system-state pages
+Phase 16 complete - Blueprint review and favicon fixes
 
 ## Current feature
 
-No active feature. B002 - Add custom system-state pages is the most recently
-completed feature.
+No active feature. B003 - Fix blueprint review duplication and favicon metadata
+is the most recently completed feature.
 
 See `features/current-feature.md`.
 
@@ -167,6 +167,10 @@ See `features/current-feature.md`.
 ### Phase 15 - Web experience hardening
 
 - [x] B002 - Add custom system-state pages
+
+### Phase 16 - Web experience hardening
+
+- [x] B003 - Fix blueprint review duplication and favicon metadata
 
 ## Deferred capabilities
 

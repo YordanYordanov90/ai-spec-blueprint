@@ -24,6 +24,41 @@ function joinFactStatements(statements: readonly string[]): string | undefined {
   return statements.length > 0 ? statements.join("\n") : undefined;
 }
 
+function capitalizeFirst(value: string): string {
+  return value.length > 0 ? `${value[0]?.toUpperCase()}${value.slice(1)}` : value;
+}
+
+function deriveGoalStatement(statement: string): string {
+  const normalized = statement.trim().replace(/[.]+$/, "");
+  const userAction = normalized.match(
+    /^V1\s+(?:allows|lets|enables)\s+the\s+user\s+to\s+(.+)$/i,
+  )?.[1];
+
+  if (userAction) {
+    return `Help the user ${userAction}.`;
+  }
+
+  const visibleOutcome = normalized.match(/^V1\s+shows\s+(.+)$/i)?.[1];
+
+  if (visibleOutcome) {
+    return `Make ${visibleOutcome} visible to the user.`;
+  }
+
+  const requiredOutcome = normalized.match(
+    /^V1\s+(?:must|should|will|needs\s+to)\s+(.+)$/i,
+  )?.[1];
+
+  if (requiredOutcome) {
+    return `Make sure the first version can ${requiredOutcome}.`;
+  }
+
+  return `Prioritize ${capitalizeFirst(normalized)} in the first version.`;
+}
+
+function goalStatements(scopeFacts: readonly string[]): string[] {
+  return scopeFacts.map(deriveGoalStatement);
+}
+
 function workingTitle(initialIdea: string): string {
   const firstLine = initialIdea.split(/[\n.]/)[0]?.trim() || initialIdea.trim();
   return firstLine.slice(0, 80);
@@ -150,6 +185,7 @@ export function proposeProjectBlueprint(
     validatedState.initialIdea;
   const usersFacts = factStatements(validatedState.facts, "users");
   const scopeFacts = factStatements(validatedState.facts, "mvp-scope");
+  const goals = goalStatements(scopeFacts);
   const nonGoalsFacts = factStatements(validatedState.facts, "non-goals");
   const persistenceFacts = factStatements(validatedState.facts, "persistence");
   const authenticationFacts = factStatements(
@@ -186,7 +222,7 @@ export function proposeProjectBlueprint(
       description: statement,
       needs: [statement],
     })),
-    goals: scopeFacts,
+    goals,
     nonGoals:
       nonGoalsFacts.length > 0
         ? nonGoalsFacts

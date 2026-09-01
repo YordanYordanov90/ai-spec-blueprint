@@ -261,3 +261,11 @@ accessible inline feedback, and reduce the favicon to a small valid PNG.
 Add branded, accessible 404, unexpected-error, and loading states using the
 approved Next.js App Router conventions while preserving the existing product
 visual system.
+
+## Phase 16 - Web experience hardening
+
+### B003 - Fix blueprint review duplication and favicon metadata — complete
+
+Remove repeated fact lines from Blueprint Review, keep goals distinct from
+MVP-scope/product success criteria, and serve the favicon with matching ICO
+bytes and metadata.

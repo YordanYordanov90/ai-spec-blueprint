@@ -56,6 +56,8 @@ assert.match(review, /Approved by human/);
 assert.match(review, /Product/);
 assert.match(review, /Users/);
 assert.match(review, /Goals/);
+assert.match(review, /uniqueText/);
+assert.match(review, /user\.description, \.\.\.user\.needs/);
 assert.match(review, /Stack/);
 assert.match(review, /Architecture/);
 assert.match(review, /Domain/);

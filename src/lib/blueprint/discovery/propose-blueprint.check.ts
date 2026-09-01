@@ -127,10 +127,14 @@ const multiFactProposal = proposeProjectBlueprint(multiFactState);
 
 assert.equal(multiFactProposal.users.length, 2);
 assert.deepEqual(multiFactProposal.goals, [
+  "Make sure the first version can create reviewable release notes without auto-publishing.",
+  "Make sure the first version can preserve the source context for each release note.",
+]);
+assert.notDeepEqual(multiFactProposal.product.successCriteria, multiFactProposal.goals);
+assert.deepEqual(multiFactProposal.product.successCriteria, [
   "V1 must create reviewable release notes without auto-publishing.",
   "V1 must preserve the source context for each release note.",
 ]);
-assert.deepEqual(multiFactProposal.product.successCriteria, multiFactProposal.goals);
 assert.deepEqual(multiFactProposal.nonGoals, [
   "V1 must not publish release notes automatically.",
   "V1 is not a replacement for the issue tracker.",
