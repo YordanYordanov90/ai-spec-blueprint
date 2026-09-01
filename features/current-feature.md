@@ -2,12 +2,43 @@
 
 ## No active feature
 
-Status: ready for planning. B002 - Add custom system-state pages is the most
-recently completed feature.
+Status: ready for planning. B003 - Fix blueprint review duplication and
+favicon metadata is the most recently completed feature.
 
 See `features/backlog.md` for planned work.
 
 ## Most recently completed feature
+
+### B003 - Fix blueprint review duplication and favicon metadata
+
+- Status: complete
+- Phase: Web experience hardening
+- Surface: Blueprint Core / Blueprint Review
+
+### Objective
+
+Remove repeated fact lines from Blueprint Review, keep goals distinct from
+MVP-scope/product success criteria, and serve the favicon with matching ICO
+bytes and metadata.
+
+### Delivered
+
+- Deduplicated repeated product, user, and list content in Blueprint Review.
+- Derived distinct goal wording from recorded MVP-scope facts.
+- Converted the favicon to a valid 64x64 ICO containing the existing image.
+- Added focused proposal, review, and favicon regression coverage.
+
+### Verification
+
+- TypeScript typecheck
+- lint
+- `npm run check:blueprint-proposal`
+- `npm run check:blueprint-review`
+- `npm run check:favicon`
+- `npm run check:ai-evaluations`
+- `npm run build -- --webpack`
+
+## Previous completed feature
 
 ### B002 - Add custom system-state pages
 
@@ -37,7 +68,7 @@ visual system.
 - `npm run check:loading`
 - `npm run build -- --webpack`
 
-## Previous completed feature
+## Earlier completed feature
 
 ### B001 - Resolve reported production regressions
 
@@ -68,7 +99,7 @@ changing the approved product architecture or adding persistence/authentication.
 - Adaptive discovery analysis from the AI quality improvement plan.
 - Provider/model changes, authentication, persistence, or database work.
 
-## Earlier completed feature
+## Historical completed feature
 
 ### F051 - Establish AI quality evaluations and baseline
 

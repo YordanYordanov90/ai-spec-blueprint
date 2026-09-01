@@ -56,10 +56,14 @@ function ReviewSection({
   );
 }
 
+function uniqueText(items: readonly string[]): string[] {
+  return [...new Set(items)];
+}
+
 function TextList({ items }: { items: readonly string[] }) {
   return (
     <ul className="list-disc space-y-1 pl-5">
-      {items.map((item) => (
+      {uniqueText(items).map((item) => (
         <li key={item}>{item}</li>
       ))}
     </ul>
@@ -221,17 +225,23 @@ export function BlueprintReview({
 
       <div className="grid gap-3 xl:grid-cols-2">
         <ReviewSection title="Product" status="fact">
-          <p>{blueprint.product.summary}</p>
-          <p>{blueprint.product.problem}</p>
-          <TextList items={blueprint.product.successCriteria} />
+          {uniqueText([blueprint.product.summary, blueprint.product.problem]).map(
+            (item) => <p key={item}>{item}</p>,
+          )}
+          <TextList
+            items={blueprint.product.successCriteria.filter(
+              (item) =>
+                item !== blueprint.product.summary &&
+                item !== blueprint.product.problem,
+            )}
+          />
         </ReviewSection>
 
         <ReviewSection title="Users" status="fact">
           {blueprint.users.map((user) => (
             <div key={user.name}>
               <p className="font-medium">{user.name}</p>
-              <p className="text-muted-foreground">{user.description}</p>
-              <TextList items={user.needs} />
+              <TextList items={[user.description, ...user.needs]} />
             </div>
           ))}
         </ReviewSection>
